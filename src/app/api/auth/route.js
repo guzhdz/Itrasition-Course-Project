@@ -1,5 +1,8 @@
-import prisma from "../../lib/prismaClient";
+//import prisma from "../../lib/prismaClient";
 import bcrypt from "bcrypt";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export async function GET(request) {
     const url = new URL(request.url);
