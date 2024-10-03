@@ -9,7 +9,7 @@ export async function GET(request) {
         const password = queryParams.get("password"); 
         return await authUser(email, password);
     } catch (error) {
-        const messageError = 'Server error. Please try again later.';
+        const messageError = 'Server error. Please try again later.' + error;
         const statusCode = 500;
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }
@@ -45,7 +45,7 @@ const authUser = async (inputEmail, inputPassword) => {
             }
         }
     } catch (error) {
-        messageError = 'Server error. Please try again later.';
+        messageError = 'Server error. Please try again later.' + error;
         statusCode = 500;
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }
@@ -61,7 +61,7 @@ const getUser = async (inputEmail) => {
         });
         return user;
     } catch (error) {
-        throw new Error("Server error. Please try again later.");
+        throw new Error("Server error. Please try again later." + error);
     }
 }
 
