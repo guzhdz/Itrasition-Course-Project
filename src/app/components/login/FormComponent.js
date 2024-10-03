@@ -1,3 +1,6 @@
+//React imports
+import { useState } from "react";
+
 //Chakra imports
 import {
     Heading,
