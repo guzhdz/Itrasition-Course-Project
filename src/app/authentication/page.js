@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 
 //Components imports
-import FormComponent from "../components/login/FormComponent";
+import FormComponent from "../components/authentication/FormComponent";
 
-export default function Login() {
+export default function Authentication() {
     const bg = useColorModeValue("gray.100", "gray.700");
 
     return (

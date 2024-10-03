@@ -29,7 +29,7 @@ const authUser = async (inputEmail, inputPassword) => {
             messageError = 'Incorrect email or password';
             statusCode = 401;
             return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
-        } else if(user.status === 0) {
+        } else if(!user.status) {
             messageError = 'Sorry, your account is blocked. Please contact the administrator';
             statusCode = 403;
             return new Response(JSON.stringify({ error: messageError }), { status: statusCode });

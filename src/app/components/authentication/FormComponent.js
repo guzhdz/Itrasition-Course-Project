@@ -18,7 +18,8 @@ const FormComponent = () => {
             subtitle: "Enter your credentials to access your account"
         },
         {
-            
+            title: "Create an Account",
+            subtitle: "Create your account to get started."
         }
     ]);
     const [formType, setFormType] = useState(0);

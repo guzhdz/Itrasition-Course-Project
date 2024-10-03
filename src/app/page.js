@@ -16,7 +16,7 @@ export default function Main() {
   return (
     <>
     <h1>Hello World!</h1>
-    <Button colorScheme="green" onClick={() => router.push("/login")}>Log in</Button>
+    <Button colorScheme="green" onClick={() => router.push("/authentication")}>Log in</Button>
     <Button colorScheme="green">Sign up</Button>
     <Button colorScheme="green" onClick={toggleColorMode}>Toggle color mode</Button>
     </>
