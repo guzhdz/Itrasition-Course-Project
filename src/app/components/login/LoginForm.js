@@ -10,26 +10,41 @@ import {
     Button,
     InputRightElement,
     InputGroup,
-    IconButton
+    IconButton,
+    Alert,
+    AlertIcon
 } from "@chakra-ui/react";
+
+//Components imports
+import CenterSpinner from "../shared/CenterSpinner";
+
+//Services imports
+import { authUser } from "../../services/authService";
 
 //Library imports
 import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
-//Components imports
-import Logo from "../shared/Logo";
-
 const LoginForm = () => {
     const [showPassword, setShowPassword] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async(data) => {
+        setErrorMessage("");
+        setLoading(true);
+        const response = await authUser(data);
+        if (response.ok) {
+            console.log(response.data);
+        } else {
+            setErrorMessage(response.message);
+        }
+        setLoading(false);
     };
 
     const tooglePasswordVisibility = () => {
@@ -38,6 +53,15 @@ const LoginForm = () => {
 
     return (
         <Box w="100%">
+            { loading && <CenterSpinner size="lg"/> }
+
+            { errorMessage && (
+                <Alert status="error" mb={3} variant='left-accent'>
+                    <AlertIcon />
+                    {errorMessage}
+                </Alert>
+            )}
+            
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl isInvalid={errors.email} mb={3}>
                     <Input id="email" type="email" placeholder="Email"
