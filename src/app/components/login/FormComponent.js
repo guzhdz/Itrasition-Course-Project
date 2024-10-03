@@ -9,6 +9,17 @@ import {
 import LoginForm from "./LoginForm";
 
 const FormComponent = () => {
+    const [formsTexts, setFormsTexts] = useState([
+        {
+            title: "Log In",
+            subtitle: "Enter your credentials to access your account"
+        },
+        {
+            
+        }
+    ]);
+    const [formType, setFormType] = useState(0);
+
     return (
         <>
             <Box
