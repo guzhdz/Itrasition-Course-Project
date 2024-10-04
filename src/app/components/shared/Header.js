@@ -38,7 +38,7 @@ const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, setLanguage } = useContext(UIContext);
-    const [logged, setLogged] = useState(true);
+    const [logged, setLogged] = useState(false);
 
     const toggleColor = () => {
         toggleColorMode();
@@ -92,6 +92,7 @@ const Header = () => {
             {!logged && <Box display="flex" gap={3}>
                 <Button colorScheme="green" onClick={() => goToLogin('login')}>Log In</Button>
                 <Button colorScheme="green" variant="outline" onClick={() => goToLogin('signup')}>Sign Up</Button>
+                <Button colorScheme="green" onClick={() => setLogged(true)}>Test Button</Button>
             </Box>}
 
             {logged && /*<Box>
@@ -116,7 +117,7 @@ const Header = () => {
                         <MenuItem icon={<MdDashboard />}>My Dashboard</MenuItem>
                         <MenuItem icon={<MdAdminPanelSettings />}>Admin Panel</MenuItem>
                         <MenuDivider />
-                        <MenuItem icon={<IoLogOut />}>Log out</MenuItem>
+                        <MenuItem icon={<IoLogOut />} onClick={() => setLogged(false)}>Log out</MenuItem>
                     </MenuList>
                 </Menu>
             }
