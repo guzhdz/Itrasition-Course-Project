@@ -50,9 +50,8 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                     type="email"
                     placeholder="Email"
                     isDisabled={loading}
-                    color="gray.400"
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'inherit' }}
+                    _placeholder={{ color: 'gray.400' }}
                     {
                     ...register("email",
                         {
@@ -77,9 +76,8 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         isDisabled={loading}
-                        color="gray.400"
                         focusBorderColor={greenColor}
-                        _placeholder={{ color: 'inherit' }}
+                        _placeholder={{ color: 'gray.400' }}
                         {
                         ...register("password",
                             {

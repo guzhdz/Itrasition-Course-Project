@@ -52,9 +52,8 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                     type="name"
                     placeholder="Name or username"
                     isDisabled={loading}
-                    color="gray.400"
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'inherit' }}
+                    _placeholder={{ color: 'gray.400' }}
                     {
                     ...register("name",
                         {
@@ -74,9 +73,8 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                     type="email"
                     placeholder="Email"
                     isDisabled={loading}
-                    color="gray.400"
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'inherit' }}
+                    _placeholder={{ color: 'gray.400' }}
                     {
                     ...register("email",
                         {
@@ -101,9 +99,8 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         isDisabled={loading}
-                        color="gray.400"
                         focusBorderColor={greenColor}
-                        _placeholder={{ color: 'inherit' }}
+                        _placeholder={{ color: 'gray.400' }}
                         {
                         ...register("password",
                             {
