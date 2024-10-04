@@ -1,9 +1,8 @@
 //React imports
-import { useState } from "react";
+import { useContext } from "react";
 
 //Chakra imports
 import {
-    Box,
     FormControl,
     FormErrorMessage,
     Input,
@@ -11,12 +10,7 @@ import {
     InputRightElement,
     InputGroup,
     IconButton,
-    Alert,
-    AlertIcon
 } from "@chakra-ui/react";
-
-//Components imports
-import CenterSpinner from "../shared/CenterSpinner";
 
 //Services imports
 import { authUser } from "../../services/authService";
@@ -25,17 +19,18 @@ import { authUser } from "../../services/authService";
 import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
-const LoginForm = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
-    const [loading, setLoading] = useState(false);
+//Context imports
+import { ModeColorContext } from "../../context/ModeColorContext";
+
+const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
+    const { greenColor } = useContext(ModeColorContext);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
 
-    const onSubmit = async(data) => {
+    const onSubmit = async (data) => {
         setErrorMessage("");
         setLoading(true);
         const response = await authUser(data);
@@ -47,71 +42,80 @@ const LoginForm = () => {
         setLoading(false);
     };
 
-    const tooglePasswordVisibility = () => {
-        setShowPassword(!showPassword);
-    };
-
     return (
-        <Box w="100%">
-            { loading && <CenterSpinner size="lg"/> }
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <FormControl isInvalid={errors.email} mb={3}>
+                <Input
+                    id="email-log"
+                    type="email"
+                    placeholder="Email"
+                    isDisabled={loading}
+                    color="gray.400"
+                    focusBorderColor={greenColor}
+                    _placeholder={{ color: 'inherit' }}
+                    {
+                    ...register("email",
+                        {
+                            required: "Email is required",
+                            pattern: {
+                                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                message: "Invalid email address",
+                            },
+                            maxLength: {
+                                value: 255,
+                                message: "Maximum length is 255 characters",
+                            }
+                        })
+                    } />
+                <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+            </FormControl>
 
-            { errorMessage && (
-                <Alert status="error" mb={3} variant='left-accent'>
-                    <AlertIcon />
-                    {errorMessage}
-                </Alert>
-            )}
-            
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <FormControl isInvalid={errors.email} mb={3}>
-                    <Input id="email" type="email" placeholder="Email"
+            <InputGroup mb={8}>
+                <FormControl isInvalid={errors.password}>
+                    <Input
+                        id="password-log"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        isDisabled={loading}
                         color="gray.400"
-                        focusBorderColor="green.300"
+                        focusBorderColor={greenColor}
                         _placeholder={{ color: 'inherit' }}
                         {
-                        ...register("email",
+                        ...register("password",
                             {
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                    message: "Invalid email address",
-                                },
-                                maxLength: {
-                                    value: 255,
-                                    message: "Maximum length is 255 characters",
-                                }
+                                required: "Password is required",
                             })
                         } />
-                        <FormErrorMessage>{errors.email && errors.email.message}</FormErrorMessage>
+                    <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
                 </FormControl>
 
-                <InputGroup mb={8}>
-                    <FormControl isInvalid={errors.password}>
-                        <Input id="password" type={showPassword ? "text" : "password"} placeholder="Password"
-                            color="gray.400"
-                            focusBorderColor="green.300"
-                            _placeholder={{ color: 'inherit' }}
-                            {
-                            ...register("password",
-                                {
-                                    required: "Password is required",
-                                })
-                            } />
-                            <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
-                    </FormControl>
+                <InputRightElement>
+                    <IconButton
+                        icon={showPassword ? <IoEyeOff /> : <IoEye />}
+                        onClick={tooglePasswordVisibility}
+                        isDisabled={loading} >
+                    </IconButton>
+                </InputRightElement>
+            </InputGroup>
 
-                    <InputRightElement>
-                        <IconButton
-                            icon={showPassword ? <IoEyeOff /> : <IoEye />}
-                            onClick={tooglePasswordVisibility} >
-                        </IconButton>
-                    </InputRightElement>
-                </InputGroup>
-
-                <Button type="submit" colorScheme="green" w="100%" mb={3}>Log In</Button>
-                <Button type="button" colorScheme="green" w="100%" variant="outline">Register</Button>
-            </form>
-        </Box>
+            <Button
+                type="submit"
+                colorScheme="green"
+                w="100%"
+                mb={3}
+                isDisabled={loading} >
+                Log In
+            </Button>
+            <Button
+                type="button"
+                colorScheme="green"
+                w="100%"
+                variant="outline"
+                onClick={toogleForm}
+                isDisabled={loading}>
+                Register
+            </Button>
+        </form>
     )
 }
 

@@ -5,14 +5,19 @@ import { useState } from "react";
 import {
     Heading,
     Text,
-    Box
+    Box,
+    Alert,
+    AlertIcon,
+    SlideFade
 } from "@chakra-ui/react";
 
 //Components imports
 import LoginForm from "./LoginForm";
+import RegisterForm from "./RegisterForm";
+import CenterSpinner from "../shared/CenterSpinner";
 
 const FormComponent = () => {
-    const [formsTexts, setFormsTexts] = useState([
+    const formsTexts = [
         {
             title: "Log In",
             subtitle: "Enter your credentials to access your account"
@@ -21,8 +26,26 @@ const FormComponent = () => {
             title: "Create an Account",
             subtitle: "Create your account to get started."
         }
-    ]);
+    ];
     const [formType, setFormType] = useState(0);
+    const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
+    const [showForm, setShowForm] = useState(true);
+
+    const toogleForm = () => {
+        setShowForm(false);
+        setTimeout(() => {
+            setFormType(formType === 0 ? 1 : 0);
+            setErrorMessage("");
+            setShowPassword(false);
+            setShowForm(true);
+        }, 500);
+    };
+
+    const tooglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     return (
         <>
@@ -31,11 +54,42 @@ const FormComponent = () => {
                 display="flex"
                 flexDirection="column"
                 alignItems={"center"}
-                width="55%" >
-                <Heading as="h1" size="2xl" mb={4}>Log In</Heading>
-                <Text mb={10}>Log in to access your account</Text>
+                w={{ base: '80%', lg: '60%' }} >
+                <SlideFade in={showForm} transition={{ enter: { duration: 0.3 } }}>
+                    <Heading as="h1" size="xl" mb={4} textAlign={"center"}>{formsTexts[formType].title}</Heading>
+                    <Text mb={10} textAlign={"center"}>{formsTexts[formType].subtitle}</Text>
 
-                <LoginForm />
+                    <Box w="100%">
+                        {loading && <CenterSpinner size="lg" />}
+
+                        {errorMessage && (
+                            <Alert status="error" mb={3} variant='left-accent'>
+                                <AlertIcon />
+                                {errorMessage}
+                            </Alert>
+                        )}
+
+                        {formType === 0 &&
+                            <LoginForm
+                                toogleForm={toogleForm}
+                                setErrorMessage={setErrorMessage}
+                                setLoading={setLoading}
+                                loading={loading}
+                                tooglePasswordVisibility={tooglePasswordVisibility}
+                                showPassword={showPassword}
+                            />
+                        }
+                        {formType === 1 &&
+                            <RegisterForm
+                                toogleForm={toogleForm}
+                                setErrorMessage={setErrorMessage}
+                                setLoading={setLoading}
+                                loading={loading}
+                                tooglePasswordVisibility={tooglePasswordVisibility}
+                                showPassword={showPassword} />
+                        }
+                    </Box>
+                </SlideFade>
             </Box>
         </>
     )

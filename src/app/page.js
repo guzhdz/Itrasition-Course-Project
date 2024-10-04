@@ -3,9 +3,6 @@
 //React/Next imports
 import { useRouter } from "next/navigation";
 
-//Styles import
-import styles from "./page.module.css";
-
 //Chakra imports
 import { Button, useColorMode } from "@chakra-ui/react";
 

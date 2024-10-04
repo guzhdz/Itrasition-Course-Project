@@ -4,6 +4,9 @@ import "./globals.css";
 //Provider imports
 import ChackraUIProvider from "./providers/ChakraUIProvider";
 
+//Context imports
+import { ModeColorProvider } from "./context/ModeColorContext";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -26,7 +29,9 @@ export default function RootLayout({ children }) {
       <head></head>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ChackraUIProvider>
-          {children}
+          <ModeColorProvider>
+            {children}
+          </ModeColorProvider>
         </ChackraUIProvider>
       </body>
     </html>
