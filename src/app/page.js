@@ -1,21 +1,36 @@
 "use client"
 
 //React/Next imports
+import { useContext } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
-import { Button, useColorMode } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  useColorMode
+} from "@chakra-ui/react";
+
+//Components import
+import Header from './components/shared/Header'
+
+//Context imports
+import { UIContext } from "./context/UIContext";
 
 export default function Main() {
   const router = useRouter();
-  const {colorMode, toggleColorMode} = useColorMode();
+  const { colorMode, toggleColorMode } = useColorMode();
+  const { bg } = useContext(UIContext);
 
   return (
-    <>
-    <h1>Hello World!</h1>
-    <Button colorScheme="green" onClick={() => router.push("/authentication")}>Log in</Button>
-    <Button colorScheme="green">Sign up</Button>
-    <Button colorScheme="green" onClick={toggleColorMode}>Toggle color mode</Button>
-    </>
+    <Box
+      w="100%"
+      h="100vh"
+      display="flex"
+      flexDirection="column" 
+      bg={bg} >
+
+        <Header />
+    </Box>
   );
 }

@@ -10,6 +10,7 @@ import {
     InputRightElement,
     InputGroup,
     IconButton,
+    chakra
 } from "@chakra-ui/react";
 
 //Services imports
@@ -20,10 +21,10 @@ import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 //Context imports
-import { ModeColorContext } from "../../context/ModeColorContext";
+import { UIContext } from "../../context/UIContext";
 
 const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
-    const { greenColor } = useContext(ModeColorContext);
+    const { greenColor } = useContext(UIContext);
     const {
         register,
         handleSubmit,
@@ -43,7 +44,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <chakra.form onSubmit={handleSubmit(onSubmit)} w="100%">
             <FormControl isInvalid={errors.email} mb={3}>
                 <Input
                     id="email-log"
@@ -51,7 +52,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                     placeholder="Email"
                     isDisabled={loading}
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'gray.400' }}
+                    _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("email",
                         {
@@ -77,7 +78,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                         placeholder="Password"
                         isDisabled={loading}
                         focusBorderColor={greenColor}
-                        _placeholder={{ color: 'gray.400' }}
+                        _placeholder={{ color: 'gray.500' }}
                         {
                         ...register("password",
                             {
@@ -111,9 +112,9 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 variant="outline"
                 onClick={toogleForm}
                 isDisabled={loading}>
-                Register
+                Sign Up
             </Button>
-        </form>
+        </chakra.form>
     )
 }
 

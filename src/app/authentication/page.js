@@ -16,10 +16,10 @@ import {
 import FormComponent from "../components/authentication/FormComponent";
 
 //Context imports
-import { ModeColorContext } from "../context/ModeColorContext";
+import { UIContext } from "../context/UIContext";
 
 export default function Authentication() {
-    const { bg } = useContext(ModeColorContext);
+    const { bg } = useContext(UIContext);
 
     return (
         <Box

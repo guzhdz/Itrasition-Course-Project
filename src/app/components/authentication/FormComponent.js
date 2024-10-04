@@ -1,5 +1,6 @@
 //React imports
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 //Chakra imports
 import {
@@ -17,6 +18,8 @@ import RegisterForm from "./RegisterForm";
 import CenterSpinner from "../shared/CenterSpinner";
 
 const FormComponent = () => {
+    const searchParams = useSearchParams();
+    const form = searchParams.get("form");
     const formsTexts = [
         {
             title: "Log In",
@@ -46,6 +49,12 @@ const FormComponent = () => {
     const tooglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
+    useEffect(() => {
+        if (form) {
+            setFormType(form === "signup" ? 1 : 0);
+        }
+    }, []);
 
     return (
         <>

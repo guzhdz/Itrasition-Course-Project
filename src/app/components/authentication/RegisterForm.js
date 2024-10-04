@@ -11,7 +11,8 @@ import {
     InputGroup,
     IconButton,
     Text,
-    Link
+    Link,
+    chakra
 } from "@chakra-ui/react";
 
 //Services imports
@@ -22,10 +23,10 @@ import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 //Context imports
-import { ModeColorContext } from "../../context/ModeColorContext";
+import { UIContext } from "../../context/UIContext";
 
 const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
-    const { greenColor } = useContext(ModeColorContext);
+    const { greenColor } = useContext(UIContext);
     const {
         register,
         handleSubmit,
@@ -45,7 +46,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
+        <chakra.form onSubmit={handleSubmit(onSubmit)} w="100%">
             <FormControl isInvalid={errors.name} mb={3}>
                 <Input
                     id="name-sign"
@@ -53,7 +54,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                     placeholder="Name or username"
                     isDisabled={loading}
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'gray.400' }}
+                    _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("name",
                         {
@@ -74,7 +75,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                     placeholder="Email"
                     isDisabled={loading}
                     focusBorderColor={greenColor}
-                    _placeholder={{ color: 'gray.400' }}
+                    _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("email",
                         {
@@ -100,7 +101,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                         placeholder="Password"
                         isDisabled={loading}
                         focusBorderColor={greenColor}
-                        _placeholder={{ color: 'gray.400' }}
+                        _placeholder={{ color: 'gray.500' }}
                         {
                         ...register("password",
                             {
@@ -128,8 +129,8 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                 Get Started
             </Button>
 
-            {!loading && <Text>Already have an account? <Link href="#" color={greenColor} onClick={toogleForm}>Log in</Link></Text>}
-        </form>
+            {!loading && <Text>Already have an account? <Link href="#" color={greenColor} onClick={toogleForm}>Log In</Link></Text>}
+        </chakra.form>
     )
 }
 
