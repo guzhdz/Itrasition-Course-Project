@@ -1,7 +1,7 @@
 "use client"
 
 //React imports
-import { useContext } from "react";
+import { useContext, Suspense } from "react";
 
 //Chakra imports
 import {
@@ -50,7 +50,9 @@ export default function Authentication() {
                         justifyContent="center"
                         alignItems="center"
                         flexDirection="column" >
-                        <FormComponent />
+                        <Suspense>
+                            <FormComponent />
+                        </Suspense>
                     </Box>
                 </CardBody>
             </Card>

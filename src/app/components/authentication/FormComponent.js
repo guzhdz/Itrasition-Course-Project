@@ -1,5 +1,5 @@
 //React imports
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 //Chakra imports
@@ -64,43 +64,42 @@ const FormComponent = () => {
                 flexDirection="column"
                 alignItems={"center"}
                 w={{ base: '80%', lg: '60%' }} >
-                <Suspense>
-                    <SlideFade in={showForm} transition={{ enter: { duration: 0.3 } }}>
-                        <Heading as="h1" size="xl" mb={4} textAlign={"center"}>{formsTexts[formType].title}</Heading>
-                        <Text mb={10} textAlign={"center"}>{formsTexts[formType].subtitle}</Text>
+                
+                <SlideFade in={showForm} transition={{ enter: { duration: 0.3 } }}>
+                    <Heading as="h1" size="xl" mb={4} textAlign={"center"}>{formsTexts[formType].title}</Heading>
+                    <Text mb={10} textAlign={"center"}>{formsTexts[formType].subtitle}</Text>
 
-                        <Box w="100%">
-                            {loading && <CenterSpinner size="lg" />}
+                    <Box w="100%">
+                        {loading && <CenterSpinner size="lg" />}
 
-                            {errorMessage && (
-                                <Alert status="error" mb={3} variant='left-accent'>
-                                    <AlertIcon />
-                                    {errorMessage}
-                                </Alert>
-                            )}
+                        {errorMessage && (
+                            <Alert status="error" mb={3} variant='left-accent'>
+                                <AlertIcon />
+                                {errorMessage}
+                            </Alert>
+                        )}
 
-                            {formType === 0 &&
-                                <LoginForm
-                                    toogleForm={toogleForm}
-                                    setErrorMessage={setErrorMessage}
-                                    setLoading={setLoading}
-                                    loading={loading}
-                                    tooglePasswordVisibility={tooglePasswordVisibility}
-                                    showPassword={showPassword}
-                                />
-                            }
-                            {formType === 1 &&
-                                <RegisterForm
-                                    toogleForm={toogleForm}
-                                    setErrorMessage={setErrorMessage}
-                                    setLoading={setLoading}
-                                    loading={loading}
-                                    tooglePasswordVisibility={tooglePasswordVisibility}
-                                    showPassword={showPassword} />
-                            }
-                        </Box>
-                    </SlideFade>
-                </Suspense>
+                        {formType === 0 &&
+                            <LoginForm
+                                toogleForm={toogleForm}
+                                setErrorMessage={setErrorMessage}
+                                setLoading={setLoading}
+                                loading={loading}
+                                tooglePasswordVisibility={tooglePasswordVisibility}
+                                showPassword={showPassword}
+                            />
+                        }
+                        {formType === 1 &&
+                            <RegisterForm
+                                toogleForm={toogleForm}
+                                setErrorMessage={setErrorMessage}
+                                setLoading={setLoading}
+                                loading={loading}
+                                tooglePasswordVisibility={tooglePasswordVisibility}
+                                showPassword={showPassword} />
+                        }
+                    </Box>
+                </SlideFade>
             </Box>
         </>
     )
