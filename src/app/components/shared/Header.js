@@ -1,5 +1,5 @@
 //React imports
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -33,11 +33,13 @@ import Logo from "./Logo";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, setLanguage } = useContext(UIContext);
+    const { checkAuth, user } = useContext(AuthContext); 
     const [logged, setLogged] = useState(false);
 
     const toggleColor = () => {
@@ -47,6 +49,17 @@ const Header = () => {
     const goToLogin = (form) => {
         router.push(`/authentication?form=${form}`);
     }
+
+    const callCheckAuth = async() => {
+        const response = await checkAuth();
+        if(!response.ok && response.message) {
+            alert(response.message);
+        }
+    }
+
+    useEffect(() => {
+        callCheckAuth();
+    }, []);
 
     return (
         <Box
@@ -89,33 +102,31 @@ const Header = () => {
                 </Box>
             </Box>
 
-            {!logged && <Box display="flex" gap={3}>
+            {user === null && <Box display="flex" gap={3}>
                 <Button colorScheme="green" onClick={() => goToLogin('login')}>Log In</Button>
                 <Button colorScheme="green" variant="outline" onClick={() => goToLogin('signup')}>Sign Up</Button>
                 <Button colorScheme="green" onClick={() => setLogged(true)}>Test Button</Button>
             </Box>}
 
-            {logged && /*<Box>
-                <Avatar name="Gustavo Hernandez"/>
-            </Box>*/
+            {user !== null && 
                 <Menu>
                     <MenuButton>
-                        <Avatar name="guzhdz21" bg={greenColor} />
+                        <Avatar name={user.name} bg={greenColor} />
                     </MenuButton>
                     <MenuList>
                         <MenuItem>
                             <Box display="flex" w="100%" gap={2} p={2}>
-                                <Avatar name="guzhdz21" bg={greenColor} />
+                                <Avatar name={user.name} bg={greenColor} />
                                 <Box>
-                                <Text fontSize="lg">guzhdz21</Text>
-                                    <Text fontSize="xs">guzhdz21@gmail.com</Text>
+                                <Text fontSize="lg">{user.name}</Text>
+                                    <Text fontSize="xs">{user.email}</Text>
                                 </Box>
                             </Box>
                         </MenuItem>
                         <MenuDivider />
                         <MenuItem icon={<IoHome />}>Home</MenuItem>
                         <MenuItem icon={<MdDashboard />}>My Dashboard</MenuItem>
-                        <MenuItem icon={<MdAdminPanelSettings />}>Admin Panel</MenuItem>
+                        {user.is_admin && <MenuItem icon={<MdAdminPanelSettings />}>Admin Panel</MenuItem> }
                         <MenuDivider />
                         <MenuItem icon={<IoLogOut />} onClick={() => setLogged(false)}>Log out</MenuItem>
                     </MenuList>

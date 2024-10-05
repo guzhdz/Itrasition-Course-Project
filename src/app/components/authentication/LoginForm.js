@@ -1,5 +1,6 @@
 //React imports
 import { useContext } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -22,21 +23,29 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
+import { AuthContext } from "../../context/AuthContext";
 
 const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
+    const router = useRouter();
     const { greenColor } = useContext(UIContext);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
+    const { saveId } = useContext(AuthContext);
 
     const onSubmit = async (data) => {
         setErrorMessage("");
         setLoading(true);
         const response = await authUser(data);
         if (response.ok) {
-            console.log(response.data);
+            const response2 = await saveId(response.data);
+            if(response2.ok) {
+                router.push("/");
+            } else {
+                setErrorMessage("Something went wrong. Please try again later.");
+            }
         } else {
             setErrorMessage(response.message);
         }
