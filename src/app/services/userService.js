@@ -1,22 +1,25 @@
 const API_URL = '/api/user';
 
 export const getUser = async (userId) => {
-    const messageError = "Unable to log in to your account. Please check your credentials and try again.";
+    let messageError = "";
     try {
       const url = new URL(API_URL, window.location.origin);
       url.searchParams.append('action', 'getUser');
       url.searchParams.append('id', userId);
       const response = await fetch(url.toString());
+      const data = (await response.json());
       if (response.status !== 200) {
+        messageError = data.error;
         return {ok: false, message: messageError};
       } else {
-        const data = (await response.json());
         if (data === null) {
+            messageError = "User not found";
             return {ok: false, message: messageError};
         } else
           return {ok: true, data: data};
       }
     } catch (error) {
+        messageError = "Something went wrong. Please try again later.";
         console.error('Error in the request:', error);
         return {ok: false, message: messageError};
     }

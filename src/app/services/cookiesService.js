@@ -31,7 +31,7 @@ export const deleteCookie = async (name) => {
             body: JSON.stringify({ name: name })
         });
         const data = await response.json();
-        return data.status ? true : false;
+        return data.status;
     } catch (error) {
         console.error('Error in the request:', error);
         return false;
@@ -44,10 +44,7 @@ export const getCookie = async (name) => {
         url.searchParams.append('name', name);
         const response = await fetch(url.toString());
         const data = await response.json();
-        if (response.status === 404) {
-            return { ok: true, data: {value: null} };
-        }
-        else if (response.status !== 200) {
+        if (response.status !== 200) {
             return { ok: false, message: data.error };
         } else {
             return { ok: true, data: data };

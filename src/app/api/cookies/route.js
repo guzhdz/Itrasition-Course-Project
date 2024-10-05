@@ -40,8 +40,8 @@ export async function GET(request) {
             return new Response(JSON.stringify({ error: error }), { status: statusCode });
         }
     } else {
-        statusCode = 404;
-        return new Response(JSON.stringify({ error: "Cookie not found" }), { status: statusCode });
+        statusCode = 200;
+        return new Response(JSON.stringify({value : null}), { status: statusCode });
     }
 }
 

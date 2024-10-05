@@ -1,10 +1,10 @@
 "use client";
 
 //React imports
-import { createContext, useState, useEffect } from "react";
+import { createContext, useState } from "react";
 
 //Services imports
-import { saveCookie, getCookie } from "../services/cookiesService";
+import { saveCookie, getCookie, deleteCookie } from "../services/cookiesService";
 import { getUser } from "../services/userService";
 
 const AuthContext = createContext();
@@ -13,30 +13,21 @@ const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
     const saveId = async (id) => {
-        const response = await saveCookie('authToken', id, 3600);
-        return response;
+        return await saveCookie('authToken', id, 3600);
     }
 
-    const getId = () => {
-        return getCookie('authToken');
+    const getId = async () => {
+        return await getCookie('authToken');
     }
 
-    const checkAuth = async () => {
-        const response = await getCookie('authToken');
-        if (response.ok) {
-            if(response.data.value === null) {
-                return {ok: false};
-            } else {
-                const response2 = await getUser(response.data.value);
-                if(response2.ok) {
-                    setUser(response2.data);
-                    return {ok: true};
-                } else {
-                    return {ok: false, message: response2.message};
-                }
-            }
-        } else {
-            return {ok: false, message: "Something went wrong. Please try to log in again."};
+    const deleteId = async () => {
+        return await deleteCookie('authToken');
+    }
+
+    const resetAuth = async () => {
+        const response = await deleteId();
+        if (response) {
+            setUser(null);
         }
     }
 
@@ -44,11 +35,33 @@ const AuthProvider = ({ children }) => {
         return await getUser(id);
     }
 
+    const checkAuth = async () => {
+        const response = await getId();
+        if (response.ok && response.data.value !== null) {
+            const userResponse = await getUser(response.data.value);
+            if (userResponse.ok) {
+                if (userResponse.data.status) {
+                    setUser(userResponse.data);
+                    return { ok: true };
+                } else {
+                    resetAuth();
+                    return { ok: false, message: "Your account has been blocked. Please contact support." };
+                }
+            } else {
+                resetAuth();
+                return { ok: false, message: "There was an error retrieving your information. Please log in again." };
+            }
+        } else {
+            resetAuth();
+            return { ok: false };
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ saveId, getId, checkAuth, getUserInfo, user }}>
+        <AuthContext.Provider value={{  user, setUser, checkAuth, resetAuth, saveId, getId, deleteId, getUserInfo }}>
             {children}
         </AuthContext.Provider>
     );
 }
 
-export {AuthContext, AuthProvider}
+export { AuthContext, AuthProvider }

@@ -39,15 +39,18 @@ const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, setLanguage } = useContext(UIContext);
-    const { checkAuth, user } = useContext(AuthContext); 
-    const [logged, setLogged] = useState(false);
+    const { checkAuth, user, resetAuth } = useContext(AuthContext); 
 
     const toggleColor = () => {
         toggleColorMode();
     }
 
+    const goTo = (path) => {
+        router.push(path);
+    }
+
     const goToLogin = (form) => {
-        router.push(`/authentication?form=${form}`);
+        goTo(`/authentication?form=${form}`);
     }
 
     const callCheckAuth = async() => {
@@ -55,6 +58,11 @@ const Header = () => {
         if(!response.ok && response.message) {
             alert(response.message);
         }
+    }
+
+    const logout = async() => {
+        resetAuth();
+        goTo('/');
     }
 
     useEffect(() => {
@@ -105,7 +113,6 @@ const Header = () => {
             {user === null && <Box display="flex" gap={3}>
                 <Button colorScheme="green" onClick={() => goToLogin('login')}>Log In</Button>
                 <Button colorScheme="green" variant="outline" onClick={() => goToLogin('signup')}>Sign Up</Button>
-                <Button colorScheme="green" onClick={() => setLogged(true)}>Test Button</Button>
             </Box>}
 
             {user !== null && 
@@ -124,11 +131,11 @@ const Header = () => {
                             </Box>
                         </MenuItem>
                         <MenuDivider />
-                        <MenuItem icon={<IoHome />}>Home</MenuItem>
+                        <MenuItem icon={<IoHome />} onClick={() => goTo('/') }>Home</MenuItem>
                         <MenuItem icon={<MdDashboard />}>My Dashboard</MenuItem>
                         {user.is_admin && <MenuItem icon={<MdAdminPanelSettings />}>Admin Panel</MenuItem> }
                         <MenuDivider />
-                        <MenuItem icon={<IoLogOut />} onClick={() => setLogged(false)}>Log out</MenuItem>
+                        <MenuItem icon={<IoLogOut />} onClick={() => logout()}>Log out</MenuItem>
                     </MenuList>
                 </Menu>
             }
