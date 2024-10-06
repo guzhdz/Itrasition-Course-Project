@@ -45,11 +45,17 @@ const AuthProvider = ({ children }) => {
                     return { ok: true };
                 } else {
                     resetAuth();
-                    return { ok: false, message: "Your account has been blocked. Please contact support." };
+                    return { ok: false, message: { 
+                        en: "Your account has been blocked. Please contact support.",
+                        es: "Tu cuenta ha sido bloqueada. Por favor, contacta con soporte."
+                    } };
                 }
             } else {
                 resetAuth();
-                return { ok: false, message: "There was an error retrieving your information. Please log in again." };
+                return { ok: false, message: {
+                    en: "There was an error retrieving your information. Please log in again.",
+                    es: "Hubo un error al recuperar tu información. Por favor, inicia sesión de nuevo."
+                } };
             }
         } else {
             resetAuth();

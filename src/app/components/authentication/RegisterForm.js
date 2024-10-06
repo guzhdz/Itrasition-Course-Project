@@ -26,7 +26,7 @@ import { IoEye, IoEyeOff } from "react-icons/io5";
 import { UIContext } from "../../context/UIContext";
 
 const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
-    const { greenColor } = useContext(UIContext);
+    const { greenColor, language } = useContext(UIContext);
     const {
         register,
         handleSubmit,
@@ -40,7 +40,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
         if (response.ok) {
             console.log("Ingresado correctamente");
         } else {
-            setErrorMessage(response.message);
+            setErrorMessage( language ? response.message[language] : response.message.en);
         }
         setLoading(false);
     };
@@ -51,17 +51,17 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                 <Input
                     id="name-sign"
                     type="name"
-                    placeholder="Name or username"
+                    placeholder={language === "es" ? "Nombre o usuario" : "Name or username"}
                     isDisabled={loading}
                     focusBorderColor={greenColor}
                     _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("name",
                         {
-                            required: "Name/username is required",
+                            required: language === "es" ? "Se requiere un nombre o usuario" : "Name/username is required",
                             maxLength: {
                                 value: 255,
-                                message: "Maximum length is 255 characters",
+                                message: language === "es" ? "Longitud maxima de 255 caracteres" : "Maximum length is 255 characters",
                             }
                         })
                     } />
@@ -72,21 +72,21 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                 <Input
                     id="email-sign"
                     type="email"
-                    placeholder="Email"
+                    placeholder={language === "es" ? "Correo" : "Email"}
                     isDisabled={loading}
                     focusBorderColor={greenColor}
                     _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("email",
                         {
-                            required: "Email is required",
+                            required: language === "es" ? "Se requiere un correo" : "Email is required",
                             pattern: {
                                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "Invalid email address",
+                                message: language === "es" ? "Dirección de correo no válida" : "Invalid email address",
                             },
                             maxLength: {
                                 value: 255,
-                                message: "Maximum length is 255 characters",
+                                message: language === "es" ? "Longitud maxima de 255 caracteres" : "Maximum length is 255 characters",
                             }
                         })
                     } />
@@ -105,7 +105,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                         {
                         ...register("password",
                             {
-                                required: "Password is required",
+                                required: language === "es" ? "Se requiere una contraseña" : "Password is required",
                             })
                         } />
                     <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
@@ -126,10 +126,13 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                 w="100%"
                 mb={3}
                 isDisabled={loading}>
-                Get Started
+                {language === "es" ? "Registrarse" : "Get Started"}
             </Button>
 
-            {!loading && <Text>Already have an account? <Link href="#" color={greenColor} onClick={toogleForm}>Log In</Link></Text>}
+            {!loading && <Text>
+                { language === "es" ? "¿Ya tienes una cuenta?" : "Already have an account?"} 
+                <Link href="#" color={greenColor} onClick={toogleForm}>{ language === "es" ? " Iniciar Sesion" : " Log In" }</Link>
+            </Text>}
         </chakra.form>
     )
 }

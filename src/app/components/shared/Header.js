@@ -39,7 +39,7 @@ const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, setLanguage } = useContext(UIContext);
-    const { checkAuth, user, resetAuth } = useContext(AuthContext); 
+    const { checkAuth, user, resetAuth } = useContext(AuthContext);
 
     const toggleColor = () => {
         toggleColorMode();
@@ -53,14 +53,14 @@ const Header = () => {
         goTo(`/authentication?form=${form}`);
     }
 
-    const callCheckAuth = async() => {
+    const callCheckAuth = async () => {
         const response = await checkAuth();
-        if(!response.ok && response.message) {
-            alert(response.message);
+        if (!response.ok && response.message) {
+            alert( language ? response.message[language] : response.message.en );
         }
     }
 
-    const logout = async() => {
+    const logout = async () => {
         resetAuth();
         goTo('/');
     }
@@ -89,7 +89,7 @@ const Header = () => {
                         </InputLeftElement>
                         <Input
                             type="text"
-                            placeholder="Search..."
+                            placeholder={language === "es" ? "Buscar..." : "Search..."}
                             focusBorderColor={greenColor}
                             _placeholder={{ color: 'gray.500' }}
                         />
@@ -111,11 +111,19 @@ const Header = () => {
             </Box>
 
             {user === null && <Box display="flex" gap={3}>
-                <Button colorScheme="green" onClick={() => goToLogin('login')}>Log In</Button>
-                <Button colorScheme="green" variant="outline" onClick={() => goToLogin('signup')}>Sign Up</Button>
+                <Button
+                    colorScheme="green"
+                    onClick={() => goToLogin('login')}>
+                    {language === "es" ? "Ingresar" : "Log In" }
+                </Button>
+                <Button
+                    colorScheme="green"
+                    variant="outline" onClick={() => goToLogin('signup')}>
+                    {language === "es" ? "Registrarse" : "Sign Up" }
+                </Button>
             </Box>}
 
-            {user !== null && 
+            {user !== null &&
                 <Menu>
                     <MenuButton>
                         <Avatar name={user.name} bg={greenColor} />
@@ -125,17 +133,18 @@ const Header = () => {
                             <Box display="flex" w="100%" gap={2} p={2}>
                                 <Avatar name={user.name} bg={greenColor} />
                                 <Box>
-                                <Text fontSize="lg">{user.name}</Text>
+                                    <Text fontSize="lg">{user.name}</Text>
                                     <Text fontSize="xs">{user.email}</Text>
                                 </Box>
                             </Box>
                         </MenuItem>
                         <MenuDivider />
-                        <MenuItem icon={<IoHome />} onClick={() => goTo('/') }>Home</MenuItem>
-                        <MenuItem icon={<MdDashboard />}>My Dashboard</MenuItem>
-                        {user.is_admin && <MenuItem icon={<MdAdminPanelSettings />}>Admin Panel</MenuItem> }
+                        <MenuItem icon={<IoHome />} onClick={() => goTo('/')}>{ language === "es" ? "Inicio" : "Home" }</MenuItem>
+                        <MenuItem icon={<MdDashboard />}>{ language === "es" ? "Mi Dashboard" : "My Dashboard" }</MenuItem>
+                        {user.is_admin && 
+                        <MenuItem icon={<MdAdminPanelSettings />}>{ language === "es" ? "Panel de administración" : "Admin Panel" }</MenuItem>}
                         <MenuDivider />
-                        <MenuItem icon={<IoLogOut />} onClick={() => logout()}>Log out</MenuItem>
+                        <MenuItem icon={<IoLogOut />} onClick={() => logout()}>{ language === "es" ? "Cerrar sesión" : "Log Out" }</MenuItem>
                     </MenuList>
                 </Menu>
             }

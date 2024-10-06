@@ -20,7 +20,10 @@ export async function GET(request) {
 export async function POST(request) {
     const { name, email, password, status, is_admin, register_time } = await request.json();
     if (!name || !email || !password) {
-        return new Response(JSON.stringify({ error: "All fields are required" }), { status: 400 });
+        return new Response(JSON.stringify({ error: {
+            en:"All fields are required",
+            es:"Todos los campos son obligatorios"
+        } }), { status: 400 });
     }
     let statusCode = 500;
     try {
@@ -40,10 +43,16 @@ export async function POST(request) {
     } catch (error) {
         let messageError = "";
         if (error.code === 'P2002') {
-            messageError = 'Email already exists, please use another email.';
+            messageError = {
+                en: 'Email already exists, please use another email.',
+                es: 'El correo ya existe, por favor, utiliza otro correo.'
+            };
             statusCode = 409;
         } else {
-            messageError = "Server error. Please try again later.";
+            messageError = {
+                en: "Server error. Please try again later.",
+                es: "Error del servidor. Por favor, intentalo de nuevo."
+            };
             statusCode = 500;
         }
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
@@ -67,7 +76,10 @@ const getUser = async (queryParams) => {
         statusCode = 200;
         return new Response(JSON.stringify(user), { status: statusCode });
     } catch (error) {
-        const messageError = "Server error. Please try again later.";
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
         statusCode = 500;
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }

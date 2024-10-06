@@ -27,13 +27,13 @@ import { AuthContext } from "../../context/AuthContext";
 
 const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
     const router = useRouter();
-    const { greenColor } = useContext(UIContext);
+    const { greenColor, language } = useContext(UIContext);
+    const { saveId } = useContext(AuthContext);
     const {
         register,
         handleSubmit,
         formState: { errors },
     } = useForm();
-    const { saveId } = useContext(AuthContext);
 
     const onSubmit = async (data) => {
         setErrorMessage("");
@@ -44,10 +44,12 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
             if(response2.ok) {
                 router.push("/");
             } else {
-                setErrorMessage("Something went wrong. Please try again later.");
+                const messageError = language === "es" ? 
+                "Algo salio mal. Por favor, intenta de nuevo." : "Something went wrong. Please try again later.";
+                setErrorMessage(messageError);
             }
         } else {
-            setErrorMessage(response.message);
+            setErrorMessage( language ? response.message[language] : response.message.en);
         }
         setLoading(false);
     };
@@ -58,21 +60,21 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 <Input
                     id="email-log"
                     type="email"
-                    placeholder="Email"
+                    placeholder={ language === "es" ? "Correo" : "Email"}
                     isDisabled={loading}
                     focusBorderColor={greenColor}
                     _placeholder={{ color: 'gray.500' }}
                     {
                     ...register("email",
                         {
-                            required: "Email is required",
+                            required: language === "es" ? "Se requiere un correo" : "Email is required",
                             pattern: {
                                 value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "Invalid email address",
+                                message: language === "es" ? "Dirección de correo no válida" : "Invalid email address",
                             },
                             maxLength: {
                                 value: 255,
-                                message: "Maximum length is 255 characters",
+                                message: language === "es" ? "Longitud maxima de 255 caracteres" : "Maximum length is 255 characters",
                             }
                         })
                     } />
@@ -84,14 +86,14 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                     <Input
                         id="password-log"
                         type={showPassword ? "text" : "password"}
-                        placeholder="Password"
+                        placeholder={ language === "es" ? "Contraseña" : "Password"}
                         isDisabled={loading}
                         focusBorderColor={greenColor}
                         _placeholder={{ color: 'gray.500' }}
                         {
                         ...register("password",
                             {
-                                required: "Password is required",
+                                required: language === "es" ? "Se requiere una contraseña" : "Password is required",
                             })
                         } />
                     <FormErrorMessage>{errors.password && errors.password.message}</FormErrorMessage>
@@ -112,7 +114,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 w="100%"
                 mb={3}
                 isDisabled={loading} >
-                Log In
+                { language === "es" ? "Ingresar" : "Log In" }
             </Button>
             <Button
                 type="button"
@@ -121,7 +123,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 variant="outline"
                 onClick={toogleForm}
                 isDisabled={loading}>
-                Sign Up
+                { language === "es" ? "Registrarse" : "Sign Up" }
             </Button>
         </chakra.form>
     )

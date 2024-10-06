@@ -19,7 +19,10 @@ export const getUser = async (userId) => {
           return {ok: true, data: data};
       }
     } catch (error) {
-        messageError = "Something went wrong. Please try again later.";
+        messageError = { 
+            en: "Something went wrong. Please try again later.",
+            es: "Algo salio mal. Por favor, intentalo de nuevo."
+        };
         console.error('Error in the request:', error);
         return {ok: false, message: messageError};
     }
@@ -51,6 +54,9 @@ export const insertUser = async ({email, name, password}) => {
         }
     } catch (error) {
         console.error('Error in the request:', error);
-        return { ok: false, message: 'Something went wrong. Please try again later.' };
+        return { ok: false, message: {
+            en: 'Something went wrong. Please try again later.',
+            es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+         }};
     }
 }
