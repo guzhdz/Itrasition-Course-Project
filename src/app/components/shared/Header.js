@@ -13,23 +13,15 @@ import {
     IconButton,
     Button,
     useColorMode,
-    Avatar,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    MenuDivider,
-    Text
+    Show,
 } from "@chakra-ui/react";
-import { SearchIcon, SunIcon, MoonIcon } from "@chakra-ui/icons";
-
-//Library imports
-import { MdDashboard, MdAdminPanelSettings } from "react-icons/md";
-import { IoLogOut, IoHome } from "react-icons/io5";
-
+import { SearchIcon, SunIcon, MoonIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 //Components imports
 import Logo from "./Logo";
+import SimpleModal from "./SimpleModal";
+import MenuComponent from "./Header/MenuComponent";
+import DrawerComponent from "./Header/DrawerComponent";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
@@ -40,6 +32,9 @@ const Header = () => {
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, setLanguage } = useContext(UIContext);
     const { checkAuth, user, resetAuth } = useContext(AuthContext);
+    const [showModal, setShowModal] = useState(false);
+    const [modalInfo, setModalInfo] = useState({ title: '', message: '' });
+    const [showDrawer, setShowDrawer] = useState(false);
 
     const toggleColor = () => {
         toggleColorMode();
@@ -56,8 +51,16 @@ const Header = () => {
     const callCheckAuth = async () => {
         const response = await checkAuth();
         if (!response.ok && response.message) {
-            alert( language ? response.message[language] : response.message.en );
+            openModal(
+                language === "es" ? 'Autenticación fallida' : 'Authentication failed',
+                language ? response.message[language] : response.message.en
+            )
         }
+    }
+
+    const openModal = (title, message) => {
+        setModalInfo({ title, message });
+        setShowModal(true);
     }
 
     const logout = async () => {
@@ -79,10 +82,19 @@ const Header = () => {
             display="flex"
             alignItems="center" >
 
-            <Logo />
+            <Show above="lg">
+                <Logo />
+            </Show>
+            <Show below="md">
+                <IconButton
+                    icon={<HamburgerIcon />}
+                    variant="ghost"
+                    colorScheme="green"
+                    onClick={() => setShowDrawer(true)}     />
+            </Show>
 
-            <Box display="flex" mx="auto" w="60%">
-                <FormControl maxW="700px" minW="300px">
+            <Box display="flex" mx="auto" w={{ base: '80%', md: '60%' }}>
+                <FormControl minW="300px">
                     <InputGroup>
                         <InputLeftElement>
                             <SearchIcon color="gray.500" />
@@ -96,59 +108,50 @@ const Header = () => {
                     </InputGroup>
                 </FormControl>
 
-                <Box display="flex">
-                    <FormControl mx={2} minW="120px">
-                        <InputGroup>
-                            <Select value={language} onChange={(e) => setLanguage(e.target.value)}>
-                                <option value="en">English</option>
-                                <option value="es">Español</option>
-                            </Select>
-                        </InputGroup>
-                    </FormControl>
-
-                    <IconButton icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} variant="ghost" onClick={toggleColor} />
-                </Box>
+                <Show above="md">
+                    <Box display="flex">
+                        <FormControl mx={2} minW="120px">
+                            <InputGroup>
+                                <Select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                                    <option value="en">English</option>
+                                    <option value="es">Español</option>
+                                </Select>
+                            </InputGroup>
+                        </FormControl>
+                        <IconButton icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} variant="ghost" onClick={toggleColor} />
+                    </Box>
+                </Show>
             </Box>
 
-            {user === null && <Box display="flex" gap={3}>
-                <Button
-                    colorScheme="green"
-                    onClick={() => goToLogin('login')}>
-                    {language === "es" ? "Ingresar" : "Log In" }
-                </Button>
-                <Button
-                    colorScheme="green"
-                    variant="outline" onClick={() => goToLogin('signup')}>
-                    {language === "es" ? "Registrarse" : "Sign Up" }
-                </Button>
-            </Box>}
+            <Show above="md">
+                {user === null && <Box display="flex" gap={3}>
+                    <Button
+                        colorScheme="green"
+                        onClick={() => goToLogin('login')}>
+                        {language === "es" ? "Ingresar" : "Log In"}
+                    </Button>
+                    <Button
+                        colorScheme="green"
+                        variant="outline" onClick={() => goToLogin('signup')}>
+                        {language === "es" ? "Registrarse" : "Sign Up"}
+                    </Button>
+                </Box>}
 
-            {user !== null &&
-                <Menu>
-                    <MenuButton>
-                        <Avatar name={user.name} bg={greenColor} />
-                    </MenuButton>
-                    <MenuList>
-                        <MenuItem>
-                            <Box display="flex" w="100%" gap={2} p={2}>
-                                <Avatar name={user.name} bg={greenColor} />
-                                <Box>
-                                    <Text fontSize="lg">{user.name}</Text>
-                                    <Text fontSize="xs">{user.email}</Text>
-                                </Box>
-                            </Box>
-                        </MenuItem>
-                        <MenuDivider />
-                        <MenuItem icon={<IoHome />} onClick={() => goTo('/')}>{ language === "es" ? "Inicio" : "Home" }</MenuItem>
-                        <MenuItem icon={<MdDashboard />}>{ language === "es" ? "Mi Dashboard" : "My Dashboard" }</MenuItem>
-                        {user.is_admin && 
-                        <MenuItem icon={<MdAdminPanelSettings />}>{ language === "es" ? "Panel de administración" : "Admin Panel" }</MenuItem>}
-                        <MenuDivider />
-                        <MenuItem icon={<IoLogOut />} onClick={() => logout()}>{ language === "es" ? "Cerrar sesión" : "Log Out" }</MenuItem>
-                    </MenuList>
-                </Menu>
-            }
+                {user !== null && <MenuComponent logout={logout} goTo={goTo} />}
+            </Show>
 
+            <SimpleModal
+                title={modalInfo.title}
+                message={modalInfo.message}
+                showModal={showModal}
+                setShowModal={setShowModal} />
+            <DrawerComponent
+                setShowDrawer={setShowDrawer}
+                showDrawer={showDrawer}
+                goToLogin={goToLogin}
+                toggleColor={toggleColor}
+                colorMode={colorMode}
+                logout={logout} />
         </Box>
     )
 }

@@ -11,6 +11,7 @@ const UIContext = createContext();
 const UIProvider = ({ children }) => {
     const bg = useColorModeValue("blackAlpha.100", "initial");
     const greenColor = useColorModeValue("green.600", "green.300");
+    const textGreenScheme = useColorModeValue("white", "gray.800");
     const [language, setLanguage] = useState('');
 
     useEffect(() => {
@@ -28,7 +29,7 @@ const UIProvider = ({ children }) => {
     }, [language]);
 
     return (
-        <UIContext.Provider value={{ bg, greenColor, language, setLanguage }}>
+        <UIContext.Provider value={{ bg, greenColor, language, setLanguage, textGreenScheme }}>
             {children}
         </UIContext.Provider>
     );
