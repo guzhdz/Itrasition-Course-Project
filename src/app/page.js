@@ -19,7 +19,6 @@ import { UIContext } from "./context/UIContext";
 
 export default function Main() {
   const router = useRouter();
-  const { colorMode, toggleColorMode } = useColorMode();
   const { bg } = useContext(UIContext);
 
   return (
