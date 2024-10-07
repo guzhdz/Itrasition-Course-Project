@@ -9,7 +9,8 @@ import {
     Card,
     CardBody,
     Image,
-    Show
+    Show,
+    Flex
 } from "@chakra-ui/react";
 
 //Components imports
@@ -22,12 +23,11 @@ export default function Authentication() {
     const { bg } = useContext(UIContext);
 
     return (
-        <Box
+        <Flex
             w="100%"
             h="100vh"
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
+            justify="center"
+            align="center"
             bg={bg} >
             <Card w="80%" h={750} p={0} >
                 <CardBody display="flex" flexDirection="row" p={0} >
@@ -43,19 +43,18 @@ export default function Authentication() {
                         </Box>
                     </Show>
 
-                    <Box
+                    <Flex
                         w={{ base: '100%', lg: '50%' }}
                         h="100%"
-                        display="flex"
-                        justifyContent="center"
-                        alignItems="center"
-                        flexDirection="column" >
+                        justify="center"
+                        align="center"
+                        direction="column" >
                         <Suspense>
                             <FormComponent />
                         </Suspense>
-                    </Box>
+                    </Flex>
                 </CardBody>
             </Card>
-        </Box>
+        </Flex>
     );
 }

@@ -10,7 +10,8 @@ import {
     MenuDivider,
     Avatar,
     Text,
-    Box
+    Box,
+    Flex
 } from "@chakra-ui/react";
 
 //Context imports
@@ -32,13 +33,13 @@ const MenuComponent = ({ logout, goTo }) => {
             </MenuButton>
             <MenuList>
                 <MenuItem>
-                    <Box display="flex" w="100%" gap={2} p={2}>
+                    <Flex w="100%" gap={2} p={2}>
                         <Avatar name={user.name} bg={greenColor} color={textGreenScheme} />
                         <Box>
                             <Text fontSize="lg">{user.name}</Text>
                             <Text fontSize="xs">{user.email}</Text>
                         </Box>
-                    </Box>
+                    </Flex>
                 </MenuItem>
                 <MenuDivider />
 

@@ -9,7 +9,8 @@ import {
     Box,
     Alert,
     AlertIcon,
-    SlideFade
+    SlideFade,
+    Flex
 } from "@chakra-ui/react";
 
 //Components imports
@@ -66,11 +67,10 @@ const FormComponent = () => {
 
     return (
         <>
-            <Box
+            <Flex
                 my={4}
-                display="flex"
-                flexDirection="column"
-                alignItems={"center"}
+                direction="column"
+                align={"center"}
                 w={{ base: '80%', lg: '60%' }}
                 maxWidth="350px" >
 
@@ -119,7 +119,7 @@ const FormComponent = () => {
                         }
                     </Box>
                 </SlideFade>
-            </Box>
+            </Flex>
         </>
     )
 }

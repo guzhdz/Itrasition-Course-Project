@@ -8,12 +8,12 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
-    Box,
     Select,
     IconButton,
     Button,
     useColorMode,
     Show,
+    Flex
 } from "@chakra-ui/react";
 import { SearchIcon, SunIcon, MoonIcon, HamburgerIcon } from "@chakra-ui/icons";
 
@@ -73,14 +73,12 @@ const Header = () => {
     }, []);
 
     return (
-        <Box
+        <Flex
             w="100%"
-
             py={5} px={8}
             pos="sticky"
             top="0"
-            display="flex"
-            alignItems="center" >
+            align="center" >
 
             <Show above="lg">
                 <Logo />
@@ -93,7 +91,7 @@ const Header = () => {
                     onClick={() => setShowDrawer(true)}     />
             </Show>
 
-            <Box display="flex" mx="auto" w={{ base: '80%', md: '60%' }}>
+            <Flex direction="row" mx="auto" w={{ base: '80%', md: '60%' }}>
                 <FormControl minW="300px">
                     <InputGroup>
                         <InputLeftElement>
@@ -109,7 +107,7 @@ const Header = () => {
                 </FormControl>
 
                 <Show above="md">
-                    <Box display="flex">
+                    <Flex>
                         <FormControl mx={2} minW="120px">
                             <InputGroup>
                                 <Select value={language} onChange={(e) => setLanguage(e.target.value)}>
@@ -119,12 +117,12 @@ const Header = () => {
                             </InputGroup>
                         </FormControl>
                         <IconButton icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />} variant="ghost" onClick={toggleColor} />
-                    </Box>
+                    </Flex>
                 </Show>
-            </Box>
+            </Flex>
 
             <Show above="md">
-                {user === null && <Box display="flex" gap={3}>
+                {user === null && <Flex gap={3}>
                     <Button
                         colorScheme="green"
                         onClick={() => goToLogin('login')}>
@@ -135,7 +133,7 @@ const Header = () => {
                         variant="outline" onClick={() => goToLogin('signup')}>
                         {language === "es" ? "Registrarse" : "Sign Up"}
                     </Button>
-                </Box>}
+                </Flex>}
 
                 {user !== null && <MenuComponent logout={logout} goTo={goTo} />}
             </Show>
@@ -152,7 +150,7 @@ const Header = () => {
                 toggleColor={toggleColor}
                 colorMode={colorMode}
                 logout={logout} />
-        </Box>
+        </Flex>
     )
 }
 

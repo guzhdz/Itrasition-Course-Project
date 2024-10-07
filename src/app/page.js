@@ -6,9 +6,9 @@ import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
-  Box,
   Button,
-  useColorMode
+  useColorMode,
+  Flex
 } from "@chakra-ui/react";
 
 //Components import
@@ -22,14 +22,13 @@ export default function Main() {
   const { bg } = useContext(UIContext);
 
   return (
-    <Box
+    <Flex
       w="100%"
       h="100vh"
-      display="flex"
-      flexDirection="column" 
+      direction="column" 
       bg={bg} >
 
         <Header />
-    </Box>
+    </Flex>
   );
 }

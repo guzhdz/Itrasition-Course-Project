@@ -13,7 +13,8 @@ import {
     Divider,
     Avatar,
     Button,
-    Switch
+    Switch,
+    Flex
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 
@@ -48,7 +49,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
 
                 <DrawerBody px={2} display="flex" flexDirection="column">
                     {user === null && <>
-                        <Box display="flex" flexDirection="column" gap={3} p={4} justifyContent="center">
+                        <Flex direction="column" gap={3} p={4} justify="center">
                             <Button
                                 colorScheme="green"
                                 onClick={() => goToLogin('login')}>
@@ -59,12 +60,11 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                                 variant="outline" onClick={() => goToLogin('signup')}>
                                 {language === "es" ? "Registrarse" : "Sign Up"}
                             </Button>
-                        </Box>
+                        </Flex>
                     </>}
 
                     {user !== null && <>
-                        <Box
-                            display="flex"
+                        <Flex
                             w="100%"
                             gap={2}
                             p={4}
@@ -74,7 +74,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                                 <Text fontSize="lg">{user.name}</Text>
                                 <Text fontSize="xs">{user.email}</Text>
                             </Box>
-                        </Box>
+                        </Flex>
                         <Divider />
 
                         <DrawerItem
@@ -102,17 +102,17 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                             text={language === "es" ? "Cerrar sesión" : "Log Out"} />
                     </>}
 
-                    <Box display="flex" alignItems="center" p={4} mt={"auto"}>
+                    <Flex align="center" p={4} mt={"auto"}>
                         <Text fontSize="lg">English</Text>
                         <Switch mx={4} colorScheme="green" isChecked={language === "es"} onChange={changeLanguage} />
                         <Text fontSize="lg">Español</Text>
-                    </Box>
+                    </Flex>
                     <Divider />
-                    <Box display="flex" alignItems="center" p={4}>
+                    <Flex align="center" p={4}>
                         <SunIcon />
                         <Switch mx={4} colorScheme="green" isChecked={colorMode === "dark"} onChange={toggleColor} />
                         <MoonIcon />
-                    </Box>
+                    </Flex>
                 </DrawerBody>
             </DrawerContent>
         </Drawer>
