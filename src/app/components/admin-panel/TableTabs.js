@@ -20,7 +20,7 @@ const TableTabs = () => {
     const { language } = useContext(UIContext);
 
     return (
-        <Tabs colorScheme="green">
+        <Tabs colorScheme="green" isLazy>
             <TabList>
                 <Tab>{language === "es" ? "Todos" : "All"}</Tab>
                 <Tab>{language === "es" ? "Activos" : "Active"}</Tab>

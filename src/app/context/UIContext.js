@@ -13,7 +13,7 @@ const UIProvider = ({ children }) => {
     const greenColor = useColorModeValue("green.600", "green.300");
     const redColor = useColorModeValue("red.600", "red.300");
     const textGreenScheme = useColorModeValue("white", "gray.800");
-    const [language, setLanguage] = useState('');
+    const [language, setLanguage] = useState('en');
 
     useEffect(() => {
         const storedLanguage = localStorage.getItem("language");
@@ -21,16 +21,17 @@ const UIProvider = ({ children }) => {
             setLanguage(storedLanguage);
         } else {
             setLanguage("en");
+            localStorage.setItem("language", "en");
         }
     }, []);
 
-    useEffect(() => {
-        if(language !== '')
-            localStorage.setItem("language", language);
-    }, [language]);
+    const changeLanguage = (value) => {
+        setLanguage(value);
+        localStorage.setItem("language", value);
+    }
 
     return (
-        <UIContext.Provider value={{ bg, greenColor, language, setLanguage, textGreenScheme, redColor }}>
+        <UIContext.Provider value={{ bg, greenColor, language, setLanguage, textGreenScheme, redColor, changeLanguage }}>
             {children}
         </UIContext.Provider>
     );

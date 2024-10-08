@@ -84,3 +84,57 @@ export const getUsers = async (action) => {
         };
     }
 }
+
+export const deleteUsers = async (ids) => {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ids: ids
+            })
+        });
+        if (response.status === 200) {
+            return { ok: true };
+        } else {
+            const data = await response.json();
+            return { ok: false, message: data.error };
+        }
+    } catch (error) {
+        console.error('Error in the request:', error);
+        return {
+            ok: false, message: {
+                en: 'Something went wrong. Please try again later.',
+                es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+            }
+        };
+    }
+}
+
+export const updateUsers = async (users) => {
+    try {
+        const response = await fetch(API_URL, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                users: users
+            })
+        });
+        const data = await response.json();
+        if (response.status != 200) {
+            return {ok: false, message: data.error};
+        } else {
+            return {ok: true, data: data.data};
+        }
+    } catch (error) {
+        console.error('Error in the request:', error);
+        return {ok: false, message: {
+            en: 'Something went wrong. Please try again later.',
+            es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+        }};
+    }
+}

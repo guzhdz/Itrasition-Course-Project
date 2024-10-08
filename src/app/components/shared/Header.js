@@ -30,7 +30,7 @@ import { AuthContext } from "../../context/AuthContext";
 const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
-    const { greenColor, language, setLanguage } = useContext(UIContext);
+    const { greenColor, language, changeLanguage } = useContext(UIContext);
     const { checkAuth, user, resetAuth } = useContext(AuthContext);
     const [showModal, setShowModal] = useState(false);
     const [modalInfo, setModalInfo] = useState({ title: '', message: '' });
@@ -111,7 +111,7 @@ const Header = () => {
                     <Flex>
                         <FormControl mx={2} minW="120px">
                             <InputGroup>
-                                <Select value={language} onChange={(e) => setLanguage(e.target.value)}>
+                                <Select value={language} onChange={(e) => changeLanguage(e.target.value)}>
                                     <option value="en">English</option>
                                     <option value="es">Español</option>
                                 </Select>

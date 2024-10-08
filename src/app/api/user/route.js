@@ -68,6 +68,80 @@ export async function POST(request) {
     }
 }
 
+export async function DELETE(request) {
+    const { ids } = await request.json();
+    console.log(ids);
+    let statusCode = 500;
+    try {
+        const result = await prisma.user.deleteMany({
+            where: {
+                id_user: {
+                    in: ids
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+export async function PUT(request) {
+    const { users } = await request.json();
+    let statusCode = 500;
+    console.log(users);
+    try {
+        const results = users.map((user) => {
+            const newData = {
+                ...(user.name && { name: user.name }),
+                ...(user.email && { email: user.email }),
+                ...(user.status !== undefined && { status: user.status }),
+                ...(user.is_admin !== undefined && { is_admin: user.is_admin }),
+                ...(user.register_time && { register_time: user.registerTime }),
+            };
+            if (user.password) {
+                return getHashedPassword(user.password).then((hashedPassword) => {
+                    newData.password = hashedPassword;
+                    return prisma.user.update({
+                        where: { id_user: user.idUser },
+                        data: newData
+                    });
+                });
+            }
+            return prisma.user.update({
+                where: { id_user: user.id_user },
+                data: newData
+            });
+        });
+        const result = await prisma.$transaction(results);
+        statusCode = 200;
+        return new Response(JSON.stringify(result), { status: statusCode });
+    } catch (error) {
+        console.log(error);
+        let messageError = "";
+        if(error.code === 'P2002') {
+            messageError = {
+                en: 'One of the emails already exists, please use another email.',
+                es: 'Uno de los correos ya existe, por favor, utiliza otro correo.'
+            };
+            statusCode = 409;
+        } else {
+            messageError = {
+                en: "Server error. Please try again later.",
+                es: "Error del servidor. Por favor, intentalo de nuevo."
+            };
+            statusCode = 500;
+        }
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
 const getHashedPassword = async (password) => {
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);

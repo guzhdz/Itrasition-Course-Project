@@ -14,18 +14,19 @@ import {
     Badge,
     Icon,
     Flex,
-    Checkbox
+    Checkbox,
+    Box,
 } from "@chakra-ui/react";
 
 //Components imports
 import SimpleModal from "../shared/SimpleModal";
+import TableActions from "./TableActions";
 
 //Services imports
-import { getUsers } from "../../services/userService";
+import { getUsers, deleteUsers, updateUsers } from "../../services/userService";
 
 //Library imports
-import { FiCheckSquare } from "react-icons/fi";
-import { FiXSquare } from "react-icons/fi";
+import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
@@ -33,7 +34,7 @@ import { UIContext } from "../../context/UIContext";
 const UsersTable = ({ usersRequest }) => {
     const { language, greenColor, redColor } = useContext(UIContext);
     const [users, setUsers] = useState([]);
-    const [checkedUsers, setCheckedUsers] = useState([]);
+    const [checkedUsers, setCheckedUsers] = useState([false]);
     const allChecked = checkedUsers.every(Boolean);
     const isIndeterminate = checkedUsers.some(Boolean) && !allChecked
     const [showModal, setShowModal] = useState(false);
@@ -48,11 +49,8 @@ const UsersTable = ({ usersRequest }) => {
             setUsers(response.data);
             setCheckedUsers(new Array(response.data.length).fill(false));
         } else {
-            setModalData({
-                title: "Error at loading users",
-                message: language === "es" ? response.message[language] : response.message.en,
-            });
-            setShowModal(true);
+            openModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
+                language === "es" ? response.message[language] : response.message.en);
         }
     };
 
@@ -68,12 +66,44 @@ const UsersTable = ({ usersRequest }) => {
         setCheckedUsers(newCheckedUsers);
     }
 
+    const deleteSelectedUsers = async () => {
+        const usersToDelete = users.filter((_, index) => checkedUsers[index]);
+        const response = await deleteUsers(usersToDelete.map(user => user.id_user));
+        if (response.ok) {
+            loadUsers();
+        } else {
+            openModal(language === "es" ? "Error al eliminar los usuarios" : "Error at deleting users",
+                language === "es" ? response.message[language] : response.message.en);
+        }
+    }
+
+    const updateSelectedUsers = async (type, value) => {
+        const usersToUpdate = users.filter((_, index) => checkedUsers[index]);
+        const updatedUsers = usersToUpdate.map(user => ({ id_user: user.id_user, [type]: value }));
+        const response = await updateUsers(updatedUsers);
+        if (response.ok) {
+            loadUsers();
+        } else {
+            openModal(language === "es" ? "Error al actualizar los usuarios" : "Error at updating users",
+                language === "es" ? response.message[language] : response.message.en);
+        }
+    }
+
+    const openModal = (title, message) => {
+        setModalData({ title, message });
+        setShowModal(true);
+    }
+
     useEffect(() => {
         loadUsers();
     }, []);
 
     return (
-        <>
+        <Box my={2}>
+            <TableActions
+                isOpen={allChecked || isIndeterminate}
+                deleteSelected={deleteSelectedUsers}
+                updateSelected={updateSelectedUsers} />
             <TableContainer>
                 <Table variant='striped'>
                     <TableCaption>{language === "es" ? "Usuarios" : "Users"}</TableCaption>
@@ -130,7 +160,7 @@ const UsersTable = ({ usersRequest }) => {
                 title={modalData.title}
                 message={modalData.message}
             />
-        </>
+        </Box>
     )
 }
 

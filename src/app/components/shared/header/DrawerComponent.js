@@ -31,11 +31,11 @@ import { MdDashboard, MdAdminPanelSettings } from "react-icons/md";
 import { IoLogOut, IoHome } from "react-icons/io5";
 
 const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, toggleColor, logout, goTo }) => {
-    const { language, setLanguage,  greenColor } = useContext(UIContext);
+    const { language, changeLanguage,  greenColor } = useContext(UIContext);
     const { user } = useContext(AuthContext);
 
-    const changeLanguage = () => {
-        setLanguage(language === "es" ? "en" : "es");
+    const onChangeLanguage = () => {
+        changeLanguage(language === "es" ? "en" : "es");
     }
 
     return (
@@ -104,7 +104,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
 
                     <Flex align="center" p={4} mt={"auto"}>
                         <Text fontSize="lg">English</Text>
-                        <Switch mx={4} colorScheme="green" isChecked={language === "es"} onChange={changeLanguage} />
+                        <Switch mx={4} colorScheme="green" isChecked={language === "es"} onChange={onChangeLanguage} />
                         <Text fontSize="lg">Español</Text>
                     </Flex>
                     <Divider />
