@@ -20,8 +20,8 @@ import { SearchIcon, SunIcon, MoonIcon, HamburgerIcon } from "@chakra-ui/icons";
 //Components imports
 import Logo from "./Logo";
 import SimpleModal from "./SimpleModal";
-import MenuComponent from "./provisional/MenuComponent";
-import DrawerComponent from "./provisional/DrawerComponent";
+import MenuComponent from "./header/MenuComponent";
+import DrawerComponent from "./header/DrawerComponent";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
