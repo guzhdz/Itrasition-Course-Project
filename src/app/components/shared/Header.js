@@ -20,8 +20,8 @@ import { SearchIcon, SunIcon, MoonIcon, HamburgerIcon } from "@chakra-ui/icons";
 //Components imports
 import Logo from "./Logo";
 import SimpleModal from "./SimpleModal";
-import MenuComponent from "./Header/MenuComponent";
-import DrawerComponent from "./Header/DrawerComponent";
+import MenuComponent from "./header/MenuComponent";
+import DrawerComponent from "./header/DrawerComponent";
 
 //Context imports
 import { UIContext } from "../../context/UIContext";
@@ -78,7 +78,8 @@ const Header = () => {
             py={5} px={8}
             pos="sticky"
             top="0"
-            align="center" >
+            align="center"
+            mb={4} >
 
             <Show above="lg">
                 <Logo />
@@ -149,7 +150,8 @@ const Header = () => {
                 goToLogin={goToLogin}
                 toggleColor={toggleColor}
                 colorMode={colorMode}
-                logout={logout} />
+                logout={logout}
+                goTo={goTo} />
         </Flex>
     )
 }

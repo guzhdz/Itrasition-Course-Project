@@ -52,7 +52,7 @@ const MenuComponent = ({ logout, goTo }) => {
                 </MenuItem>
 
                 {user.is_admin &&
-                    <MenuItem icon={<MdAdminPanelSettings />}>
+                    <MenuItem icon={<MdAdminPanelSettings />} onClick={() => goTo('/admin-panel')}>
                         {language === "es" ? "Panel de administración" : "Admin Panel"}
                     </MenuItem>}   
                 <MenuDivider />

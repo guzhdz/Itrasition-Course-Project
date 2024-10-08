@@ -6,10 +6,17 @@ export async function GET(request) {
     const queryParams = url.searchParams;
     const action = queryParams.get('action');
     if (action === 'getUsers') {
+        return await getUsers();
     } else if (action === 'getUser') {
         return await getUser(queryParams);
     } else if (action === 'getBlockedUsers') {
+        return await getStatusUsers(false);
     } else if (action === 'getActiveUsers') {
+        return await getStatusUsers(true);
+    } else if (action === 'getAdminUsers') {
+        return await getAdminUsers(true);
+    } else if (action === 'getNormalUsers') {
+        return await getAdminUsers(false);
     } else {
         const messageError = 'Bad request';
         const statusCode = 400;
@@ -20,10 +27,12 @@ export async function GET(request) {
 export async function POST(request) {
     const { name, email, password, status, is_admin, register_time } = await request.json();
     if (!name || !email || !password) {
-        return new Response(JSON.stringify({ error: {
-            en:"All fields are required",
-            es:"Todos los campos son obligatorios"
-        } }), { status: 400 });
+        return new Response(JSON.stringify({
+            error: {
+                en: "All fields are required",
+                es: "Todos los campos son obligatorios"
+            }
+        }), { status: 400 });
     }
     let statusCode = 500;
     try {
@@ -75,6 +84,62 @@ const getUser = async (queryParams) => {
         });
         statusCode = 200;
         return new Response(JSON.stringify(user), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getUsers = async () => {
+    let statusCode = 500;
+    try {
+        const rows = await prisma.user.findMany({
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(rows), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getStatusUsers = async (value) => {
+    let statusCode = 500;
+    try {
+        const rows = await prisma.user.findMany({
+            where: { status: value },
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(rows), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getAdminUsers = async (value) => {
+    let statusCode = 500;
+    try {
+        const rows = await prisma.user.findMany({
+            where: { is_admin: value },
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(rows), { status: statusCode });
     } catch (error) {
         const messageError = {
             en: "Server error. Please try again later.",

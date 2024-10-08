@@ -9,8 +9,9 @@ import { useColorModeValue } from "@chakra-ui/react";
 const UIContext = createContext();
 
 const UIProvider = ({ children }) => {
-    const bg = useColorModeValue("blackAlpha.100", "initial");
+    const bg = useColorModeValue("blackAlpha.50", "initial");
     const greenColor = useColorModeValue("green.600", "green.300");
+    const redColor = useColorModeValue("red.600", "red.300");
     const textGreenScheme = useColorModeValue("white", "gray.800");
     const [language, setLanguage] = useState('');
 
@@ -29,7 +30,7 @@ const UIProvider = ({ children }) => {
     }, [language]);
 
     return (
-        <UIContext.Provider value={{ bg, greenColor, language, setLanguage, textGreenScheme }}>
+        <UIContext.Provider value={{ bg, greenColor, language, setLanguage, textGreenScheme, redColor }}>
             {children}
         </UIContext.Provider>
     );

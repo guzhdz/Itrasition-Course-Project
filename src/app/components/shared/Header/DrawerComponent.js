@@ -30,7 +30,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import { MdDashboard, MdAdminPanelSettings } from "react-icons/md";
 import { IoLogOut, IoHome } from "react-icons/io5";
 
-const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, toggleColor, logout }) => {
+const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, toggleColor, logout, goTo }) => {
     const { language, setLanguage,  greenColor } = useContext(UIContext);
     const { user } = useContext(AuthContext);
 
@@ -91,7 +91,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
 
                         {user.is_admin && <>
                             <DrawerItem
-                                action={() => console.log("Ir a admin panel")}
+                                action={() => goTo('/admin-panel')}
                                 icon={MdAdminPanelSettings}
                                 text={language === "es" ? "Panel de administración" : "Admin Panel"} />
                             <Divider /></>}
