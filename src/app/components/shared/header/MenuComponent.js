@@ -27,7 +27,7 @@ const MenuComponent = ({ logout, goTo }) => {
     const { user } = useContext(AuthContext);
 
     return (
-        <Menu>
+        <Menu zIndex={1000}>
             <MenuButton>
                 <Avatar name={user.name} bg={greenColor} color={textGreenScheme} />
             </MenuButton>

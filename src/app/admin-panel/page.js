@@ -28,7 +28,7 @@ export default function AdminPanel() {
 
       <Header />
 
-      <Box maxW="1400px" mx="auto" width="80%" p={3}>
+      <Box maxW="1250px" mx="auto" width="80%" p={3}>
         <Heading mb="60px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>
 
         <TableTabs />

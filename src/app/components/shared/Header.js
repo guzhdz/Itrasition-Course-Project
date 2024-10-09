@@ -79,7 +79,8 @@ const Header = () => {
             pos="sticky"
             top="0"
             align="center"
-            mb={4} >
+            mb={4}
+            zIndex={1000} >
 
             <Show above="lg">
                 <Logo />
