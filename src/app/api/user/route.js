@@ -70,7 +70,6 @@ export async function POST(request) {
 
 export async function DELETE(request) {
     const { ids } = await request.json();
-    console.log(ids);
     let statusCode = 500;
     try {
         const result = await prisma.user.deleteMany({
@@ -95,7 +94,6 @@ export async function DELETE(request) {
 export async function PUT(request) {
     const { users } = await request.json();
     let statusCode = 500;
-    console.log(users);
     try {
         const results = users.map((user) => {
             const newData = {
@@ -123,7 +121,6 @@ export async function PUT(request) {
         statusCode = 200;
         return new Response(JSON.stringify(result), { status: statusCode });
     } catch (error) {
-        console.log(error);
         let messageError = "";
         if(error.code === 'P2002') {
             messageError = {
@@ -172,7 +169,8 @@ const getUsers = async () => {
     let statusCode = 500;
     try {
         const rows = await prisma.user.findMany({
-            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true },
+            orderBy: { id_user: 'asc' }
         });
         statusCode = 200;
         return new Response(JSON.stringify(rows), { status: statusCode });
@@ -191,7 +189,8 @@ const getStatusUsers = async (value) => {
     try {
         const rows = await prisma.user.findMany({
             where: { status: value },
-            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true },
+            orderBy: { id_user: 'asc' }
         });
         statusCode = 200;
         return new Response(JSON.stringify(rows), { status: statusCode });
@@ -210,7 +209,8 @@ const getAdminUsers = async (value) => {
     try {
         const rows = await prisma.user.findMany({
             where: { is_admin: value },
-            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true }
+            select: { id_user: true, name: true, email: true, status: true, is_admin: true, register_time: true },
+            orderBy: { id_user: 'asc' }
         });
         statusCode = 200;
         return new Response(JSON.stringify(rows), { status: statusCode });

@@ -21,6 +21,7 @@ import {
 //Components imports
 import SimpleModal from "../shared/SimpleModal";
 import TableActions from "./TableActions";
+import CenterSpinner from "../shared/CenterSpinner";
 
 //Services imports
 import { getUsers, deleteUsers, updateUsers } from "../../services/userService";
@@ -42,8 +43,10 @@ const UsersTable = ({ usersRequest }) => {
         title: "",
         message: "",
     });
+    const [loading, setLoading] = useState(false);
 
     const loadUsers = async () => {
+        setLoading(true);
         const response = await getUsers(usersRequest);
         if (response.ok) {
             setUsers(response.data);
@@ -52,6 +55,7 @@ const UsersTable = ({ usersRequest }) => {
             openModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
                 language === "es" ? response.message[language] : response.message.en);
         }
+        setLoading(false);
     };
 
     const toogleCheckbox = (index) => {
@@ -66,27 +70,39 @@ const UsersTable = ({ usersRequest }) => {
         setCheckedUsers(newCheckedUsers);
     }
 
+    const uncheckAll = () => {
+        const newCheckedUsers = [...checkedUsers];
+        newCheckedUsers.fill(false);
+        setCheckedUsers(newCheckedUsers);
+    }
+
     const deleteSelectedUsers = async () => {
+        uncheckAll();
+        setLoading(true);
         const usersToDelete = users.filter((_, index) => checkedUsers[index]);
         const response = await deleteUsers(usersToDelete.map(user => user.id_user));
         if (response.ok) {
-            loadUsers();
+            await loadUsers();
         } else {
             openModal(language === "es" ? "Error al eliminar los usuarios" : "Error at deleting users",
                 language === "es" ? response.message[language] : response.message.en);
         }
+        setLoading(false);
     }
 
     const updateSelectedUsers = async (type, value) => {
+        uncheckAll();
+        setLoading(true);
         const usersToUpdate = users.filter((_, index) => checkedUsers[index]);
         const updatedUsers = usersToUpdate.map(user => ({ id_user: user.id_user, [type]: value }));
         const response = await updateUsers(updatedUsers);
         if (response.ok) {
-            loadUsers();
+            await loadUsers();
         } else {
             openModal(language === "es" ? "Error al actualizar los usuarios" : "Error at updating users",
                 language === "es" ? response.message[language] : response.message.en);
         }
+        setLoading(false);
     }
 
     const openModal = (title, message) => {
@@ -101,19 +117,21 @@ const UsersTable = ({ usersRequest }) => {
     return (
         <Box my={2}>
             <TableActions
-                isOpen={allChecked || isIndeterminate}
+                isOpen={(allChecked && users.length > 0) || isIndeterminate}
                 deleteSelected={deleteSelectedUsers}
                 updateSelected={updateSelectedUsers} />
             <TableContainer>
                 <Table variant='striped'>
-                    <TableCaption>{language === "es" ? "Usuarios" : "Users"}</TableCaption>
+                    {users.length > 0 && <TableCaption>{language === "es" ? "Usuarios" : "Users"}</TableCaption>}
+                    {users.length === 0 && !loading && <TableCaption>{language === "es" ? "No hay usuarios" : "No users"}</TableCaption>}
                     <Thead>
                         <Tr>
                             <Th>
                                 <Checkbox size="lg"
-                                    isChecked={allChecked}
+                                    isChecked={allChecked && users.length > 0}
                                     isIndeterminate={isIndeterminate}
-                                    onChange={toogleAllCheckboxes} />
+                                    onChange={toogleAllCheckboxes}
+                                    isDisabled={users.length === 0 || loading} />
                             </Th>
                             <Th>{language === "es" ? "Indice" : "Index"}</Th>
                             <Th>{language === "es" ? "Nombre" : "Name"}</Th>
@@ -124,7 +142,13 @@ const UsersTable = ({ usersRequest }) => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {users.map((user, index) => (
+                        {loading && <Tr>
+                            <Td colSpan={7}>
+                                <CenterSpinner size="lg" />
+                            </Td>
+                        </Tr>}
+
+                        {!loading && users.map((user, index) => (
                             <Tr key={index}>
                                 <Td>
                                     <Checkbox size="lg"
