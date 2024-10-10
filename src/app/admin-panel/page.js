@@ -1,6 +1,7 @@
 "use client"
 //React imports
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -12,27 +13,79 @@ import {
 //Components imports
 import Header from '../components/shared/Header'
 import TableTabs from "../components/admin-panel/TableTabs";
+import LoadingPage from "../components/shared/LoadingPage";
+import SimpleModal from "../components/shared/SimpleModal";
 
 //Context imports
 import { UIContext } from "../context/UIContext";
+import { AuthContext } from "../context/AuthContext";
 
 export default function AdminPanel() {
-  const { bg, language } = useContext(UIContext);
+  const router = useRouter();
+  const { bg, language, openSimpleModal, showModal, setShowModal, modalInfo, pageLoaded, setPageLoaded } = useContext(UIContext);
+  const { checkAuth } = useContext(AuthContext);
+
+  const callCheckAuth = async () => {
+    const response = await checkAuth();
+    if (!response?.ok) {
+      setPageLoaded(false);
+      handleResponse(response);
+      return false;
+    } else {
+      setPageLoaded(true);
+      return true;
+    }
+  }
+
+  const handleResponse = (response) => {
+    if (response?.message) {
+      openSimpleModal(
+        language === "es" ? 'Autenticación fallida' : 'Authentication failed',
+        language ? response.message[language] : response.message.en,
+        () => router.push('/')
+      )
+    } else {
+      openSimpleModal(
+        language === "es" ? 'Sesión expirada' : 'Session expired',
+        language === "es" ? 'La sesión ha expirado, por favor inicia sesión nuevamente' :
+          'Your session has expired, please log in again',
+        () => router.push('/')
+      );
+    }
+  }
+
+  useEffect(() => {
+    callCheckAuth();
+  }, []);
 
   return (
-    <Flex
-      w="100%"
-      h="100vh"
-      direction="column"
-      bg={bg} >
+    <>
+      {pageLoaded ?
+        <Flex
+          w="100%"
+          h="100vh"
+          direction="column"
+          bg={bg} >
 
-      <Header />
+          <Header />
 
-      <Box maxW="1250px" mx="auto" width="80%" p={3}>
-        <Heading mb="60px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>
+          <Box maxW="1400px" mx="auto" width="80%" p={3}>
+            <Heading mb="60px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>
 
-        <TableTabs />
-      </Box>
-    </Flex>
+            <TableTabs callCheckAuth={callCheckAuth} />
+          </Box>
+        </Flex>
+        :
+        <LoadingPage />
+      }
+
+      <SimpleModal
+        title={modalInfo.title}
+        message={modalInfo.message}
+        showModal={showModal}
+        setShowModal={setShowModal}
+        closeCallback={modalInfo.closeCallback} />
+    </>
+
   );
 }

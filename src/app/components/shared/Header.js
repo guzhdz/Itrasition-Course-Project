@@ -1,5 +1,5 @@
 //React imports
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -13,13 +13,12 @@ import {
     Button,
     useColorMode,
     Show,
-    Flex
+    Flex,
 } from "@chakra-ui/react";
 import { SearchIcon, SunIcon, MoonIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 //Components imports
 import Logo from "./Logo";
-import SimpleModal from "./SimpleModal";
 import MenuComponent from "./header/MenuComponent";
 import DrawerComponent from "./header/DrawerComponent";
 
@@ -30,10 +29,8 @@ import { AuthContext } from "../../context/AuthContext";
 const Header = () => {
     const router = useRouter();
     const { colorMode, toggleColorMode } = useColorMode();
-    const { greenColor, language, changeLanguage } = useContext(UIContext);
-    const { checkAuth, user, resetAuth } = useContext(AuthContext);
-    const [showModal, setShowModal] = useState(false);
-    const [modalInfo, setModalInfo] = useState({ title: '', message: '' });
+    const { greenColor, language, changeLanguage, setPageLoaded } = useContext(UIContext);
+    const { user, resetAuth } = useContext(AuthContext);
     const [showDrawer, setShowDrawer] = useState(false);
 
     const toggleColor = () => {
@@ -41,6 +38,7 @@ const Header = () => {
     }
 
     const goTo = (path) => {
+        setPageLoaded(false);
         router.push(path);
     }
 
@@ -48,38 +46,19 @@ const Header = () => {
         goTo(`/authentication?form=${form}`);
     }
 
-    const callCheckAuth = async () => {
-        const response = await checkAuth();
-        if (!response.ok && response.message) {
-            openModal(
-                language === "es" ? 'Autenticación fallida' : 'Authentication failed',
-                language ? response.message[language] : response.message.en
-            )
-        }
-    }
-
-    const openModal = (title, message) => {
-        setModalInfo({ title, message });
-        setShowModal(true);
-    }
-
     const logout = async () => {
         resetAuth();
         goTo('/');
     }
 
-    useEffect(() => {
-        callCheckAuth();
-    }, []);
-
     return (
         <Flex
             w="100%"
-            py={5} px={8}
+            py={4} px={8}
             pos="sticky"
             top="0"
             align="center"
-            mb={4}
+            mb={3}
             zIndex={1000} >
 
             <Show above="lg">
@@ -90,7 +69,7 @@ const Header = () => {
                     icon={<HamburgerIcon />}
                     variant="ghost"
                     colorScheme="green"
-                    onClick={() => setShowDrawer(true)}     />
+                    onClick={() => setShowDrawer(true)} />
             </Show>
 
             <Flex direction="row" mx="auto" w={{ base: '80%', md: '60%' }}>
@@ -139,12 +118,6 @@ const Header = () => {
 
                 {user !== null && <MenuComponent logout={logout} goTo={goTo} />}
             </Show>
-
-            <SimpleModal
-                title={modalInfo.title}
-                message={modalInfo.message}
-                showModal={showModal}
-                setShowModal={setShowModal} />
             <DrawerComponent
                 setShowDrawer={setShowDrawer}
                 showDrawer={showDrawer}

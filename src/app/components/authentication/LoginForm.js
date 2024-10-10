@@ -27,7 +27,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
     const router = useRouter();
-    const { greenColor, language } = useContext(UIContext);
+    const { greenColor, language, setPageLoaded } = useContext(UIContext);
     const { saveId } = useContext(AuthContext);
     const {
         register,
@@ -42,6 +42,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
         if (response.ok) {
             const response2 = await saveId(response.data);
             if(response2.ok) {
+                setPageLoaded(false);
                 router.push("/");
             } else {
                 const messageError = language === "es" ? 

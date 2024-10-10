@@ -16,7 +16,7 @@ import UsersTable from "./UsersTable";
 //Context imports
 import { UIContext } from "../../context/UIContext";
 
-const TableTabs = () => {
+const TableTabs = ({ callCheckAuth }) => {
     const { language } = useContext(UIContext);
 
     return (
@@ -31,19 +31,19 @@ const TableTabs = () => {
 
             <TabPanels>
                 <TabPanel>
-                    <UsersTable usersRequest="getUsers" />
+                    <UsersTable usersRequest="getUsers" callCheckAuth={callCheckAuth} />
                 </TabPanel>
                 <TabPanel>
-                    <UsersTable usersRequest="getActiveUsers" />
+                    <UsersTable usersRequest="getActiveUsers" callCheckAuth={callCheckAuth} />
                 </TabPanel>
                 <TabPanel>
-                    <UsersTable usersRequest="getBlockedUsers" />
+                    <UsersTable usersRequest="getBlockedUsers" callCheckAuth={callCheckAuth} />
                 </TabPanel>
                 <TabPanel>
-                    <UsersTable usersRequest="getAdminUsers" />
+                    <UsersTable usersRequest="getAdminUsers" callCheckAuth={callCheckAuth} />
                 </TabPanel>
                 <TabPanel>
-                    <UsersTable usersRequest="getNormalUsers" />
+                    <UsersTable usersRequest="getNormalUsers" callCheckAuth={callCheckAuth} />
                 </TabPanel>
             </TabPanels>
         </Tabs>

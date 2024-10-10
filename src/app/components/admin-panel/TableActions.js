@@ -16,7 +16,7 @@ import { UIContext } from "../../context/UIContext";
 //Component imports
 import ConfirmModal from "../shared/ConfirmModal";
 
-const TableActions = ({ isOpen, deleteSelected, updateSelected }) => {
+const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth }) => {
     const { language } = useContext(UIContext);
     const [showModal, setShowModal] = useState(false);
     const [confirmModalInfo, setConfirmModalInfo] = useState({
@@ -25,57 +25,60 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected }) => {
         confirmCallback: () => { },
     });
 
-    const openModal = (mode) => {
+    const selectModalMode = (mode) => {
+        let title = '', message = '', confirmCallback = () => { };
         switch (mode) {
             case 0:
-                setConfirmModalInfo({
-                    title: language === "es" ? "Confirmar bloqueo" : "Confirm block",
-                    message: language === "es" ? "¿Esta seguro de que desea bloquear los usuarios seleccionados?"
-                        : "Are you sure you want to block the selected users?",
-                    confirmCallback: () => updateSelected("status", false),
-                });
-                setShowModal(true);
+                title = language === "es" ? "Confirmar bloqueo" : "Confirm block";
+                message = language === "es" ? "¿Esta seguro de que desea bloquear los usuarios seleccionados?"
+                    : "Are you sure you want to block the selected users?";
+                confirmCallback = () => updateSelected("status", false);
+                openModal(title, message, confirmCallback);
                 break;
 
             case 1:
-                setConfirmModalInfo({
-                    title: language === "es" ? "Confirmar desbloqueo" : "Confirm unblock",
-                    message: language === "es" ? "¿Esta seguro de que desea desbloquear los usuarios seleccionados?"
-                        : "Are you sure you want to unblock the selected users?",
-                    confirmCallback: () => updateSelected("status", true),
-                });
-                setShowModal(true);
+                title = language === "es" ? "Confirmar desbloqueo" : "Confirm unblock";
+                message = language === "es" ? "¿Esta seguro de que desea desbloquear los usuarios seleccionados?"
+                : "Are you sure you want to unblock the selected users?";
+                confirmCallback = () => updateSelected("status", true);
+                openModal(title, message, confirmCallback);
                 break;
 
             case 2:
-                setConfirmModalInfo({
-                    title: language === "es" ? "Confirmar eliminación" : "Confirm delete",
-                    message: language === "es" ? "¿Esta seguro de que desea eliminar los usuarios seleccionados?"
-                        : "Are you sure you want to delete the selected users?",
-                    confirmCallback: () => deleteSelected,
-                });
-                setShowModal(true);
+                title = language === "es" ? "Confirmar eliminación" : "Confirm delete";
+                message = language === "es" ? "¿Esta seguro de que desea eliminar los usuarios seleccionados?"
+                        : "Are you sure you want to delete the selected users?";
+                confirmCallback = () => deleteSelected;
+                openModal(title, message, confirmCallback);
                 break;
 
             case 3:
-                setConfirmModalInfo({
-                    title: language === "es" ? "Confirmar hacer admin" : "Confirm add to admins",
-                    message: language === "es" ? "¿Esta seguro de que desea hacer admin a los usuarios seleccionados?"
-                        : "Are you sure you want to add to admins the selected users?",
-                    confirmCallback: () => updateSelected("is_admin", true),
-                });
-                setShowModal(true);
+                title = language === "es" ? "Confirmar hacer admin" : "Confirm add to admins";
+                message = language === "es" ? "¿Esta seguro de que desea hacer admin a los usuarios seleccionados?"
+                : "Are you sure you want to add to admins the selected users?";
+                confirmCallback = () => updateSelected("is_admin", true);
+                openModal(title, message, confirmCallback);
                 break;
 
             case 4:
-                setConfirmModalInfo({
-                    title: language === "es" ? "Confirmar quitar admin" : "Confirm remove from admins",
-                    message: language === "es" ? "¿Esta seguro de que desea quitar el admin a los usuarios seleccionados?"
-                        : "Are you sure you want to remove from admins the selected users?",
-                    confirmCallback: () => updateSelected("is_admin", false),
-                });
-                setShowModal(true);
+                title = language === "es" ? "Confirmar quitar admin" : "Confirm remove from admins";
+                message = language === "es" ? "¿Esta seguro de que desea quitar el admin a los usuarios seleccionados?"
+                : "Are you sure you want to remove from admins the selected users?";
+                confirmCallback = () => updateSelected("is_admin", false);
+                openModal(title, message, confirmCallback);
                 break;
+        }
+    }
+
+    const openModal = async (title, message, confirmCallback) => {
+        const isAuth = await callCheckAuth();
+        if (isAuth) {
+            setConfirmModalInfo({
+                title,
+                message,
+                confirmCallback
+            });
+            setShowModal(true);
         }
     }
 
@@ -87,21 +90,21 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected }) => {
                         icon={<LockIcon />}
                         colorScheme="red"
                         variant="ghost"
-                        onClick={() => openModal(0)} />
+                        onClick={() => selectModalMode(0)} />
                     <IconButton
                         icon={<UnlockIcon />}
                         colorScheme="teal"
                         variant="ghost"
-                        onClick={() => openModal(1)} />
+                        onClick={() => selectModalMode(1)} />
                     <IconButton
                         icon={<DeleteIcon />}
                         colorScheme="gray"
                         variant="ghost"
-                        onClick={() => openModal(2)} />
-                    <Button colorScheme="green" onClick={() => openModal(3)}>
+                        onClick={() => selectModalMode(2)} />
+                    <Button colorScheme="green" onClick={() => selectModalMode(3)}>
                         {language === "es" ? "Hacer admin" : "Add to admins"}
                     </Button>
-                    <Button colorScheme="green" variant={"outline"} onClick={() => openModal(4)}>
+                    <Button colorScheme="green" variant={"outline"} onClick={() => selectModalMode(4)}>
                         {language === "es" ? "Quitar admin" : "Remove from admins"}
                     </Button>
                 </Flex>

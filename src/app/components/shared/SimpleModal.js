@@ -1,5 +1,5 @@
 //Chakra imports
-import { 
+import {
     Modal,
     ModalOverlay,
     ModalContent,
@@ -11,10 +11,15 @@ import {
 } from "@chakra-ui/react";
 
 
-const SimpleModal = ({closeOnOverlay = true, showModal, setShowModal, title, message}) => {
+const SimpleModal = ({ closeOnOverlay = true, showModal, setShowModal, title, message, closeCallback = () => {} }) => {
 
     return (
-        <Modal closeOnOverlayClick={closeOnOverlay} isOpen={showModal} isCentered onClose={() => setShowModal(false)}>
+        <Modal
+            closeOnOverlayClick={closeOnOverlay}
+            isOpen={showModal}
+            isCentered
+            onClose={() => setShowModal(false)}
+            onCloseComplete={closeCallback}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>{title}</ModalHeader>

@@ -16,6 +16,7 @@ import {
     Flex,
     Checkbox,
     Box,
+    Skeleton,
 } from "@chakra-ui/react";
 
 //Components imports
@@ -32,7 +33,7 @@ import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 //Context imports
 import { UIContext } from "../../context/UIContext";
 
-const UsersTable = ({ usersRequest }) => {
+const UsersTable = ({ usersRequest, callCheckAuth }) => {
     const { language, greenColor, redColor } = useContext(UIContext);
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
@@ -44,18 +45,22 @@ const UsersTable = ({ usersRequest }) => {
         message: "",
     });
     const [loading, setLoading] = useState(false);
+    const skeletons = Array(8).fill(null);
 
     const loadUsers = async () => {
         setLoading(true);
-        const response = await getUsers(usersRequest);
-        if (response.ok) {
-            setUsers(response.data);
-            setCheckedUsers(new Array(response.data.length).fill(false));
-        } else {
-            openModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
-                language === "es" ? response.message[language] : response.message.en);
+        const isAuth = await callCheckAuth();
+        if (isAuth) {
+            const response = await getUsers(usersRequest);
+            if (response.ok) {
+                setUsers(response.data);
+                setCheckedUsers(new Array(response.data.length).fill(false));
+            } else {
+                openModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
+                    language === "es" ? response.message[language] : response.message.en);
+            }
+            setTimeout(() => setLoading(false), 500);
         }
-        setLoading(false);
     };
 
     const toogleCheckbox = (index) => {
@@ -119,11 +124,12 @@ const UsersTable = ({ usersRequest }) => {
             <TableActions
                 isOpen={(allChecked && users.length > 0) || isIndeterminate}
                 deleteSelected={deleteSelectedUsers}
-                updateSelected={updateSelectedUsers} />
+                updateSelected={updateSelectedUsers}
+                callCheckAuth={callCheckAuth} />
             <TableContainer>
                 <Table variant='striped'>
                     {users.length > 0 && <TableCaption>{language === "es" ? "Usuarios" : "Users"}</TableCaption>}
-                    {users.length === 0 && !loading && <TableCaption>{language === "es" ? "No hay usuarios" : "No users"}</TableCaption>}
+                    {users.length === 0 && !loading && <TableCaption>{language === "es" ? "No hay usuarios aqui" : "No users here"}</TableCaption>}
                     <Thead>
                         <Tr>
                             <Th>
@@ -142,39 +148,42 @@ const UsersTable = ({ usersRequest }) => {
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {loading && <Tr>
-                            <Td colSpan={7}>
-                                <CenterSpinner size="lg" />
-                            </Td>
-                        </Tr>}
-
-                        {!loading && users.map((user, index) => (
-                            <Tr key={index}>
-                                <Td>
-                                    <Checkbox size="lg"
-                                        isChecked={checkedUsers[index]}
-                                        onChange={() => toogleCheckbox(index)} />
-                                </Td>
-                                <Td>{index + 1}</Td>
-                                <Td>{user.name}</Td>
-                                <Td>{user.email}</Td>
-                                <Td>
-                                    <Badge colorScheme={user.status ? 'green' : 'red'}>
-                                        {user.status ? language === "es" ? 'Activo' : 'Active'
-                                            : language === "es" ? 'Bloqueado' : 'Blocked'}
-                                    </Badge>
-                                </Td>
-                                <Td>
-                                    <Flex align="center" gap={1}>
-                                        <Icon
-                                            as={user.is_admin ? FiCheckSquare : FiXSquare}
-                                            color={user.is_admin ? greenColor : redColor} />
-                                        {user.is_admin ? language === "es" ? 'Admin' : 'Admin' : language === "es" ? 'No admin' : 'Not admin'}
-                                    </Flex>
-                                </Td>
-                                <Td>{new Date(user.register_time).toLocaleString()}</Td>
-                            </Tr>
-                        ))}
+                        {loading ?
+                            skeletons.map((_, index) => (
+                                <Tr key={index}>
+                                    <Td colSpan={7}>
+                                        <Skeleton isLoaded={!loading} height="20px" />
+                                    </Td>
+                                </Tr>
+                            ))
+                            :
+                            users.map((user, index) => (
+                                <Tr key={index}>
+                                    <Td>
+                                        <Checkbox size="lg"
+                                            isChecked={checkedUsers[index]}
+                                            onChange={() => toogleCheckbox(index)} />
+                                    </Td>
+                                    <Td>{index + 1}</Td>
+                                    <Td>{user.name}</Td>
+                                    <Td>{user.email}</Td>
+                                    <Td>
+                                        <Badge colorScheme={user.status ? 'green' : 'red'}>
+                                            {user.status ? language === "es" ? 'Activo' : 'Active'
+                                                : language === "es" ? 'Bloqueado' : 'Blocked'}
+                                        </Badge>
+                                    </Td>
+                                    <Td>
+                                        <Flex align="center" gap={1}>
+                                            <Icon
+                                                as={user.is_admin ? FiCheckSquare : FiXSquare}
+                                                color={user.is_admin ? greenColor : redColor} />
+                                            {user.is_admin ? language === "es" ? 'Admin' : 'Admin' : language === "es" ? 'No admin' : 'Not admin'}
+                                        </Flex>
+                                    </Td>
+                                    <Td>{new Date(user.register_time).toLocaleString()}</Td>
+                                </Tr>
+                            ))}
                     </Tbody>
                 </Table>
             </TableContainer>
