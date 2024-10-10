@@ -36,8 +36,12 @@ export default function Main() {
       setPageLoaded(true);
   }
 
+  const initializePage = async() => {
+    await callCheckAuth();
+  }
+
   useEffect(() => {
-    callCheckAuth();
+    initializePage();
   }, []);
 
 
@@ -50,7 +54,7 @@ export default function Main() {
           direction="column"
           bg={bg} >
 
-          <Header />
+          <Header initializePage={initializePage}/>
         </Flex>
         :
         <LoadingPage />

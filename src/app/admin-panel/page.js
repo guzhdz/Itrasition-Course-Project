@@ -1,6 +1,6 @@
 "use client"
 //React imports
-import { useContext, useState, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -23,7 +23,7 @@ import { AuthContext } from "../context/AuthContext";
 export default function AdminPanel() {
   const router = useRouter();
   const { bg, language, openSimpleModal, showModal, setShowModal, modalInfo, pageLoaded, setPageLoaded } = useContext(UIContext);
-  const { checkAuth } = useContext(AuthContext);
+  const { checkAuth, user } = useContext(AuthContext);
 
   const callCheckAuth = async () => {
     const response = await checkAuth();
@@ -32,8 +32,12 @@ export default function AdminPanel() {
       handleResponse(response);
       return false;
     } else {
-      setPageLoaded(true);
-      return true;
+      if(response?.data?.is_admin) {
+        setPageLoaded(true);
+        return true;
+      } else {
+        router.push('/');
+      }
     }
   }
 
@@ -54,8 +58,12 @@ export default function AdminPanel() {
     }
   }
 
+  const initializePage = async() => {
+    await callCheckAuth();
+  };
+
   useEffect(() => {
-    callCheckAuth();
+    initializePage();
   }, []);
 
   return (
@@ -67,7 +75,7 @@ export default function AdminPanel() {
           direction="column"
           bg={bg} >
 
-          <Header />
+          <Header initializePage={initializePage} />
 
           <Box maxW="1400px" mx="auto" width="80%" p={3}>
             <Heading mb="60px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>

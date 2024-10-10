@@ -42,7 +42,7 @@ const AuthProvider = ({ children }) => {
             if (userResponse.ok) {
                 if (userResponse.data.status) {
                     setUser(userResponse.data);
-                    return { ok: true };
+                    return { ok: true, data: userResponse.data };
                 } else {
                     await resetAuth();
                     return { ok: false, message: { 

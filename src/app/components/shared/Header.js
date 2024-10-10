@@ -1,6 +1,6 @@
 //React imports
 import { useContext, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 //Chakra imports
 import {
@@ -26,8 +26,9 @@ import DrawerComponent from "./header/DrawerComponent";
 import { UIContext } from "../../context/UIContext";
 import { AuthContext } from "../../context/AuthContext";
 
-const Header = () => {
+const Header = ({initializePage}) => {
     const router = useRouter();
+    const pathname = usePathname();
     const { colorMode, toggleColorMode } = useColorMode();
     const { greenColor, language, changeLanguage, setPageLoaded } = useContext(UIContext);
     const { user, resetAuth } = useContext(AuthContext);
@@ -39,7 +40,11 @@ const Header = () => {
 
     const goTo = (path) => {
         setPageLoaded(false);
-        router.push(path);
+        if(pathname === path) {
+            initializePage();
+        }
+        else
+            router.push(path);
     }
 
     const goToLogin = (form) => {
@@ -47,7 +52,7 @@ const Header = () => {
     }
 
     const logout = async () => {
-        resetAuth();
+        await resetAuth();
         goTo('/');
     }
 
