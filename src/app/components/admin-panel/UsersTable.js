@@ -20,9 +20,7 @@ import {
 } from "@chakra-ui/react";
 
 //Components imports
-import SimpleModal from "../shared/SimpleModal";
 import TableActions from "./TableActions";
-import CenterSpinner from "../shared/CenterSpinner";
 
 //Services imports
 import { getUsers, deleteUsers, updateUsers } from "../../services/userService";
@@ -34,16 +32,11 @@ import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 import { UIContext } from "../../context/UIContext";
 
 const UsersTable = ({ usersRequest, callCheckAuth }) => {
-    const { language, greenColor, redColor } = useContext(UIContext);
+    const { language, greenColor, redColor, openSimpleModal } = useContext(UIContext);
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
     const allChecked = checkedUsers.every(Boolean);
     const isIndeterminate = checkedUsers.some(Boolean) && !allChecked
-    const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState({
-        title: "",
-        message: "",
-    });
     const [loading, setLoading] = useState(false);
     const skeletons = Array(8).fill(null);
 
@@ -56,7 +49,7 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
                 setUsers(response.data);
                 setCheckedUsers(new Array(response.data.length).fill(false));
             } else {
-                openModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
+                openSimpleModal(language === "es" ? "Error al cargar los usuarios" : "Error at loading users",
                     language === "es" ? response.message[language] : response.message.en);
             }
             setTimeout(() => setLoading(false), 500);
@@ -89,7 +82,7 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
         if (response.ok) {
             await loadUsers();
         } else {
-            openModal(language === "es" ? "Error al eliminar los usuarios" : "Error at deleting users",
+            openSimpleModal(language === "es" ? "Error al eliminar los usuarios" : "Error at deleting users",
                 language === "es" ? response.message[language] : response.message.en);
         }
         setLoading(false);
@@ -104,17 +97,12 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
         if (response.ok) {
             await loadUsers();
         } else {
-            openModal(language === "es" ? "Error al actualizar los usuarios" : "Error at updating users",
+            openSimpleModal(language === "es" ? "Error al actualizar los usuarios" : "Error at updating users",
                 language === "es" ? response.message[language] : response.message.en);
         }
         setLoading(false);
     }
-
-    const openModal = (title, message) => {
-        setModalData({ title, message });
-        setShowModal(true);
-    }
-
+    
     useEffect(() => {
         loadUsers();
     }, []);
@@ -187,12 +175,6 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <SimpleModal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                title={modalData.title}
-                message={modalData.message}
-            />
         </Box>
     )
 }

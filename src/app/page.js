@@ -12,7 +12,6 @@ import {
 //Components import
 import Header from './components/shared/Header'
 import LoadingPage from './components/shared/LoadingPage'
-import SimpleModal from './components/shared/SimpleModal'
 
 //Context imports
 import { UIContext } from "./context/UIContext";
@@ -20,11 +19,14 @@ import { AuthContext } from "./context/AuthContext";
 
 export default function Main() {
   const router = useRouter();
-  const { bg, language, openSimpleModal, showModal, setShowModal, modalInfo, pageLoaded, setPageLoaded } = useContext(UIContext);
+  const { bg, language, openSimpleModal, pageLoaded, setPageLoaded } = useContext(UIContext);
   const { checkAuth } = useContext(AuthContext);
 
   const callCheckAuth = async () => {
-    const response = await checkAuth();
+    return await checkAuth();
+  }
+
+  const handleResponse = (response) => {
     if (!response?.ok && response?.message) {
       setPageLoaded(false);
       openSimpleModal(
@@ -32,12 +34,14 @@ export default function Main() {
         language ? response.message[language] : response.message.en,
         () => router.push('/')
       );
+      setPageLoaded(true);
     } else 
       setPageLoaded(true);
   }
 
   const initializePage = async() => {
-    await callCheckAuth();
+    const response = await callCheckAuth();
+    return handleResponse(response);
   }
 
   useEffect(() => {
@@ -59,12 +63,6 @@ export default function Main() {
         :
         <LoadingPage />
       }
-
-      <SimpleModal
-        title={modalInfo.title}
-        message={modalInfo.message}
-        showModal={showModal}
-        setShowModal={setShowModal} />
     </>
 
   );

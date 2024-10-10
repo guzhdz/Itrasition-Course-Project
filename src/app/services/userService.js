@@ -19,12 +19,7 @@ export const getUser = async (userId) => {
                 return { ok: true, data: data };
         }
     } catch (error) {
-        messageError = {
-            en: "Something went wrong. Please try again later.",
-            es: "Algo salio mal. Por favor, intentalo de nuevo."
-        };
-        console.error('Error in the request:', error);
-        return { ok: false, message: messageError };
+        return getGeneralError(error);
     }
 }
 
@@ -53,13 +48,7 @@ export const insertUser = async ({ email, name, password }) => {
             return { ok: true };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return {
-            ok: false, message: {
-                en: 'Something went wrong. Please try again later.',
-                es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-            }
-        };
+        return getGeneralError(error);
     }
 }
 
@@ -75,13 +64,7 @@ export const getUsers = async (action) => {
             return { ok: true, data: data };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return {
-            ok: false, message: {
-                en: 'Something went wrong. Please try again later.',
-                es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-            }
-        };
+        return getGeneralError(error);
     }
 }
 
@@ -103,13 +86,7 @@ export const deleteUsers = async (ids) => {
             return { ok: false, message: data.error };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return {
-            ok: false, message: {
-                en: 'Something went wrong. Please try again later.',
-                es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-            }
-        };
+        return getGeneralError(error);
     }
 }
 
@@ -131,10 +108,17 @@ export const updateUsers = async (users) => {
             return {ok: true, data: data.data};
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return {ok: false, message: {
-            en: 'Something went wrong. Please try again later.',
-            es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-        }};
+        return getGeneralError(error);
     }
+}
+
+const getGeneralError = (error) => {
+    const message = {
+        en: 'Something went wrong. Please try again later.',
+        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+    }
+    console.error('Error in the request:', error);
+    return {
+        ok: false, message: message
+    };
 }

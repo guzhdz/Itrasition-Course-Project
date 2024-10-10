@@ -6,6 +6,9 @@ import { createContext, useState, useEffect } from "react";
 //Chakra imports
 import { useColorModeValue } from "@chakra-ui/react";
 
+//Components imports
+import SimpleModal from "../components/shared/SimpleModal";
+
 const UIContext = createContext();
 
 const UIProvider = ({ children }) => {
@@ -15,9 +18,14 @@ const UIProvider = ({ children }) => {
     const textGreenScheme = useColorModeValue("white", "gray.800");
     const [language, setLanguage] = useState('en');
     const [showModal, setShowModal] = useState(false);
-    const [modalInfo, setModalInfo] = useState({ title: '', message: '', closeCallback: () => {} });
+    const [modalOptions, setModalOptions] = useState({ 
+        title: '', 
+        message: '', 
+        closeCallback: () => { },
+        closeOnOverlay: true
+     });
     const [pageLoaded, setPageLoaded] = useState(false);
-    
+
 
     useEffect(() => {
         const storedLanguage = localStorage.getItem("language");
@@ -34,29 +42,38 @@ const UIProvider = ({ children }) => {
         localStorage.setItem("language", value);
     }
 
-    const openSimpleModal = (title, message, closeCallback = () => {}) => {
-        setModalInfo({ title, message, closeCallback });
+    const openSimpleModal = (title, message, closeCallback = () => { }) => {
+        setModalOptions({ title, message, closeCallback });
         setShowModal(true);
-      }
+    }
 
     return (
-        <UIContext.Provider value={{ 
-            bg, 
-            greenColor, 
-            language, 
+        <UIContext.Provider value={{
+            bg,
+            greenColor,
+            language,
             setLanguage,
-             textGreenScheme, 
-             redColor, 
-             changeLanguage,
-             showModal,
-             setShowModal,
-             modalInfo,
-             openSimpleModal,
-             pageLoaded,
-             setPageLoaded }}>
+            textGreenScheme,
+            redColor,
+            changeLanguage,
+            showModal,
+            setShowModal,
+            modalOptions,
+            openSimpleModal,
+            pageLoaded,
+            setPageLoaded
+        }}>
             {children}
+
+            <SimpleModal
+                closeOnOverlay={modalOptions?.closeOnOverlay || true}
+                title={modalOptions.title}
+                message={modalOptions.message}
+                showModal={showModal}
+                setShowModal={setShowModal}
+                closeCallback={modalOptions.closeCallback || (() => { })} />
         </UIContext.Provider>
     );
 }
 
-export {UIContext, UIProvider}
+export { UIContext, UIProvider }

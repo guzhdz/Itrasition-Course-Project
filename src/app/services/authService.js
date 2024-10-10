@@ -7,16 +7,22 @@ export const authUser = async (form) => {
         const response = await fetch(url.toString());
         const data = await response.json();
         if (response.status != 200) {
-            return {ok: false, message: data.error};
+            return { ok: false, message: data.error };
         } else {
-            return {ok: true, data: data};
+            return { ok: true, data: data };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return {ok: false, message: 
-            {
-                en: 'Something went wrong. Please try again later.',
-                es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-            } };
+        return getGeneralError(error);
     }
+}
+
+const getGeneralError = (error) => {
+    const message = {
+        en: 'Something went wrong. Please try again later.',
+        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+    }
+    console.error('Error in the request:', error);
+    return {
+        ok: false, message: message
+    };
 }

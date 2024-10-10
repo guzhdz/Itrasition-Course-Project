@@ -16,8 +16,7 @@ export const saveCookie = async (name, value, time = 3600) => {
             return { ok: false, message: data.error };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return false;
+        return getFalseError(error);
     }
 }
 
@@ -33,8 +32,7 @@ export const deleteCookie = async (name) => {
         const data = await response.json();
         return data.status;
     } catch (error) {
-        console.error('Error in the request:', error);
-        return false;
+        return getFalseError(error);
     }
 };
 
@@ -50,10 +48,22 @@ export const getCookie = async (name) => {
             return { ok: true, data: data };
         }
     } catch (error) {
-        console.error('Error in the request:', error);
-        return { ok: false, message: {
-            en: 'Something went wrong. Please try again later.',
-            es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-        }};
+        return getGeneralError(error);
     }
 };
+
+const getGeneralError = (error) => {
+    const message = {
+        en: 'Something went wrong. Please try again later.',
+        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
+    }
+    console.error('Error in the request:', error);
+    return {
+        ok: false, message: message
+    };
+}
+
+const getFalseError = (error) => {
+    console.error('Error in the request:', error);
+    return false;
+}

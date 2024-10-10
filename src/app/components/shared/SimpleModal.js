@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 
-const SimpleModal = ({ closeOnOverlay = true, showModal, setShowModal, title, message, closeCallback = () => {} }) => {
+const SimpleModal = ({ closeOnOverlay, showModal, setShowModal, title, message, closeCallback }) => {
 
     return (
         <Modal
