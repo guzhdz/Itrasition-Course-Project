@@ -78,7 +78,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                         <Divider />
 
                         <DrawerItem
-                            action={() => setShowDrawer(false)}
+                            action={() => goTo('/main')}
                             icon={IoHome}
                             text={language === "es" ? "Inicio" : "Home"} />
                         <Divider />

@@ -26,7 +26,7 @@ import DrawerComponent from "./header/DrawerComponent";
 import { UIContext } from "../../context/UIContext";
 import { AuthContext } from "../../context/AuthContext";
 
-const Header = ({initializePage}) => {
+const Header = ({checkAuth, refreshPage}) => {
     const router = useRouter();
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useColorMode();
@@ -38,22 +38,27 @@ const Header = ({initializePage}) => {
         toggleColorMode();
     }
 
-    const goTo = (path) => {
+    const goTo = async (path) => {
         setPageLoaded(false);
-        if(pathname === path) {
-            initializePage();
+        const isAuth = await checkAuth();
+        if(!isAuth) {
+            return;
         }
-        else
-            router.push(path);
+        if(pathname === path) {
+            refreshPage();
+        }
+        router.push(path);
     }
 
     const goToLogin = (form) => {
-        goTo(`/authentication?form=${form}`);
+        setPageLoaded(false);
+        router.push(`/authentication?form=${form}`);
     }
 
     const logout = async () => {
+        setPageLoaded(false);
         await resetAuth();
-        goTo('/');
+        router.push('/');
     }
 
     return (

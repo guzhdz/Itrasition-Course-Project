@@ -16,7 +16,7 @@ import { UIContext } from "../../context/UIContext";
 //Component imports
 import ConfirmModal from "../shared/ConfirmModal";
 
-const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth }) => {
+const TableActions = ({ isOpen, deleteSelected, updateSelected, checkAuth }) => {
     const { language } = useContext(UIContext);
     const [showModal, setShowModal] = useState(false);
     const [confirmModalInfo, setConfirmModalInfo] = useState({
@@ -39,7 +39,7 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth })
             case 1:
                 title = language === "es" ? "Confirmar desbloqueo" : "Confirm unblock";
                 message = language === "es" ? "¿Esta seguro de que desea desbloquear los usuarios seleccionados?"
-                : "Are you sure you want to unblock the selected users?";
+                    : "Are you sure you want to unblock the selected users?";
                 confirmCallback = () => updateSelected("status", true);
                 openModal(title, message, confirmCallback);
                 break;
@@ -47,15 +47,15 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth })
             case 2:
                 title = language === "es" ? "Confirmar eliminación" : "Confirm delete";
                 message = language === "es" ? "¿Esta seguro de que desea eliminar los usuarios seleccionados?"
-                        : "Are you sure you want to delete the selected users?";
-                confirmCallback = () => deleteSelected;
+                    : "Are you sure you want to delete the selected users?";
+                confirmCallback = deleteSelected;
                 openModal(title, message, confirmCallback);
                 break;
 
             case 3:
                 title = language === "es" ? "Confirmar hacer admin" : "Confirm add to admins";
                 message = language === "es" ? "¿Esta seguro de que desea hacer admin a los usuarios seleccionados?"
-                : "Are you sure you want to add to admins the selected users?";
+                    : "Are you sure you want to add to admins the selected users?";
                 confirmCallback = () => updateSelected("is_admin", true);
                 openModal(title, message, confirmCallback);
                 break;
@@ -63,7 +63,7 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth })
             case 4:
                 title = language === "es" ? "Confirmar quitar admin" : "Confirm remove from admins";
                 message = language === "es" ? "¿Esta seguro de que desea quitar el admin a los usuarios seleccionados?"
-                : "Are you sure you want to remove from admins the selected users?";
+                    : "Are you sure you want to remove from admins the selected users?";
                 confirmCallback = () => updateSelected("is_admin", false);
                 openModal(title, message, confirmCallback);
                 break;
@@ -71,7 +71,7 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected, callCheckAuth })
     }
 
     const openModal = async (title, message, confirmCallback) => {
-        const isAuth = await callCheckAuth();
+        const isAuth = await checkAuth(true);
         if (isAuth) {
             setConfirmModalInfo({
                 title,

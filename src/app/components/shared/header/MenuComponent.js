@@ -43,7 +43,7 @@ const MenuComponent = ({ logout, goTo }) => {
                 </MenuItem>
                 <MenuDivider />
 
-                <MenuItem icon={<IoHome />} onClick={() => goTo('/')}>
+                <MenuItem icon={<IoHome />} onClick={() => goTo('/main')}>
                     {language === "es" ? "Inicio" : "Home"}
                 </MenuItem>
                 

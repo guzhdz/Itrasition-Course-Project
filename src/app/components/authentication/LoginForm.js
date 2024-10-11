@@ -43,7 +43,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
             const response2 = await saveId(response.data);
             if(response2.ok) {
                 setPageLoaded(false);
-                router.push("/");
+                router.push("/main");
             } else {
                 const messageError = language === "es" ? 
                 "Algo salio mal. Por favor, intenta de nuevo." : "Something went wrong. Please try again later.";

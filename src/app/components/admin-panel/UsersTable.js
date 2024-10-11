@@ -31,8 +31,8 @@ import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 //Context imports
 import { UIContext } from "../../context/UIContext";
 
-const UsersTable = ({ usersRequest, callCheckAuth }) => {
-    const { language, greenColor, redColor, openSimpleModal } = useContext(UIContext);
+const UsersTable = ({ usersRequest, checkAuth }) => {
+    const { language, greenColor, redColor, openSimpleModal, setPageLoaded } = useContext(UIContext);
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
     const allChecked = checkedUsers.every(Boolean);
@@ -42,7 +42,7 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
 
     const loadUsers = async () => {
         setLoading(true);
-        const isAuth = await callCheckAuth();
+        const isAuth = await checkAuth(true);
         if (isAuth) {
             const response = await getUsers(usersRequest);
             if (response.ok) {
@@ -113,7 +113,7 @@ const UsersTable = ({ usersRequest, callCheckAuth }) => {
                 isOpen={(allChecked && users.length > 0) || isIndeterminate}
                 deleteSelected={deleteSelectedUsers}
                 updateSelected={updateSelectedUsers}
-                callCheckAuth={callCheckAuth} />
+                checkAuth={checkAuth} />
             <TableContainer>
                 <Table variant='striped'>
                     {users.length > 0 && <TableCaption>{language === "es" ? "Usuarios" : "Users"}</TableCaption>}
