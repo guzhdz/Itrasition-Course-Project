@@ -26,7 +26,7 @@ export default function AdminPanel() {
     bg, 
     language,
     openErrorAuthModal,
-    openSessionExpiredModal,
+    openExpiredSessionModal,
     openAccessDeniedModal,
     pageLoaded, 
     setPageLoaded
@@ -58,7 +58,7 @@ export default function AdminPanel() {
 
       case 3:
         setPageLoaded(false);
-        openSessionExpiredModal(() => router.push('/main'));
+        openExpiredSessionModal(() => router.push('/main'));
         return false
 
       case 4:

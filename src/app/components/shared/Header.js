@@ -22,6 +22,9 @@ import Logo from "./Logo";
 import MenuComponent from "./header/MenuComponent";
 import DrawerComponent from "./header/DrawerComponent";
 
+//Services imports
+import { getCookie } from "../../services/cookiesService";
+
 //Context imports
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
@@ -30,7 +33,7 @@ const Header = ({ refreshPage }) => {
     const router = useRouter();
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useColorMode();
-    const { greenColor, language, changeLanguage, setPageLoaded } = useUI();
+    const { greenColor, language, changeLanguage, setPageLoaded, openExpiredSessionModal } = useUI();
     const { user, resetAuth } = useAuth();
     const [showDrawer, setShowDrawer] = useState(false);
 
@@ -40,21 +43,26 @@ const Header = ({ refreshPage }) => {
 
     const goTo = async (path) => {
         setPageLoaded(false);
-        if(pathname === path) {
-            refreshPage();
+        const response = await getCookie('authToken');
+        if(!response.ok) {
+            openExpiredSessionModal(() => router.push('/'));
+        } else {
+            if(pathname === path) {
+                refreshPage();
+            }
+            router.push(path);
         }
-        router.push(path);
     }
 
     const goToLogin = (form) => {
         setPageLoaded(false);
-        goTo(`/authentication?form=${form}`);
+        router.push(`/authentication?form=${form}`);
     }
 
     const logout = async () => {
         setPageLoaded(false);
         await resetAuth();
-        goTo('/');
+        router.push('/');
     }
 
     return (

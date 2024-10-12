@@ -23,7 +23,7 @@ export default function Main() {
   const { 
     bg, 
     openErrorAuthModal,
-    openSessionExpiredModal,
+    openExpiredSessionModal,
     pageLoaded, 
     setPageLoaded } = useUI();
   const { checkAuth } = useAuth();
@@ -56,7 +56,7 @@ export default function Main() {
 
       case 4:
         setPageLoaded(false);
-        openSessionExpiredModal(() => router.push('/'));
+        openExpiredSessionModal(() => router.push('/'));
         return false;
 
       default:
