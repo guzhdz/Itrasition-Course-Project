@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     Tabs,
@@ -14,10 +11,10 @@ import {
 import UsersTable from "./UsersTable";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 const TableTabs = ({ checkAuth }) => {
-    const { language } = useContext(UIContext);
+    const { language } = useUI();
 
     return (
         <Tabs colorScheme="green" isLazy>

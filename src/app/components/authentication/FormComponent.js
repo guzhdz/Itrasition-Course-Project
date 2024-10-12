@@ -1,5 +1,5 @@
-//React imports
-import { useState, useEffect, useContext } from "react";
+//React/Next imports
+import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 //Chakra imports
@@ -19,11 +19,12 @@ import RegisterForm from "./RegisterForm";
 import CenterSpinner from "../shared/CenterSpinner";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 const FormComponent = () => {
     const searchParams = useSearchParams();
     const form = searchParams.get("form");
+    const { language } = useUI();
     const formsTexts = [
         {
             title: "Log In",
@@ -43,14 +44,13 @@ const FormComponent = () => {
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showForm, setShowForm] = useState(true);
-    const { language } = useContext(UIContext);
 
     const toogleForm = () => {
         setShowForm(false);
+        setErrorMessage("");
+        setShowPassword(false);
         setTimeout(() => {
             setFormType(formType === 0 ? 1 : 0);
-            setErrorMessage("");
-            setShowPassword(false);
             setShowForm(true);
         }, 500);
     };
@@ -60,9 +60,7 @@ const FormComponent = () => {
     };
 
     useEffect(() => {
-        if (form) {
-            setFormType(form === "signup" ? 1 : 0);
-        }
+        form && setFormType(form === "signup" ? 1 : 0);
     }, []);
 
     return (

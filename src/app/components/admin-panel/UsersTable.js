@@ -1,5 +1,5 @@
-//React imports
-import { useContext, useEffect, useState } from "react";
+//React/Next imports
+import { useEffect, useState } from "react";
 
 //Chakra imports
 import {
@@ -29,10 +29,10 @@ import { getUsers, deleteUsers, updateUsers } from "../../services/userService";
 import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 const UsersTable = ({ usersRequest, checkAuth }) => {
-    const { language, greenColor, redColor, openSimpleModal, setPageLoaded } = useContext(UIContext);
+    const { language, greenColor, redColor, openSimpleModal } = useUI();
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
     const allChecked = checkedUsers.every(Boolean);
@@ -42,7 +42,7 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
 
     const loadUsers = async () => {
         setLoading(true);
-        const isAuth = await checkAuth(true);
+        const isAuth = await checkAuth();
         if (isAuth) {
             const response = await getUsers(usersRequest);
             if (response.ok) {

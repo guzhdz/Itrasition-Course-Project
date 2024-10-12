@@ -1,6 +1,3 @@
-//React/Next imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     Spinner,
@@ -8,10 +5,10 @@ import {
 } from "@chakra-ui/react";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 export default function Main() {
-    const { bg } = useContext(UIContext);
+    const { bg } = useUI();
 
     return (
         <Flex

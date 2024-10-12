@@ -1,6 +1,7 @@
 "use client"
-//React imports
-import { useContext, useEffect } from "react";
+
+//React/Next imports
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -16,61 +17,72 @@ import TableTabs from "../components/admin-panel/TableTabs";
 import LoadingPage from "../components/shared/LoadingPage";
 
 //Context imports
-import { UIContext } from "../context/UIContext";
-import { AuthContext } from "../context/AuthContext";
+import { useUI } from "../context/UIContext";
+import { useAuth } from "../context/AuthContext";
 
 export default function AdminPanel() {
   const router = useRouter();
-  const { bg, language, openSimpleModal, pageLoaded, setPageLoaded } = useContext(UIContext);
-  const { checkAuth } = useContext(AuthContext);
+  const { 
+    bg, 
+    language,
+    openErrorAuthModal,
+    openSessionExpiredModal,
+    openAccessDeniedModal,
+    pageLoaded, 
+    setPageLoaded
+  } = useUI();
+  const { checkAuth } = useAuth();
 
-  const authenticate = async (chefForAdmin = false) => {
+  const authenticate = async () => {
     const response = await checkAuth();
     if (response.ok) {
-      if (chefForAdmin) {
-        return checkAdmin(response);
-      }
-      return true;
+      return checkAdmin(response);
     } else {
       if (response.message) {
-        setPageLoaded(false);
-        openSimpleModal(
-          language === "es" ? 'Autenticación fallida' : 'Authentication failed',
-          language ? response.message[language] : response.message.en,
-          () => router.push('/main')
-        );
+        return { case: 2, message: response.message };
       } else {
-        setPageLoaded(false);
-        openSimpleModal(
-          language === "es" ? 'Sesión expirada' : 'Session expired',
-          language === "es" ? 'La sesión ha expirado, por favor inicia sesión nuevamente' :
-            'Your session has expired, please log in again',
-          () => router.push('/main')
-        );
+        return { case: 3 };
       }
-      return false;
     }
   }
 
-  const initializePage = async () => {
-    const isAuth = await authenticate(true);
-    if (isAuth) {
-      setPageLoaded(true);
+  const handleAuthCase = (authCase) => {
+    switch (authCase.case) {
+      case 1:
+        return true;
+
+      case 2:
+        setPageLoaded(false);
+        openErrorAuthModal(authCase.message, () => router.push('/main'));
+        return false;
+
+      case 3:
+        setPageLoaded(false);
+        openSessionExpiredModal(() => router.push('/main'));
+        return false
+
+      case 4:
+        setPageLoaded(false);
+        openAccessDeniedModal(() => router.push('/main'));
+        return false;
+
+      default:
+        return true;
     }
   }
 
   const checkAdmin = (response) => {
     if (response?.data?.is_admin) {
-      return true;
+      return { case: 1 };
     } else {
-      setPageLoaded(false);
-      openSimpleModal(
-        language === "es" ? 'Acceso denegado' : 'Access denied',
-        language === "es" ? 'No eres parte de la administración' : 'You are not part of the administration',
-        () => router.push('/main')
-      );
-      return false;
+      return { case: 4 };
     }
+  }
+
+  const initializePage = async () => {
+    const authCase = await authenticate();
+    const isAuth = handleAuthCase(authCase);
+    isAuth && setPageLoaded(true);
   }
 
   useEffect(() => {
@@ -86,12 +98,15 @@ export default function AdminPanel() {
           direction="column"
           bg={bg} >
 
-          <Header checkAuth={authenticate} refreshPage={initializePage} />
+          <Header refreshPage={initializePage} />
 
           <Box maxW="1400px" mx="auto" width="80%" p={3}>
             <Heading mb="60px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>
 
-            <TableTabs checkAuth={authenticate} />
+            <TableTabs checkAuth={async () => {
+              const authCase = await authenticate();
+              return handleAuthCase(authCase);
+            }} />
           </Box>
         </Flex>
         :

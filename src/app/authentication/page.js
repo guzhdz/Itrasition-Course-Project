@@ -1,7 +1,7 @@
 "use client"
 
-//React imports
-import { useContext, Suspense, useState, useEffect } from "react";
+//React/Next imports
+import { Suspense, useEffect } from "react";
 
 //Chakra imports
 import {
@@ -18,10 +18,10 @@ import FormComponent from "../components/authentication/FormComponent";
 import LoadingPage from "../components/shared/LoadingPage";
 
 //Context imports
-import { UIContext } from "../context/UIContext";
+import { useUI } from "../context/UIContext";
 
 export default function Authentication() {
-    const { bg, pageLoaded, setPageLoaded } = useContext(UIContext);
+    const { bg, pageLoaded, setPageLoaded } = useUI();
 
     useEffect(() => {
         setPageLoaded(true);
@@ -38,6 +38,7 @@ export default function Authentication() {
                     bg={bg} >
                     <Card w="80%" h={750} p={0} >
                         <CardBody display="flex" flexDirection="row" p={0} >
+
                             <Show above="lg">
                                 <Box w="50%" h="100%">
                                     <Image
@@ -56,9 +57,11 @@ export default function Authentication() {
                                 justify="center"
                                 align="center"
                                 direction="column" >
+
                                 <Suspense>
                                     <FormComponent />
                                 </Suspense>
+                                
                             </Flex>
                         </CardBody>
                     </Card>

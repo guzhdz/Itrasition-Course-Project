@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     Flex,
@@ -8,12 +5,11 @@ import {
     Icon,
 } from "@chakra-ui/react";
 
-
 //Context imports
-import { UIContext } from "../../../context/UIContext";
+import { useUI } from "../../../context/UIContext";
 
 const DrawerComponent = ({ action, icon, text }) => {
-    const { greenColor } = useContext(UIContext);
+    const { greenColor } = useUI();
 
     return (
         <Flex 

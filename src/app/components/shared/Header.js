@@ -1,5 +1,5 @@
-//React imports
-import { useContext, useState } from "react";
+//React/Next imports
+import { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 //Chakra imports
@@ -23,15 +23,15 @@ import MenuComponent from "./header/MenuComponent";
 import DrawerComponent from "./header/DrawerComponent";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
-import { AuthContext } from "../../context/AuthContext";
+import { useUI } from "../../context/UIContext";
+import { useAuth } from "../../context/AuthContext";
 
-const Header = ({checkAuth, refreshPage}) => {
+const Header = ({ refreshPage }) => {
     const router = useRouter();
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useColorMode();
-    const { greenColor, language, changeLanguage, setPageLoaded } = useContext(UIContext);
-    const { user, resetAuth } = useContext(AuthContext);
+    const { greenColor, language, changeLanguage, setPageLoaded } = useUI();
+    const { user, resetAuth } = useAuth();
     const [showDrawer, setShowDrawer] = useState(false);
 
     const toggleColor = () => {
@@ -40,10 +40,6 @@ const Header = ({checkAuth, refreshPage}) => {
 
     const goTo = async (path) => {
         setPageLoaded(false);
-        const isAuth = await checkAuth();
-        if(!isAuth) {
-            return;
-        }
         if(pathname === path) {
             refreshPage();
         }
@@ -52,13 +48,13 @@ const Header = ({checkAuth, refreshPage}) => {
 
     const goToLogin = (form) => {
         setPageLoaded(false);
-        router.push(`/authentication?form=${form}`);
+        goTo(`/authentication?form=${form}`);
     }
 
     const logout = async () => {
         setPageLoaded(false);
         await resetAuth();
-        router.push('/');
+        goTo('/');
     }
 
     return (
@@ -83,6 +79,7 @@ const Header = ({checkAuth, refreshPage}) => {
             </Show>
 
             <Flex direction="row" mx="auto" w={{ base: '80%', md: '60%' }}>
+                {/*Cambiar a componente*/}
                 <FormControl minW="300px">
                     <InputGroup>
                         <InputLeftElement>

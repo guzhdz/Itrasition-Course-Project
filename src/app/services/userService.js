@@ -1,3 +1,6 @@
+//Shared functions import
+import { getGeneralError } from './sharedFunctions.js'
+
 const API_URL = '/api/user';
 
 export const getUser = async (userId) => {
@@ -110,15 +113,4 @@ export const updateUsers = async (users) => {
     } catch (error) {
         return getGeneralError(error);
     }
-}
-
-const getGeneralError = (error) => {
-    const message = {
-        en: 'Something went wrong. Please try again later.',
-        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-    }
-    console.error('Error in the request:', error);
-    return {
-        ok: false, message: message
-    };
 }

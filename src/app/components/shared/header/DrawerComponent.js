@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     Drawer,
@@ -22,17 +19,17 @@ import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import Logo from "../Logo";
 import DrawerItem from "./DrawerItem";
 
-//Context imports
-import { UIContext } from "../../../context/UIContext";
-import { AuthContext } from "../../../context/AuthContext";
-
 //Library imports
 import { MdDashboard, MdAdminPanelSettings } from "react-icons/md";
 import { IoLogOut, IoHome } from "react-icons/io5";
 
+//Context imports
+import { useUI } from "../../../context/UIContext";
+import { useAuth } from "../../../context/AuthContext";
+
 const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, toggleColor, logout, goTo }) => {
-    const { language, changeLanguage,  greenColor } = useContext(UIContext);
-    const { user } = useContext(AuthContext);
+    const { language, changeLanguage, greenColor } = useUI();
+    const { user } = useAuth();
 
     const onChangeLanguage = () => {
         changeLanguage(language === "es" ? "en" : "es");
@@ -42,13 +39,12 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
         <Drawer placement="left" onClose={() => setShowDrawer(false)} isOpen={showDrawer}>
             <DrawerOverlay />
             <DrawerContent>
-
                 <DrawerHeader borderBottomWidth='1px'>
                     <Logo />
                 </DrawerHeader>
 
                 <DrawerBody px={2} display="flex" flexDirection="column">
-                    {user === null && <>
+                    {user === null &&
                         <Flex direction="column" gap={3} p={4} justify="center">
                             <Button
                                 colorScheme="green"
@@ -61,7 +57,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                                 {language === "es" ? "Registrarse" : "Sign Up"}
                             </Button>
                         </Flex>
-                    </>}
+                    }
 
                     {user !== null && <>
                         <Flex
@@ -108,6 +104,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                         <Text fontSize="lg">Español</Text>
                     </Flex>
                     <Divider />
+                    
                     <Flex align="center" p={4}>
                         <SunIcon />
                         <Switch mx={4} colorScheme="green" isChecked={colorMode === "dark"} onChange={toggleColor} />

@@ -1,3 +1,4 @@
+//Prisma client import
 import { PrismaClient } from "@prisma/client";
 
 const globalPrisma = global;

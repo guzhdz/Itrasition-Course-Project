@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     FormControl,
@@ -23,10 +20,10 @@ import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
-    const { greenColor, language } = useContext(UIContext);
+    const { greenColor, language, openSimpleModal } = useUI();
     const {
         register,
         handleSubmit,
@@ -38,12 +35,22 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
         setLoading(true);
         const response = await insertUser(data);
         if (response.ok) {
-            console.log("Ingresado correctamente");
+            redirectToLogin();
         } else {
             setErrorMessage( language ? response.message[language] : response.message.en);
         }
         setLoading(false);
     };
+
+    const redirectToLogin = () => {
+        openSimpleModal(
+            language === "es" ? "Registrado exitosamente" : "Registered successfully", 
+            language === "es" ? "Seras redirigido al inicio de sesión, y asi puedas usar tu nueva cuenta" 
+            : "You will be redirected to the log in, so you can use your new account", 
+            () => toogleForm(),
+            false
+        );
+    }
 
     return (
         <chakra.form onSubmit={handleSubmit(onSubmit)} w="100%">

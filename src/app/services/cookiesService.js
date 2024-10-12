@@ -1,3 +1,6 @@
+//Shared functions import
+import { getGeneralError, getFalseError } from './sharedFunctions.js'
+
 const API_URL = '/api/cookies';
 
 export const saveCookie = async (name, value, time = 3600) => {
@@ -51,19 +54,3 @@ export const getCookie = async (name) => {
         return getGeneralError(error);
     }
 };
-
-const getGeneralError = (error) => {
-    const message = {
-        en: 'Something went wrong. Please try again later.',
-        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-    }
-    console.error('Error in the request:', error);
-    return {
-        ok: false, message: message
-    };
-}
-
-const getFalseError = (error) => {
-    console.error('Error in the request:', error);
-    return false;
-}

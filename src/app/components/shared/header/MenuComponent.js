@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import {
     Menu,
@@ -14,23 +11,24 @@ import {
     Flex
 } from "@chakra-ui/react";
 
-//Context imports
-import { UIContext } from "../../../context/UIContext";
-import { AuthContext } from "../../../context/AuthContext";
-
 //Library imports
 import { MdDashboard, MdAdminPanelSettings } from "react-icons/md";
 import { IoLogOut, IoHome } from "react-icons/io5";
 
+//Context imports
+import { useUI } from "../../../context/UIContext";
+import { useAuth } from "../../../context/AuthContext";
+
 const MenuComponent = ({ logout, goTo }) => {
-    const { language, greenColor, textGreenScheme } = useContext(UIContext);
-    const { user } = useContext(AuthContext);
+    const { language, greenColor, textGreenScheme } = useUI();
+    const { user } = useAuth();
 
     return (
         <Menu zIndex={1000}>
             <MenuButton>
                 <Avatar name={user.name} bg={greenColor} color={textGreenScheme} />
             </MenuButton>
+            
             <MenuList>
                 <MenuItem>
                     <Flex w="100%" gap={2} p={2}>

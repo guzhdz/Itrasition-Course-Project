@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import { 
     Modal,
@@ -14,11 +11,11 @@ import {
 } from "@chakra-ui/react";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 
 const ConfirmModal = ({closeOnOverlay = true, showModal, setShowModal, title, message, confirmCallback}) => {
-    const { language } = useContext(UIContext);
+    const { language } = useUI();
 
     const handleOk = () => {
         confirmCallback();
@@ -31,6 +28,7 @@ const ConfirmModal = ({closeOnOverlay = true, showModal, setShowModal, title, me
             <ModalContent>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
+                
                 <ModalBody pb={6}>
                     {message}
                 </ModalBody>

@@ -1,5 +1,4 @@
-//React imports
-import { useContext } from "react";
+//React/Next imports
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -22,13 +21,13 @@ import { useForm } from "react-hook-form";
 import { IoEye, IoEyeOff } from "react-icons/io5";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
-import { AuthContext } from "../../context/AuthContext";
+import { useUI } from "../../context/UIContext";
+import { useAuth } from "../../context/AuthContext";
 
 const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePasswordVisibility, showPassword }) => {
     const router = useRouter();
-    const { greenColor, language, setPageLoaded } = useContext(UIContext);
-    const { saveId } = useContext(AuthContext);
+    const { greenColor, language, setPageLoaded } = useUI();
+    const { saveId } = useAuth();
     const {
         register,
         handleSubmit,
@@ -40,20 +39,24 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
         setLoading(true);
         const response = await authUser(data);
         if (response.ok) {
-            const response2 = await saveId(response.data);
-            if(response2.ok) {
-                setPageLoaded(false);
-                router.push("/main");
-            } else {
-                const messageError = language === "es" ? 
-                "Algo salio mal. Por favor, intenta de nuevo." : "Something went wrong. Please try again later.";
-                setErrorMessage(messageError);
-            }
+            await saveAuthToken(response.data);
         } else {
-            setErrorMessage( language ? response.message[language] : response.message.en);
+            setErrorMessage(language ? response.message[language] : response.message.en);
         }
         setLoading(false);
     };
+
+    const saveAuthToken = async (data) => {
+        const response = await saveId(data);
+        if (response.ok) {
+            setPageLoaded(false);
+            router.push("/main");
+        } else {
+            const messageError = language === "es" ?
+                "Algo salio mal. Por favor, intenta de nuevo." : "Something went wrong. Please try again later.";
+            setErrorMessage(messageError);
+        }
+    }
 
     return (
         <chakra.form onSubmit={handleSubmit(onSubmit)} w="100%">
@@ -61,7 +64,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 <Input
                     id="email-log"
                     type="email"
-                    placeholder={ language === "es" ? "Correo" : "Email"}
+                    placeholder={language === "es" ? "Correo" : "Email"}
                     isDisabled={loading}
                     focusBorderColor={greenColor}
                     _placeholder={{ color: 'gray.500' }}
@@ -87,7 +90,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                     <Input
                         id="password-log"
                         type={showPassword ? "text" : "password"}
-                        placeholder={ language === "es" ? "Contraseña" : "Password"}
+                        placeholder={language === "es" ? "Contraseña" : "Password"}
                         isDisabled={loading}
                         focusBorderColor={greenColor}
                         _placeholder={{ color: 'gray.500' }}
@@ -115,7 +118,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 w="100%"
                 mb={3}
                 isDisabled={loading} >
-                { language === "es" ? "Ingresar" : "Log In" }
+                {language === "es" ? "Ingresar" : "Log In"}
             </Button>
             <Button
                 type="button"
@@ -124,7 +127,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 variant="outline"
                 onClick={toogleForm}
                 isDisabled={loading}>
-                { language === "es" ? "Registrarse" : "Sign Up" }
+                {language === "es" ? "Registrarse" : "Sign Up"}
             </Button>
         </chakra.form>
     )

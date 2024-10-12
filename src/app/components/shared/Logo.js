@@ -1,6 +1,3 @@
-//React imports
-import { useContext } from "react";
-
 //Chakra imports
 import { Text, Icon, Flex } from "@chakra-ui/react";
 
@@ -8,10 +5,11 @@ import { Text, Icon, Flex } from "@chakra-ui/react";
 import { SiFormspree } from "react-icons/si";
 
 //Context imports
-import { UIContext } from "../../context/UIContext";
+import { useUI } from "../../context/UIContext";
 
 const Logo = () => {
-    const { greenColor } = useContext(UIContext);
+    const { greenColor } = useUI();
+
     return (
         <Flex align="center">
             <Icon as={SiFormspree} color={greenColor} mr={1} boxSize={6} />

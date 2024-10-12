@@ -1,3 +1,6 @@
+//Shared functions import
+import { getGeneralError } from './sharedFunctions.js'
+
 const API_URL = '/api/auth';
 export const authUser = async (form) => {
     try {
@@ -16,13 +19,3 @@ export const authUser = async (form) => {
     }
 }
 
-const getGeneralError = (error) => {
-    const message = {
-        en: 'Something went wrong. Please try again later.',
-        es: 'Algo salio mal. Por favor, intentalo de nuevo.'
-    }
-    console.error('Error in the request:', error);
-    return {
-        ok: false, message: message
-    };
-}
