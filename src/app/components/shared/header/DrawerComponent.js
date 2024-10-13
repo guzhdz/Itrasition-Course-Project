@@ -64,7 +64,8 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                             w="100%"
                             gap={2}
                             p={4}
-                            _hover={{ cursor: 'pointer', color: greenColor }} >
+                            _hover={{ cursor: 'pointer', color: greenColor }}
+                            onClick={() => goTo('/dashboard')} >
                             <Avatar name={user.name} bg={greenColor} />
                             <Box>
                                 <Text fontSize="lg">{user.name}</Text>
@@ -80,7 +81,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                         <Divider />
 
                         <DrawerItem
-                            action={() => console.log("Ir a dashboard")}
+                            action={() => goTo('/dashboard')}
                             icon={MdDashboard}
                             text={language === "es" ? "Mi Dashboard" : "My Dashboard"} />
                         <Divider />

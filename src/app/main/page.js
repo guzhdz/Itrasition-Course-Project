@@ -60,6 +60,7 @@ export default function Main() {
         return false;
 
       default:
+        router.push('/');
         return false;
     }
   }

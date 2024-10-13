@@ -30,7 +30,7 @@ const MenuComponent = ({ logout, goTo }) => {
             </MenuButton>
             
             <MenuList>
-                <MenuItem>
+                <MenuItem onClick={() => goTo('/dashboard')}>
                     <Flex w="100%" gap={2} p={2}>
                         <Avatar name={user.name} bg={greenColor} color={textGreenScheme} />
                         <Box>
@@ -45,7 +45,7 @@ const MenuComponent = ({ logout, goTo }) => {
                     {language === "es" ? "Inicio" : "Home"}
                 </MenuItem>
                 
-                <MenuItem icon={<MdDashboard />}>
+                <MenuItem icon={<MdDashboard />} onClick={() => goTo('/dashboard')}>
                     {language === "es" ? "Mi Dashboard" : "My Dashboard"}
                 </MenuItem>
 

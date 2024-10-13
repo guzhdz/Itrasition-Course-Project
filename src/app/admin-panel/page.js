@@ -22,13 +22,13 @@ import { useAuth } from "../context/AuthContext";
 
 export default function AdminPanel() {
   const router = useRouter();
-  const { 
-    bg, 
+  const {
+    bg,
     language,
     openErrorAuthModal,
     openExpiredSessionModal,
     openAccessDeniedModal,
-    pageLoaded, 
+    pageLoaded,
     setPageLoaded
   } = useUI();
   const { checkAuth } = useAuth();
@@ -67,7 +67,8 @@ export default function AdminPanel() {
         return false;
 
       default:
-        return true;
+        router.push('/');
+        return false;
     }
   }
 

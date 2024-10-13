@@ -13,7 +13,7 @@ const UIContext = createContext();
 
 export const UIProvider = ({ children }) => {
     //Color settings
-    const bg = useColorModeValue("blackAlpha.50", "initial");
+    const bg = useColorModeValue("whiteAlpha.50", "initial");
     const greenColor = useColorModeValue("green.600", "green.300");
     const redColor = useColorModeValue("red.600", "red.300");
     const textGreenScheme = useColorModeValue("white", "gray.800");
