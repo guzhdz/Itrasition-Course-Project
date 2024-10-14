@@ -14,11 +14,100 @@ datasource db {
 }
 
 model User {
-  id_user        Int      @id @default(autoincrement())
-  name           String   @db.VarChar(255)
-  email          String   @unique @db.VarChar(255)
-  password       String   @db.Char(60)
-  status         Boolean
-  is_admin       Boolean
-  register_time  DateTime @default(now())
+  id_user         Int      @id @default(autoincrement())
+  name            String   @db.VarChar(255)
+  email           String   @unique @db.VarChar(255)
+  password        String   @db.Char(60)
+  status          Boolean  @default(true)
+  is_admin        Boolean  @default(false)
+  register_time   DateTime @default(now())
+  templates       Template[]
+  templateaccess  TemplateAccess[]
+  forms           Form[]
+}
+
+model Topic {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  templates Template[]
+}
+
+model Tag {
+  id            Int     @id @default(autoincrement()) 
+  name          String  @db.VarChar(255)
+  templatetags  TemplateTag[]
+}
+
+model Template {
+  id              BigInt       @id @default(autoincrement()) 
+  title           String       @db.VarChar(255)
+  description     String       @db.VarChar(510)
+  image_url       String?      @db.VarChar(510)
+  visibility      Visibility   @default(public)
+  topic           Topic        @relation(fields: [topic_id], references: [id], onDelete: Cascade)
+  topic_id        Int
+  user            User         @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  user_id         Int
+  templatetags    TemplateTag[]
+  templateaccess  TemplateAccess[]
+  questions       Question[]
+  forms           Form[]
+}
+
+enum Visibility {
+  public
+  restricted
+}
+
+model TemplateTag {
+  id          BigInt    @id @default(autoincrement()) 
+  tag         Tag       @relation(fields: [tag_id], references: [id], onDelete: Cascade)
+  tag_id      Int
+  template    Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_id BigInt
+}
+
+model TemplateAccess {
+  id          BigInt    @id @default(autoincrement()) 
+  template    Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_id BigInt
+  user        User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  user_id     Int
+}
+
+model Question {
+  id          BigInt        @id @default(autoincrement()) 
+  title       String        @db.VarChar(255)
+  description String        @db.VarChar(255)
+  displayed   Boolean       @default(true)
+  type        QuestionType  @default(text)
+  template    Template      @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_id BigInt
+  answers     Answer[]
+}
+
+enum QuestionType {
+  text
+  textarea
+  positive_num
+  checkbox
+}
+
+model Form {
+  id          BigInt    @id @default(autoincrement()) 
+  fill_time   DateTime  @default(now())
+  template    Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_id BigInt
+  user        User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  user_id     Int
+  answers     Answer[]
+}
+
+model Answer {
+  id            BigInt    @id @default(autoincrement()) 
+  answer_value  String       
+  form          Form      @relation(fields: [form_id], references: [id], onDelete: Cascade)
+  form_id       BigInt
+  question      Question  @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  question_id   BigInt 
 }
