@@ -1,5 +1,5 @@
 -- CreateEnum
-CREATE TYPE "Visibility" AS ENUM ('public', 'restricted');
+CREATE TYPE "State" AS ENUM ('draft', 'public', 'restricted');
 
 -- CreateEnum
 CREATE TYPE "QuestionType" AS ENUM ('text', 'textarea', 'positive_num', 'checkbox');
@@ -39,7 +39,8 @@ CREATE TABLE "Template" (
     "title" VARCHAR(255) NOT NULL,
     "description" VARCHAR(510) NOT NULL,
     "image_url" VARCHAR(510),
-    "visibility" "Visibility" NOT NULL DEFAULT 'public',
+    "state" "State" NOT NULL DEFAULT 'public',
+    "creation_time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "topic_id" INTEGER NOT NULL,
     "user_id" INTEGER NOT NULL,
 

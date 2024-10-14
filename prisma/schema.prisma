@@ -43,7 +43,8 @@ model Template {
   title           String       @db.VarChar(255)
   description     String       @db.VarChar(510)
   image_url       String?      @db.VarChar(510)
-  visibility      Visibility   @default(public)
+  state           State        @default(public)
+  creation_time   DateTime     @default(now())
   topic           Topic        @relation(fields: [topic_id], references: [id], onDelete: Cascade)
   topic_id        Int
   user            User         @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
@@ -54,7 +55,8 @@ model Template {
   forms           Form[]
 }
 
-enum Visibility {
+enum State {
+  draft
   public
   restricted
 }
