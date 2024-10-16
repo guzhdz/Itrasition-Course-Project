@@ -20,19 +20,87 @@ import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 //Component imports
 import SortMenu from "./SortMenu";
 
+//Services imports
+import { insertDraftTemplate } from "../../services/templateService";
+import { getTopics } from "../../services/topicService";
+
 //Context imports
 import { useUI } from "../../context/UIContext";
+import { useAuth } from "../../context/AuthContext";
 
-const TemplatesTable = () => {
-    const { language } = useUI();
+const TemplatesTable = ({ goTo }) => {
+    const { language, openSimpleModal } = useUI();
+    const { user } = useAuth();
+    const handleNewTemplate = async () => {
+        const response = await createNewTemplate();
+        if (response) {
+            openTemplatePage(response.id);
+            goTo("/template-page");
+        }
+    }
+
+    const openTemplatePage = (id) => {
+        goTo(`/template-page/${id}`);
+    }
+
+    const createNewTemplate = async () => {
+        const topics = await getTopicsList();
+        if (topics.length !== 0) {
+            const title = language === "es" ? "Plantilla sin título" : "Template untitle";
+            const description = language === "es" ? "Este es una plantilla sin título. Completa la información solicitada."
+                : "This is a template untitle. Fill in the requested information.";
+            const topic_id = topics[0].id;
+            const user_id = user.id_user;
+            const response = await insertDraftTemplate(title, description, topic_id, user_id);
+            if (response.ok) {
+                return response.data;
+            } else {
+                openSimpleModal(
+                    "Error",
+                    language === "es" ? response.message[language] : response.message.en
+                )
+                return null;
+            }
+        }
+    };
+
+    const getTopicsList = async () => {
+        const response = await getTopics("getTopics");
+        if (response.ok && response.data.length > 0) {
+            return response.data;
+        } else {
+            let messageError = language === "es" ? "Algo salio mal. Por favor, intenta de nuevo."
+                : "Something went wrong. Please try again later.";
+            if (response.message) {
+                messageError = language === "es" ? response.message[language] : response.message.en;
+            }
+            openSimpleModal(
+                "Error",
+                messageError
+            );
+            return [];
+        }
+    }
+
+    const testTemplatePage = () => {
+        openTemplatePage(20n);
+    }
 
     return (
         <Box my={2}>
             <Flex mb={4} gap={2}>
                 <Button
                     rightIcon={<AddIcon />}
-                    colorScheme="green">
+                    colorScheme="green"
+                    onClick={handleNewTemplate}>
                     {language === "es" ? 'Nueva' : 'New'}
+                </Button>
+
+                <Button
+                    rightIcon={<AddIcon />}
+                    colorScheme="green"
+                    onClick={testTemplatePage}>
+                    {language === "es" ? 'Prueba' : 'Test'}
                 </Button>
 
                 <SortMenu />
@@ -48,7 +116,7 @@ const TemplatesTable = () => {
                             </Th>
                             <Th>{language === "es" ? 'Indice' : 'Index'}</Th>
                             <Th>{language === "es" ? 'Titulo' : 'Title'}</Th>
-                            <Th>{language === "es" ? 'Visibilidad' : 'Visibility'}</Th>
+                            <Th>{language === "es" ? 'Estado' : 'State'}</Th>
                             <Th>{language === "es" ? 'Tema' : 'Topic'}</Th>
                             <Th>{language === "es" ? 'Acciones' : 'Actions'}</Th>
                         </Tr>

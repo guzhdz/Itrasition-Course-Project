@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
         <ChackraUIProvider>
           <UIProvider>
             <AuthProvider>
-              {children}
+                {children}
             </AuthProvider>
           </UIProvider>
         </ChackraUIProvider>

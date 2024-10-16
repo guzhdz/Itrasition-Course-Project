@@ -13,13 +13,36 @@ const UIContext = createContext();
 
 export const UIProvider = ({ children }) => {
     //Color settings
-    const bg = useColorModeValue("whiteAlpha.50", "initial");
+    const bg = useColorModeValue("white", "gray.800");
     const greenColor = useColorModeValue("green.600", "green.300");
     const redColor = useColorModeValue("red.600", "red.300");
     const textGreenScheme = useColorModeValue("white", "gray.800");
 
     //Text Settings
     const [language, setLanguage] = useState('en');
+    const markdownStyles = {
+        h1: { fontSize: '2em', fontWeight: 'bold', marginBottom: '0.5em' },
+        h2: { fontSize: '1.5em', fontWeight: 'bold', marginBottom: '0.5em' },
+        h3: { fontSize: '1.2em', fontWeight: 'bold', marginBottom: '0.5em' },
+        h4: { fontSize: '1em', fontWeight: 'bold', marginBottom: '0.5em' },
+        h5: { fontSize: '0.9em', fontWeight: 'bold', marginBottom: '0.5em' },
+        h6: { fontSize: '0.8em', fontWeight: 'bold', marginBottom: '0.5em' },
+        ul: { listStyle: 'disc', marginLeft: '1em' },
+        'ul ul': { listStyle: 'circle', marginLeft: '2em' },
+        'ul ul ul': { listStyle: 'square', marginLeft: '3em' },
+        'ul ul ul ul': { listStyle: 'disc', marginLeft: '4em' },
+        ol: { listStyle: 'decimal', marginLeft: '1em' },
+        'ol ol': { listStyle: 'lower-alpha', marginLeft: '2em' },
+        'ol ol ol': { listStyle: 'lower-roman', marginLeft: '3em' },
+        'ol ol ol ol': { listStyle: 'decimal', marginLeft: '4em' },
+        li: { marginBottom: '0.5em' },
+        p: { marginBottom: '1em' },
+        a: { textDecoration: 'underline' },
+        strong: { fontWeight: 'bold' },
+        em: { fontStyle: 'italic' },
+        code: { fontFamily: 'monospace', padding: '2px 4px' },
+        blockquote: { padding: '10px', borderLeft: { textGreenScheme } }
+    }
 
     //Interactive settings
     const [showModal, setShowModal] = useState(false);
@@ -87,6 +110,7 @@ export const UIProvider = ({ children }) => {
             textGreenScheme,
             language,
             setLanguage,
+            markdownStyles,
             showModal,
             setShowModal,
             modalOptions,

@@ -82,14 +82,14 @@ export default function Dashboard() {
             {pageLoaded ?
                 <Flex
                     w="100%"
-                    h="100vh"
+                    minH="100vh"
                     direction="column"
                     bg={bg} >
 
                     <Header refreshPage={initializePage} />
 
                     <Box maxW="1400px" mx="auto" width="80%" p={3}>
-                        <Heading mb="60px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
+                        <Heading mb="40px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
                         
                         <UserBanner />
 

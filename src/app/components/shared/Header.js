@@ -33,7 +33,7 @@ const Header = ({ refreshPage }) => {
     const router = useRouter();
     const pathname = usePathname();
     const { colorMode, toggleColorMode } = useColorMode();
-    const { greenColor, language, changeLanguage, setPageLoaded, openExpiredSessionModal } = useUI();
+    const { bg, greenColor, language, changeLanguage, setPageLoaded, openExpiredSessionModal } = useUI();
     const { user, resetAuth } = useAuth();
     const [showDrawer, setShowDrawer] = useState(false);
 
@@ -73,7 +73,8 @@ const Header = ({ refreshPage }) => {
             top="0"
             align="center"
             mb={3}
-            zIndex={1000} >
+            zIndex={1000}
+            bg={bg} >
 
             <Show above="lg">
                 <Logo />

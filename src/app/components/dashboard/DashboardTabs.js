@@ -1,3 +1,6 @@
+//React/Next imports
+import { useRouter } from "next/navigation";
+
 //Chakra imports
 import {
     Tabs,
@@ -14,7 +17,13 @@ import TemplatesTable from "./TemplatesTable";
 import { useUI } from "../../context/UIContext";
 
 const DashboardTabs = () => {
-    const { language } = useUI();
+    const router = useRouter();
+    const { language, setPageLoaded } = useUI();
+
+    const goTo = (path) => {
+        setPageLoaded(false);
+        router.push(path);
+    }
 
     return (
         <Tabs colorScheme="green" isLazy align="center">
@@ -25,7 +34,7 @@ const DashboardTabs = () => {
 
             <TabPanels>
                 <TabPanel>
-                    <TemplatesTable />
+                    <TemplatesTable goTo={goTo}/>
                 </TabPanel>
                 <TabPanel>
                     <h1>My forms</h1>

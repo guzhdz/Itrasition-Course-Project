@@ -18,7 +18,10 @@ export async function GET(request) {
     } else if (action === 'getNormalUsers') {
         return await getAdminUsers(false);
     } else {
-        const messageError = 'Bad request';
+        const messageError = {
+            en: "Bad request.",
+            es: "Solicitud incorrecta."
+        }
         const statusCode = 400;
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }

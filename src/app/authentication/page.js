@@ -32,7 +32,7 @@ export default function Authentication() {
             {pageLoaded ?
                 <Flex
                     w="100%"
-                    h="100vh"
+                    minH="100vh"
                     justify="center"
                     align="center"
                     bg={bg} >
@@ -42,7 +42,7 @@ export default function Authentication() {
                             <Show above="lg">
                                 <Box w="50%" h="100%">
                                     <Image
-                                        src="/login-image.jpg"
+                                        src="https://res.cloudinary.com/da7gnzwis/image/upload/v1729101437/login-image_aqao0z.jpg"
                                         alt="Login image"
                                         w="100%"
                                         h="100%"

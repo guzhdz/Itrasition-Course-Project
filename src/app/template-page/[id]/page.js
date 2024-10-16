@@ -2,33 +2,41 @@
 
 //React/Next imports
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 
 //Chakra imports
 import {
-  Flex
+  Flex,
+  Box,
+  Heading,
+  Button
 } from "@chakra-ui/react";
 
 //Components import
-import Header from '../components/shared/Header'
-import LoadingPage from '../components/shared/LoadingPage'
+import Header from '../../components/shared/Header'
+import LoadingPage from '../../components/shared/LoadingPage'
+import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
 
 //Context imports
-import { useUI } from "../context/UIContext";
-import { useAuth } from "../context/AuthContext";
+import { useUI } from "../../context/UIContext";
+import { useAuth } from "../../context/AuthContext";
 
 
-export default function Main() {
+export default function TemplatePage() {
   const router = useRouter();
-  const { 
-    bg, 
+  const params = useParams();
+  const id = BigInt(params.id);
+  const {
+    bg,
     openErrorAuthModal,
     openExpiredSessionModal,
-    pageLoaded, 
-    setPageLoaded } = useUI();
+    pageLoaded,
+    setPageLoaded,
+    language } = useUI();
   const { checkAuth } = useAuth();
 
-  const authenticate = async (home) => {
+
+  const authenticate = async () => {
     const response = await checkAuth();
     if (response.ok) {
       return { case: 1 };
@@ -36,7 +44,7 @@ export default function Main() {
       if (response.message) {
         return { case: 2, message: response.message };
       } else {
-        return home ? { case: 3 } : { case: 4 };
+        return { case: 3 };
       }
     }
   }
@@ -52,27 +60,24 @@ export default function Main() {
         return false;
 
       case 3:
-        return true;
-
-      case 4:
         setPageLoaded(false);
         openExpiredSessionModal(() => router.push('/'));
         return false;
 
       default:
-        router.push('/');
         return false;
     }
   }
 
-  const initializePage = async (home = false) => {
-    const authCase = await authenticate(home);
+  const initializePage = async () => {
+    const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
     isAuth && setPageLoaded(true);
   }
 
   useEffect(() => {
-    initializePage(true);
+    console.log(id);
+    initializePage();
   }, []);
 
 
@@ -86,6 +91,16 @@ export default function Main() {
           bg={bg} >
 
           <Header refreshPage={initializePage} />
+          <Box maxW="1400px" mx="auto" width="80%">
+            <Heading mb="40px">{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
+
+            <Flex justify="flex-end" gap={4}>
+              <Button colorScheme="green">{language === "es" ? "Guardar cambios" : "Save changes"}</Button>
+              <Button colorScheme="green" variant="outline">{language === "es" ? "Vista previa" : "Preview"}</Button>
+            </Flex>
+
+            <TemplatePageTabs id={id} />
+          </Box>
         </Flex>
         :
         <LoadingPage />

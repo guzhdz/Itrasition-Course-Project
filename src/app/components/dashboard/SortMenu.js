@@ -20,8 +20,7 @@ const SortMenu = () => {
 
     return (
         <Menu>
-            <MenuButton as={IconButton}>
-                <IconButton icon={<FaSort />} variant="ghost" colorScheme="green"/>
+            <MenuButton as={IconButton} icon={<FaSort />} variant="ghost" colorScheme="green">
             </MenuButton>
             <MenuList>
                 <MenuGroup title={language === "es" ? "Ordenar por" : "Sort by"} textAlign="left" fontSize="xs">
