@@ -95,6 +95,7 @@ export default function AdminPanel() {
       {pageLoaded ?
         <Flex
           w="100%"
+          h="100vh"
           minH="100vh"
           direction="column"
           bg={bg} >

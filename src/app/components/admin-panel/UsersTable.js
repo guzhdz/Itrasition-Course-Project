@@ -17,6 +17,7 @@ import {
     Checkbox,
     Box,
     Skeleton,
+    useToast
 } from "@chakra-ui/react";
 
 //Components imports
@@ -32,6 +33,7 @@ import { FiCheckSquare, FiXSquare } from "react-icons/fi";
 import { useUI } from "../../context/UIContext";
 
 const UsersTable = ({ usersRequest, checkAuth }) => {
+    const toast = useToast();
     const { language, greenColor, redColor, openSimpleModal } = useUI();
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
@@ -81,6 +83,11 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
         const response = await deleteUsers(usersToDelete.map(user => user.id_user));
         if (response.ok) {
             await loadUsers();
+            toast({
+                description: language === 'es' ? 'Los usuarios seleccionados han sido eliminados' : 'The selected users have been deleted',
+                status: "success",
+                isClosable: true,
+            });
         } else {
             openSimpleModal(language === "es" ? "Error al eliminar los usuarios" : "Error at deleting users",
                 language === "es" ? response.message[language] : response.message.en);
@@ -96,13 +103,18 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
         const response = await updateUsers(updatedUsers);
         if (response.ok) {
             await loadUsers();
+            toast({
+                description: language === 'es' ? 'Los usuarios seleccionados han sido actualizados' : 'The selected users have been updated',
+                status: "success",
+                isClosable: true,
+            });
         } else {
             openSimpleModal(language === "es" ? "Error al actualizar los usuarios" : "Error at updating users",
                 language === "es" ? response.message[language] : response.message.en);
         }
         setLoading(false);
     }
-    
+
     useEffect(() => {
         loadUsers();
     }, []);

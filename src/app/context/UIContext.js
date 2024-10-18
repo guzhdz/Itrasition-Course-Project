@@ -77,6 +77,14 @@ export const UIProvider = ({ children }) => {
         setShowModal(true);
     }
 
+    const openSimpleErrorModal = (message, callback) => {
+        openSimpleModal(
+            'Error',
+            language ? message[language] : message.en,
+            callback
+        );
+    }
+
     const openErrorAuthModal = (message, callback) => {
         openSimpleModal(
             language === "es" ? 'Autenticación fallida' : 'Authentication failed',
@@ -120,6 +128,7 @@ export const UIProvider = ({ children }) => {
             changeLanguage,
             getLocalLanguage,
             openSimpleModal,
+            openSimpleErrorModal,
             openErrorAuthModal,
             openExpiredSessionModal,
             openAccessDeniedModal

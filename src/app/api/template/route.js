@@ -1,6 +1,24 @@
 import prisma from "../../lib/prismaClient";
 import superjson from 'superjson';
 
+export async function GET(request) {
+    const url = new URL(request.url);
+    const queryParams = url.searchParams;
+    const action = queryParams.get('action');
+    if (action === 'getTemplateOwner') {
+        return await getTemplateOwner(queryParams);
+    } else if (action === 'getTemplateSettings') {
+        return await getTemplateSettings(queryParams);
+    } else {
+        const messageError = {
+            en: "Bad request.",
+            es: "Solicitud incorrecta."
+        }
+        const statusCode = 400;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
 export async function POST(request) {
     const { title, description, image_url, state, creation_time, topic_id, user_id } = await request.json();
     let statusCode = 500;
@@ -41,5 +59,127 @@ export async function POST(request) {
             es: "Error del servidor. Por favor, intentalo de nuevo."
         }
         return new Response(JSON.stringify(messageError), { status: 500 });
+    }
+}
+
+export async function PUT(request) {
+    const { templateInfoBody, action } = await request.json();
+    if (action === 'updateTemplateSettings') {
+        return await updateTemplateSettings(templateInfoBody);
+    } else {
+        const messageError = {
+            en: "Bad request.",
+            es: "Solicitud incorrecta."
+        }
+        const statusCode = 400;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+
+const getTemplateOwner = async (queryParams) => {
+    const id = queryParams.get('id');
+    let statusCode = 500;
+    try {
+        const result = await prisma.template.findUnique({
+            where: { id: id },
+            select: { user_id: true }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getTemplateSettings= async (queryParams) => {
+    const id = queryParams.get('id');
+    let statusCode = 500;
+    try {
+        const result = await prisma.template.findUnique({
+            where: { id: id },
+            include: {
+                topic: true,
+                templatetags: {
+                    include: {
+                        tag: true
+                    }
+                },
+                templateaccess: true
+            }
+        });
+        statusCode = 200;
+        if (result) {
+            result.templatetags = result.templatetags.map((templateTag) => ({
+                value: templateTag.tag.id,
+                label: templateTag.tag.name
+            }));
+        }
+        return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const updateTemplateSettings = async (templateInfo) => {
+    const { id, title, description, image_url, state, topic_id, tagsToAdd, tagsToDelete, newTags } = templateInfo;
+    let statusCode = 500;
+    try {
+        await prisma.templateTag.deleteMany({
+            where: {
+                template_id: id,
+                tag_id: {
+                    in: tagsToDelete
+                }
+            }
+        });
+        await prisma.template.update({
+            where: { id },
+            data: {
+                title,
+                description,
+                image_url,
+                state,
+                topic_id,
+                templatetags: {
+                    create: [
+                        ...newTags.map(tag => {
+                            return {
+                                tag: {
+                                    create: { name: tag }
+                                }
+                            }
+                        }),
+                        ...tagsToAdd.map(id => {
+                            return {
+                                tag: {
+                                    connect: id
+                                }
+                            }
+                        })
+                    ]
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify({ success: true }), { status: statusCode });
+    } catch (error) {
+        console.log(error);
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }
 }

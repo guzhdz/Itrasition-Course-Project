@@ -16,7 +16,10 @@ export const getUser = async (userId) => {
             return { ok: false, message: messageError };
         } else {
             if (data === null) {
-                messageError = "User not found";
+                messageError = {
+                    en: "User not found.",
+                    es: "Usuario no encontrado.",
+                };
                 return { ok: false, message: messageError };
             } else
                 return { ok: true, data: data };

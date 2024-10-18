@@ -1,10 +1,13 @@
+//React/Next imports
+import { useState, useEffect } from "react";
+
 //Chakra imports
 import {
     Tabs,
     TabList,
     TabPanels,
     Tab,
-    TabPanel
+    TabPanel,
 } from "@chakra-ui/react";
 
 //Components imports
@@ -13,11 +16,11 @@ import TemplateSettings from "./TemplateSettings";
 //Context imports
 import { useUI } from "../../context/UIContext";
 
-const TemplatePageTabs = ({id}) => {
-    const { language } = useUI();
-
+const TemplatePageTabs = ({ id, checkAuth }) => {
+    const { language} = useUI();
+    
     return (
-        <Tabs colorScheme="green" isLazy align="center">
+        <Tabs colorScheme="green" align="center">
             <TabList>
                 <Tab>{language === "es" ? "Configuración" : "Settings"}</Tab>
                 <Tab>{language === "es" ? "Preguntas" : "Questions"}</Tab>
@@ -27,7 +30,7 @@ const TemplatePageTabs = ({id}) => {
 
             <TabPanels>
                 <TabPanel>
-                    <TemplateSettings />
+                    <TemplateSettings id={id} checkAuth={checkAuth}/>
                 </TabPanel>
                 <TabPanel>
                     <h1>Questions</h1>

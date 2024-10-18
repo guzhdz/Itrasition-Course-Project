@@ -1,7 +1,7 @@
 "use client"
 
 //React/Next imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 //Chakra imports
@@ -17,6 +17,9 @@ import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
 
+//Services imports
+import { getTemplate } from "../../services/templateService";
+
 //Context imports
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
@@ -28,8 +31,10 @@ export default function TemplatePage() {
   const id = BigInt(params.id);
   const {
     bg,
+    openSimpleErrorModal,
     openErrorAuthModal,
     openExpiredSessionModal,
+    openSimpleModal,
     pageLoaded,
     setPageLoaded,
     language } = useUI();
@@ -39,7 +44,7 @@ export default function TemplatePage() {
   const authenticate = async () => {
     const response = await checkAuth();
     if (response.ok) {
-      return { case: 1 };
+      return { case: 1, user: response.data };
     } else {
       if (response.message) {
         return { case: 2, message: response.message };
@@ -53,7 +58,6 @@ export default function TemplatePage() {
     switch (authCase.case) {
       case 1:
         return true;
-
       case 2:
         setPageLoaded(false);
         openErrorAuthModal(authCase.message, () => router.push('/'));
@@ -72,11 +76,37 @@ export default function TemplatePage() {
   const initializePage = async () => {
     const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
-    isAuth && setPageLoaded(true);
+    if (isAuth) {
+      const isOwner = await validateTemplate(authCase.user);
+      isOwner && setPageLoaded(true);
+    }
+  }
+
+  const validateTemplate = async (user) => {
+    const response = await getTemplate(id, "getTemplateOwner");
+    if (response.ok) {
+      if (response.data.user_id === user.id_user || user.is_admin) {
+        return true;
+      } else {
+        setPageLoaded(false);
+        openSimpleModal(
+          language === "es" ? 'Acceso denegado' : 'Access denied',
+          language === "es" ? 'No tienes permiso para acceder a este formulario'
+            : 'You do not have permission to access this form',
+          () => router.push('/dashboard'));
+        return false;
+      }
+    } else {
+      setPageLoaded(false);
+      openSimpleErrorModal(
+        response.message,
+        () => router.push('/dashboard')
+      );
+      return false;
+    }
   }
 
   useEffect(() => {
-    console.log(id);
     initializePage();
   }, []);
 
@@ -86,6 +116,7 @@ export default function TemplatePage() {
       {pageLoaded ?
         <Flex
           w="100%"
+          h="100vh"
           minH="100vh"
           direction="column"
           bg={bg} >
@@ -99,7 +130,15 @@ export default function TemplatePage() {
               <Button colorScheme="green" variant="outline">{language === "es" ? "Vista previa" : "Preview"}</Button>
             </Flex>
 
-            <TemplatePageTabs id={id} />
+            <TemplatePageTabs
+              id={id}
+              checkAuth={
+                async () => {
+                  const authCase = await authenticate();
+                  const isAuth = handleAuthCase(authCase);
+                  return isAuth ? await validateTemplate(authCase.user) : false;
+                }
+              } />
           </Box>
         </Flex>
         :

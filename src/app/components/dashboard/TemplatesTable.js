@@ -46,9 +46,9 @@ const TemplatesTable = ({ goTo }) => {
     const createNewTemplate = async () => {
         const topics = await getTopicsList();
         if (topics.length !== 0) {
-            const title = language === "es" ? "Plantilla sin título" : "Template untitle";
-            const description = language === "es" ? "Este es una plantilla sin título. Completa la información solicitada."
-                : "This is a template untitle. Fill in the requested information.";
+            const title = language === "es" ? "Plantilla sin título" : "Untitle template";
+            const description = language === "es" ? "Esta es una descripción por defecto. Rellena con información (soporta markdown)."
+                : "This is a default description. Fill in with information (supports markdown).";
             const topic_id = topics[0].id;
             const user_id = user.id_user;
             const response = await insertDraftTemplate(title, description, topic_id, user_id);
