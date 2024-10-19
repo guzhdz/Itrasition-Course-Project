@@ -27,8 +27,13 @@ const TemplateSettings = ({id, checkAuth}) => {
     const getTemplateInfo = async () => {
         const response = await getTemplate(id, "getTemplateSettings");
         if (response.ok) {
-            console.log(response.data);
-            setTemplateInfo(response.data);
+            if(response.data)
+                setTemplateInfo(response.data);
+            else 
+                openSimpleErrorModal(
+                    { es: "Error al cargar la plantilla", en: "Error aot loading template" },
+                    () => router.push('/dashboard')
+                );
         } else {
             setPageLoaded(false);
             openSimpleErrorModal(

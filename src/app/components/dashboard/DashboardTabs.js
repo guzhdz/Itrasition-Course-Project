@@ -16,7 +16,7 @@ import TemplatesTable from "./TemplatesTable";
 //Context imports
 import { useUI } from "../../context/UIContext";
 
-const DashboardTabs = () => {
+const DashboardTabs = ({checkAuth}) => {
     const router = useRouter();
     const { language, setPageLoaded } = useUI();
 
@@ -34,7 +34,7 @@ const DashboardTabs = () => {
 
             <TabPanels>
                 <TabPanel>
-                    <TemplatesTable goTo={goTo}/>
+                    <TemplatesTable goTo={goTo} checkAuth={checkAuth}/>
                 </TabPanel>
                 <TabPanel>
                     <h1>My forms</h1>

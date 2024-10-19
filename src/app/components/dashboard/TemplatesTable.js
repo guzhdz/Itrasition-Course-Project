@@ -28,14 +28,16 @@ import { getTopics } from "../../services/topicService";
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
-const TemplatesTable = ({ goTo }) => {
-    const { language, openSimpleModal } = useUI();
+const TemplatesTable = ({ goTo, checkAuth }) => {
+    const { language, openToast } = useUI();
     const { user } = useAuth();
     const handleNewTemplate = async () => {
-        const response = await createNewTemplate();
-        if (response) {
-            openTemplatePage(response.id);
-            goTo("/template-page");
+        const isAuth = await checkAuth();
+        if (isAuth) {
+            const response = await createNewTemplate();
+            if (response) {
+                openTemplatePage(response);
+            }
         }
     }
 
@@ -55,11 +57,11 @@ const TemplatesTable = ({ goTo }) => {
             if (response.ok) {
                 return response.data;
             } else {
-                openSimpleModal(
-                    "Error",
-                    language === "es" ? response.message[language] : response.message.en
-                )
-                return null;
+                openToast(
+                    language === "es" ? "Error" : "Error",
+                    language === "es" ? response.message[language] : response.message.en,
+                    "error"
+                );
             }
         }
     };
@@ -74,16 +76,13 @@ const TemplatesTable = ({ goTo }) => {
             if (response.message) {
                 messageError = language === "es" ? response.message[language] : response.message.en;
             }
-            openSimpleModal(
-                "Error",
-                messageError
-            );
+            openToast("Error", messageError, "error");
             return [];
         }
     }
 
     const testTemplatePage = () => {
-        openTemplatePage(20n);
+        openTemplatePage(1n);
     }
 
     return (

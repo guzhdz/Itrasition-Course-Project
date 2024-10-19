@@ -100,6 +100,15 @@ CREATE TABLE "Answer" (
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
+-- CreateIndex
+CREATE UNIQUE INDEX "Tag_name_key" ON "Tag"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TemplateTag_template_id_tag_id_key" ON "TemplateTag"("template_id", "tag_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TemplateAccess_template_id_user_id_key" ON "TemplateAccess"("template_id", "user_id");
+
 -- AddForeignKey
 ALTER TABLE "Template" ADD CONSTRAINT "Template_topic_id_fkey" FOREIGN KEY ("topic_id") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 

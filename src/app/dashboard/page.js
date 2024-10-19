@@ -94,7 +94,10 @@ export default function Dashboard() {
                         
                         <UserBanner />
 
-                        <DashboardTabs />
+                        <DashboardTabs checkAuth={async () => {
+                            const authCase = await authenticate();
+                            return handleAuthCase(authCase);
+                        }}/>
                     </Box>
                 </Flex >
                 :

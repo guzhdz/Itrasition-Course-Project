@@ -93,7 +93,8 @@ export default function TemplatePage() {
           language === "es" ? 'Acceso denegado' : 'Access denied',
           language === "es" ? 'No tienes permiso para acceder a este formulario'
             : 'You do not have permission to access this form',
-          () => router.push('/dashboard'));
+          () => router.push('/dashboard')
+        );
         return false;
       }
     } else {

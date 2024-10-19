@@ -117,7 +117,7 @@ const LoginForm = ({ toogleForm, setErrorMessage, setLoading, loading, tooglePas
                 colorScheme="green"
                 w="100%"
                 mb={3}
-                isDisabled={loading} >
+                isLoading={loading} >
                 {language === "es" ? "Ingresar" : "Log In"}
             </Button>
             <Button

@@ -97,7 +97,7 @@ const getTemplateOwner = async (queryParams) => {
     }
 }
 
-const getTemplateSettings= async (queryParams) => {
+const getTemplateSettings = async (queryParams) => {
     const id = queryParams.get('id');
     let statusCode = 500;
     try {
@@ -135,44 +135,56 @@ const updateTemplateSettings = async (templateInfo) => {
     const { id, title, description, image_url, state, topic_id, tagsToAdd, tagsToDelete, newTags } = templateInfo;
     let statusCode = 500;
     try {
-        await prisma.templateTag.deleteMany({
-            where: {
-                template_id: id,
-                tag_id: {
-                    in: tagsToDelete
+        const result = await prisma.$transaction(async () => {
+            await prisma.templateTag.deleteMany({
+                where: {
+                    template_id: id,
+                    tag_id: {
+                        in: tagsToDelete
+                    }
                 }
-            }
-        });
-        await prisma.template.update({
-            where: { id },
-            data: {
-                title,
-                description,
-                image_url,
-                state,
-                topic_id,
-                templatetags: {
-                    create: [
-                        ...newTags.map(tag => {
-                            return {
-                                tag: {
-                                    create: { name: tag }
+            });
+            const updatedTemplate = await prisma.template.update({
+                where: { id },
+                data: {
+                    title,
+                    description,
+                    image_url,
+                    state,
+                    topic_id,
+                    templatetags: {
+                        create: [
+                            ...newTags.map(tagName => {
+                                return {
+                                    tag: {
+                                        create: { name: tagName }
+                                    }
                                 }
-                            }
-                        }),
-                        ...tagsToAdd.map(id => {
-                            return {
-                                tag: {
-                                    connect: id
+                            })
+                        ],
+                        upsert: tagsToAdd.map(tagid => ({
+                            where: {
+                                template_id_tag_id: {
+                                    tag_id: tagid.id,
+                                    template_id: id
                                 }
-                            }
-                        })
-                    ]
+                            },
+                            create: {
+                                tag: {
+                                    connect: {
+                                        id: tagid.id
+                                    }
+                                }
+                            },
+                            update: {}
+                        }))
+                    }
                 }
-            }
+            });
+            return updatedTemplate;
         });
         statusCode = 200;
-        return new Response(JSON.stringify({ success: true }), { status: statusCode });
+        return new Response(JSON.stringify(superjson.stringify(result)), { status: statusCode });
     } catch (error) {
         console.log(error);
         const messageError = {
@@ -180,6 +192,6 @@ const updateTemplateSettings = async (templateInfo) => {
             es: "Error del servidor. Por favor, intentalo de nuevo."
         };
         statusCode = 500;
-        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
 }

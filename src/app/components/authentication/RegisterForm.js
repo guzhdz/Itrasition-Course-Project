@@ -132,7 +132,7 @@ const RegisterForm = ({ toogleForm, setErrorMessage, setLoading, loading, toogle
                 colorScheme="green"
                 w="100%"
                 mb={3}
-                isDisabled={loading}>
+                isLoading={loading}>
                 {language === "es" ? "Registrarse" : "Get Started"}
             </Button>
 

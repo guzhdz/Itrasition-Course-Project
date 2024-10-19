@@ -1,5 +1,6 @@
 //React/Next imports
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -19,8 +20,7 @@ import {
     TagLabel,
     TagCloseButton,
     Text,
-    chakra,
-    useToast
+    chakra
 } from "@chakra-ui/react";
 
 //Components imports
@@ -37,8 +37,8 @@ import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 import { useUI } from "../../context/UIContext";
 
 const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refreshInfo, checkAuth }) => {
-    const toast = useToast();
-    const { language, greenColor } = useUI();
+    const router = useRouter();
+    const { language, greenColor, openToast } = useUI();
     const {
         register,
         handleSubmit,
@@ -68,18 +68,27 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
 
     const onSubmit = async (data) => {
         setLoadingUpdate(true);
-        const newTemplateInfo = getNewTemplateInfo(data);
-        const response = await updateTemplateSettings(newTemplateInfo);
-        if (response.ok) {
-            toast({
-                description: language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
-                status: "success",
-                isClosable: true,
-            })
-            setLoading(true);
-            refreshInfo();
-        } else {
-            console.log(response.message);
+        const isOwner = await checkAuth();
+        if (isOwner) {
+            const newTemplateInfo = getNewTemplateInfo(data);
+            const response = await updateTemplateSettings(newTemplateInfo);
+            if (response.ok) {
+                openToast(
+                    null,
+                    language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
+                    'success'
+                )
+                setLoading(true);
+                refreshInfo();
+            } else {
+                openToast(
+                    'Error',
+                    language === 'es' ? response.message[language] : response.message.en,
+                    'error'
+                );
+                setLoading(true);
+                refreshInfo();
+            }
         }
         setLoadingUpdate(false);
     }
@@ -105,14 +114,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
     }
 
     const openConfirmModal = async () => {
-        setLoadingUpdate(true);
-        const isOwner = await checkAuth();
-        if(isOwner) {
-            setShowModal(true);
-            setLoadingUpdate(false);
-        } else {
-            setLoadingUpdate(false);
-        }
+        setShowModal(true);
     };
 
     useEffect(() => {
@@ -209,6 +211,9 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                                         <option key={topic.id} value={topic.id}>{topic.name}</option>
                                     ))
                                 }
+                                {topicOptions.length === 0 &&
+                                    <option value="">{language === "es" ? "Sin temas" : "No topics aviable"}</option>
+                                }
                             </Select>
                             <FormErrorMessage>{errors.topic && errors.topic.message}</FormErrorMessage>
                         </FormControl>
@@ -245,7 +250,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                                 {language === "es" ? "Etiquetas" : "Tags"}
                             </FormLabel>
                             <Autocomplete
-                                options={tagOptions}
+                                options={tagOptions ? tagOptions : []}
                                 result={tagsSelected}
                                 setResult={(tagOptions) => setTagsSelected(handleTagSelected(tagOptions))}
                                 placeholder="Select tags"
@@ -271,7 +276,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                             </FormErrorMessage>
                         </FormControl>
 
-                        <FormControl mb={4} isInvalid={errors.state}>
+                        <FormControl mb={8} isInvalid={errors.state}>
                             <FormLabel
                                 color={greenColor}
                                 fontWeight="bold" >
@@ -292,12 +297,12 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                                 <option value='restricted'>Restricted</option>
                             </Select>
                             <FormErrorMessage>{errors.state && errors.state.message}</FormErrorMessage>
+                            <Text py={2} fontSize="sm">
+                                {language === "es" ? "Nota: si el estado de la plantilla es 'Draft', solo el creador del template podran verlo"
+                                    : "Note: If the template state is 'Draft', only the creator of the template can see it"}
+                            </Text>
                         </FormControl>
 
-                        <Text mb={4} fontSize="sm">
-                            {language === "es" ? "Nota: si el estado de la plantilla es 'Draft', solo el creador del template podran verlo"
-                                : "Note: If the template state is 'Draft', only the creator of the template can see it"}
-                        </Text>
                     </CardBody>
 
                     <CardFooter display="flex" justifyContent="flex-end">
@@ -314,7 +319,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                 confirmCallback={handleSubmit(onSubmit)}
                 title={language === "es" ? "Guardar configuración" : "Set settings"}
                 message={language === "es" ? "¿Deseas guardar los cambios?" : "Do you want to save the changes?"} />
-                
+
         </>
     )
 }

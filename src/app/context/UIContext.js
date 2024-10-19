@@ -1,7 +1,10 @@
 "use client";
 
-//React imports
+//React/Next imports
 import { useState, useEffect, createContext, useContext } from "react";
+
+//Chakra imports
+import { useToast } from "@chakra-ui/react";
 
 //Chakra imports
 import { useColorModeValue } from "@chakra-ui/react";
@@ -45,6 +48,7 @@ export const UIProvider = ({ children }) => {
     }
 
     //Interactive settings
+    const toast = useToast();
     const [showModal, setShowModal] = useState(false);
     const [modalOptions, setModalOptions] = useState({
         title: '',
@@ -110,6 +114,15 @@ export const UIProvider = ({ children }) => {
         );
     }
 
+    const openToast = (title = null, message, type, isClosable = true) => {
+        toast({
+            title: title,
+            description: message,
+            status: type,
+            isClosable: isClosable
+        });
+    }
+
     return (
         <UIContext.Provider value={{
             bg,
@@ -131,7 +144,8 @@ export const UIProvider = ({ children }) => {
             openSimpleErrorModal,
             openErrorAuthModal,
             openExpiredSessionModal,
-            openAccessDeniedModal
+            openAccessDeniedModal,
+            openToast
         }}>
             {children}
 

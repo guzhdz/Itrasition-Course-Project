@@ -81,7 +81,7 @@ export const updateTemplateSettings = async (templateInfo) => {
             },
             body: JSON.stringify(body)
         });
-        const data = await response.json();
+        const data = superjson.deserialize(await response.json());
         if (response.status !== 200) {
             messageError = data.error;
             return { ok: false, message: messageError };

@@ -34,7 +34,7 @@ model Topic {
 
 model Tag {
   id            Int     @id @default(autoincrement()) 
-  name          String  @db.VarChar(255)
+  name          String  @unique @db.VarChar(255)
   templatetags  TemplateTag[]
 }
 
@@ -67,6 +67,8 @@ model TemplateTag {
   tag_id      Int
   template    Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
   template_id BigInt
+
+  @@unique([template_id, tag_id])
 }
 
 model TemplateAccess {
@@ -75,6 +77,8 @@ model TemplateAccess {
   template_id BigInt
   user        User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
   user_id     Int
+
+  @@unique([template_id, user_id])
 }
 
 model Question {
