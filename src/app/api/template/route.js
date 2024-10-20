@@ -110,7 +110,11 @@ const getTemplateSettings = async (queryParams) => {
                         tag: true
                     }
                 },
-                templateaccess: true
+                templateaccess: {
+                    include: {
+                        user: true
+                    }
+                }
             }
         });
         statusCode = 200;
@@ -118,6 +122,10 @@ const getTemplateSettings = async (queryParams) => {
             result.templatetags = result.templatetags.map((templateTag) => ({
                 value: templateTag.tag.id,
                 label: templateTag.tag.name
+            }));
+            result.templateaccess = result.templateaccess.map((templateAccess) => ({
+                value: templateAccess.user.id_user,
+                label: templateAccess.user.name + " (" + templateAccess.user.email + ")"
             }));
         }
         return new Response(superjson.stringify(result), { status: statusCode });
@@ -132,7 +140,7 @@ const getTemplateSettings = async (queryParams) => {
 }
 
 const updateTemplateSettings = async (templateInfo) => {
-    const { id, title, description, image_url, state, topic_id, tagsToAdd, tagsToDelete, newTags } = templateInfo;
+    const { id, title, description, image_url, state, topic_id, tagsToAdd, tagsToDelete, newTags, usersToAdd, usersToDelete } = templateInfo;
     let statusCode = 500;
     try {
         const result = await prisma.$transaction(async () => {
@@ -141,6 +149,14 @@ const updateTemplateSettings = async (templateInfo) => {
                     template_id: id,
                     tag_id: {
                         in: tagsToDelete
+                    }
+                }
+            });
+            await prisma.templateAccess.deleteMany({
+                where: {
+                    template_id: id,
+                    user_id: {
+                        in: usersToDelete
                     }
                 }
             });
@@ -165,14 +181,32 @@ const updateTemplateSettings = async (templateInfo) => {
                         upsert: tagsToAdd.map(tagid => ({
                             where: {
                                 template_id_tag_id: {
-                                    tag_id: tagid.id,
+                                    tag_id: tagid,
                                     template_id: id
                                 }
                             },
                             create: {
                                 tag: {
                                     connect: {
-                                        id: tagid.id
+                                        id: tagid
+                                    }
+                                }
+                            },
+                            update: {}
+                        }))
+                    },
+                    templateaccess: {
+                        upsert: usersToAdd.map(userId => ({
+                            where: {
+                                template_id_user_id: {
+                                    template_id: id,
+                                    user_id: userId
+                                }
+                            },
+                            create: {
+                                user: {
+                                    connect: {
+                                        id_user: userId
                                     }
                                 }
                             },

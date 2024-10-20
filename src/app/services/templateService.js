@@ -63,9 +63,11 @@ export const updateTemplateSettings = async (templateInfo) => {
         image_url: templateInfo.image_url,
         state: templateInfo.state,
         topic_id: Number.parseInt(templateInfo.topic_id),
-        tagsToAdd: templateInfo.tagsToAdd.map((tag) => {return {id: tag.value}}),
+        tagsToAdd: templateInfo.tagsToAdd.map((tag) => tag.value),
         tagsToDelete: templateInfo.tagsToDelete.map((tag) => tag.value),
         newTags: templateInfo.newTags.map((tag) => tag.label),
+        usersToAdd: templateInfo.usersToAdd.map((user) => user.value),
+        usersToDelete: templateInfo.usersToDelete.map((user) => user.value)
     }
     const action = "updateTemplateSettings";
     const body = {

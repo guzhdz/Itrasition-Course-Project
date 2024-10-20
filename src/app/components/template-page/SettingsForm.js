@@ -20,7 +20,8 @@ import {
     TagLabel,
     TagCloseButton,
     Text,
-    chakra
+    chakra,
+    Avatar
 } from "@chakra-ui/react";
 
 //Components imports
@@ -36,16 +37,19 @@ import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 //Context imports
 import { useUI } from "../../context/UIContext";
 
-const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refreshInfo, checkAuth }) => {
+const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, setLoading, refreshInfo, checkAuth }) => {
     const router = useRouter();
-    const { language, greenColor, openToast } = useUI();
+    const { language, greenColor, openToast, textGreenScheme } = useUI();
     const {
         register,
         handleSubmit,
         formState: { errors },
-        reset
+        reset,
+        watch
     } = useForm();
+    const state = watch('state');
     const [tagsSelected, setTagsSelected] = useState(templateInfo.templatetags || []);
+    const [usersSelected, setUsersSelected] = useState([]);
     const [tagError, setTagError] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -100,6 +104,16 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
             !templateInfo.templatetags.some(templatetag => templatetag.value === tag.value)
         );
         const tagsToDelete = templateInfo.templatetags.filter((tag) => !tagsSelected.some(tagSelected => tagSelected === tag));
+        let usersToAdd = [];
+        let usersToDelete = [];
+        if(state === "restricted") {
+            usersToAdd = usersSelected.filter((user) =>
+                !templateInfo.templateaccess.some(templateaccess => templateaccess.value === user.value)
+            );
+            usersToDelete = templateInfo.templateaccess.filter((user) => !usersSelected.some(userSelected => userSelected.value === user.value));
+        } else {
+            usersToDelete = templateInfo.templateaccess;
+        }
         return {
             id: templateInfo.id,
             title: data.title,
@@ -109,7 +123,9 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
             topic_id: data.topic,
             tagsToAdd,
             tagsToDelete,
-            newTags
+            newTags,
+            usersToAdd,
+            usersToDelete
         }
     }
 
@@ -126,6 +142,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
             topic: templateInfo.topic_id || "",
         });
         setTagsSelected(templateInfo.templatetags || []);
+        setUsersSelected(templateInfo.templateaccess || []);
     }, [templateInfo]);
 
     return (
@@ -298,8 +315,51 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, setLoading, refr
                             </Select>
                             <FormErrorMessage>{errors.state && errors.state.message}</FormErrorMessage>
                             <Text py={2} fontSize="sm">
-                                {language === "es" ? "Nota: si el estado de la plantilla es 'Draft', solo el creador del template podran verlo"
-                                    : "Note: If the template state is 'Draft', only the creator of the template can see it"}
+                                {language === "es" ? "Nota: Si el estado de la plantilla es 'Draft', solo el creador del template podra verlo."
+                                    : "Note: If the template state is 'Draft', only the creator of the template can see it."}
+                            </Text>
+                        </FormControl>
+
+                        <FormControl>
+                            <FormLabel
+                                color={greenColor}
+                                fontWeight="bold" >
+                                {language === "es" ? "Usuarios autorizados" : "Authorized users"}
+                            </FormLabel>
+                            <Autocomplete
+                                options={userOptions ? userOptions : []}
+                                result={state === "restricted" ? usersSelected : []}
+                                setResult={(userOptions) => setUsersSelected(userOptions)}
+                                placeholder="Select users"
+                                disabled={loadingUpdate || state !== "restricted"}
+                                allowCreation={false}
+                                notFoundText={language === "es" ? "No se encontraron resultados" : "No results found"}
+                                focusBorderColor={greenColor}
+                                _placeholder={{ color: 'gray.500' }}
+                                bgHoverColor="gray"
+                                renderBadge={(option) => (
+                                    <Tag
+                                        key={option.value}
+                                        borderRadius='full'
+                                        variant='solid'
+                                        size='lg'
+                                        mx={1} >
+                                        <Avatar
+                                            name={option.label.replace(/\s*\(.*?\)/, '')}
+                                            bg={greenColor}
+                                            color={textGreenScheme}
+                                            size='xs'
+                                            ml={-1}
+                                            mr={2} />
+                                        <TagLabel>{option.label}</TagLabel>
+                                        <TagCloseButton />
+                                    </Tag>
+                                )}
+                            />
+                            <Text py={2} fontSize="sm">
+                                {language === "es" ?
+                                    "Nota: Aqui puedes seleccionar los usuarios autorizados para ver y rellenar la plantilla (solo en stado restringido)."
+                                    : "Note: Here you can select users authorized to see and fill out the template (only in state 'restricted')."}
                             </Text>
                         </FormControl>
 

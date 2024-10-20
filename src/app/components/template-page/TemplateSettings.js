@@ -13,6 +13,7 @@ import SettingsForm from "./SettingsForm";
 import { getTopics } from "../../services/topicService";
 import { getTags } from "../../services/tagService";
 import { getTemplate } from "../../services/templateService";
+import { getUsers } from "../../services/userService";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -21,6 +22,7 @@ const TemplateSettings = ({id, checkAuth}) => {
     const { openSimpleErrorModal, setPageLoaded } = useUI();
     const [topicOptions, setTopicOptions] = useState([]);
     const [tagOptions, setTagOptions] = useState([]);
+    const [userOptions, setUserOptions] = useState([]);
     const [loading, setLoading] = useState(true);
     const [templateInfo, setTemplateInfo] = useState(null);
 
@@ -75,11 +77,31 @@ const TemplateSettings = ({id, checkAuth}) => {
         }
     }
 
+    const getUsersOptions = async () => {
+        const response = await getUsers("getUsers");
+        if (response.ok) {
+            const users = response.data.map((user) => {
+                return {
+                    value: user.id_user,
+                    label: user.name + " (" + user.email + ")"
+                }
+            });
+            setUserOptions(users);
+        } else {
+            setPageLoaded(false);
+            openSimpleErrorModal(
+                response.message,
+                () => router.push('/dashboard')
+            );
+        }
+    }
+
     const initializeComponent = async () => {
         await getTemplateInfo();
         await getTopicOptions();
         await getTagOptions();
-        setLoading(false); setLoading(false);
+        await getUsersOptions();
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -93,6 +115,7 @@ const TemplateSettings = ({id, checkAuth}) => {
                     templateInfo={templateInfo}
                     tagOptions={tagOptions}
                     topicOptions={topicOptions}
+                    userOptions={userOptions}
                     setLoading={setLoading}
                     refreshInfo={initializeComponent}
                     checkAuth={checkAuth} />}
