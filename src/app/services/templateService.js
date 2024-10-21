@@ -25,6 +25,25 @@ export const getTemplate = async (templateId, action) => {
     }
 }
 
+export const getTemplatesUser = async (userId) => {
+    let messageError = "";
+    try {
+        const url = new URL(API_URL, window.location.origin);
+        url.searchParams.append('action', "getTemplatesUser");
+        url.searchParams.append('userId', userId);
+        const response = await fetch(url.toString());
+        const data = superjson.deserialize(await response.json());
+        if (response.status !== 200) {
+            messageError = data.error;
+            return { ok: false, message: messageError };
+        } else {
+            return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(deserializedError);
+    }
+}
+
 export const insertDraftTemplate = async (title, description, topic_id, user_id) => {
     const template = {
         title,
@@ -99,5 +118,28 @@ export const updateTemplateSettings = async (templateInfo) => {
         return {
             ok: false, message: message
         };
+    }
+}
+
+export const deleteTemplates = async (ids) => {
+    ids = ids.map(id => id.toString());
+    try {
+        const response = await fetch(API_URL, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ids: ids
+            })
+        });
+        if (response.status === 200) {
+            return { ok: true };
+        } else {
+            const data = await response.json();
+            return { ok: false, message: data.error };
+        }
+    } catch (error) {
+        return getGeneralError(error);
     }
 }

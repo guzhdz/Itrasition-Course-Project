@@ -17,9 +17,11 @@ import { getUsers } from "../../services/userService";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
+import { useAuth } from "../../context/AuthContext";
 
 const TemplateSettings = ({id, checkAuth}) => {
     const { openSimpleErrorModal, setPageLoaded } = useUI();
+    const { user } = useAuth();
     const [topicOptions, setTopicOptions] = useState([]);
     const [tagOptions, setTagOptions] = useState([]);
     const [userOptions, setUserOptions] = useState([]);
@@ -80,7 +82,8 @@ const TemplateSettings = ({id, checkAuth}) => {
     const getUsersOptions = async () => {
         const response = await getUsers("getUsers");
         if (response.ok) {
-            const users = response.data.map((user) => {
+            const users = response.data.filter((userData) => userData.id_user !== user.id_user)
+            .map((user) => {
                 return {
                     value: user.id_user,
                     label: user.name + " (" + user.email + ")"

@@ -7,6 +7,8 @@ export async function GET(request) {
     const action = queryParams.get('action');
     if (action === 'getTemplateOwner') {
         return await getTemplateOwner(queryParams);
+    } else if (action === 'getTemplatesUser') {
+        return await getTemplatesUser(queryParams);
     } else if (action === 'getTemplateSettings') {
         return await getTemplateSettings(queryParams);
     } else {
@@ -15,7 +17,7 @@ export async function GET(request) {
             es: "Solicitud incorrecta."
         }
         const statusCode = 400;
-        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
 }
 
@@ -58,7 +60,7 @@ export async function POST(request) {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
         }
-        return new Response(JSON.stringify(messageError), { status: 500 });
+        return new Response(superjson.stringify(messageError), { status: 500 });
     }
 }
 
@@ -72,6 +74,29 @@ export async function PUT(request) {
             es: "Solicitud incorrecta."
         }
         const statusCode = 400;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+export async function DELETE(request) {
+    const { ids } = await request.json();
+    let statusCode = 500;
+    try {
+        const result = await prisma.template.deleteMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
         return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
     }
 }
@@ -93,7 +118,29 @@ const getTemplateOwner = async (queryParams) => {
             es: "Error del servidor. Por favor, intentalo de nuevo."
         };
         statusCode = 500;
-        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getTemplatesUser = async (queryParams) => {
+    const userId = queryParams.get('userId');
+    let statusCode = 500;
+    try {
+        const rows = await prisma.template.findMany({
+            where: { user_id: Number.parseInt(userId) },
+            include: {
+                topic: true
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(rows), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
 }
 
@@ -135,7 +182,7 @@ const getTemplateSettings = async (queryParams) => {
             es: "Error del servidor. Por favor, intentalo de nuevo."
         };
         statusCode = 500;
-        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
 }
 
@@ -218,9 +265,8 @@ const updateTemplateSettings = async (templateInfo) => {
             return updatedTemplate;
         });
         statusCode = 200;
-        return new Response(JSON.stringify(superjson.stringify(result)), { status: statusCode });
+        return new Response(superjson.stringify(result), { status: statusCode });
     } catch (error) {
-        console.log(error);
         const messageError = {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."

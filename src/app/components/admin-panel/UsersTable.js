@@ -36,7 +36,7 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
     const [users, setUsers] = useState([]);
     const [checkedUsers, setCheckedUsers] = useState([false]);
     const allChecked = checkedUsers.every(Boolean);
-    const isIndeterminate = checkedUsers.some(Boolean) && !allChecked
+    const isIndeterminate = checkedUsers.some(Boolean) && !allChecked;
     const [loading, setLoading] = useState(false);
     const skeletons = Array(8).fill(null);
 
@@ -55,7 +55,7 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
                     "error"
                 );
             }
-            setTimeout(() => setLoading(false), 500);
+            setTimeout(() => setLoading(false), 300);
         }
     };
 

@@ -15,7 +15,7 @@ import { PlusSquareIcon, CopyIcon } from "@chakra-ui/icons";
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
-const UserBanner = () => {
+const UserBanner = ({templatesNumber}) => {
     const { greenColor, textGreenScheme, language } = useUI();
     const { user } = useAuth();
 
@@ -38,7 +38,7 @@ const UserBanner = () => {
                     <Flex direction="column" alignItems="center">
                         <Text fontSize="lg" display="flex" alignItems="center" gap={2}>
                             <PlusSquareIcon color={greenColor} />
-                            0
+                            {templatesNumber}
                         </Text>
                         <Text fontSize="lg">
                             {language === "es" ? "Plantillas creadas" : "Templates created"}

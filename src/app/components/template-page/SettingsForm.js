@@ -1,6 +1,5 @@
 //React/Next imports
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -38,7 +37,6 @@ import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 import { useUI } from "../../context/UIContext";
 
 const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, setLoading, refreshInfo, checkAuth }) => {
-    const router = useRouter();
     const { language, greenColor, openToast, textGreenScheme } = useUI();
     const {
         register,
@@ -183,7 +181,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                             <FormLabel
                                 color={greenColor}
                                 fontWeight="bold" >
-                                {language === "es" ? "Descripción (soporte markdown)" : "Description (support markdown)"}
+                                {language === "es" ? "Descripción (soporte a markdown)" : "Description (support markdown)"}
                             </FormLabel>
                             <Textarea
                                 id="description"
@@ -309,13 +307,13 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                                         required: language === "es" ? "Selecciona un estado" : "Please select a state",
                                     }
                                 )}>
-                                <option value='draft'>Draft</option>
-                                <option value='public'>Public</option>
-                                <option value='restricted'>Restricted</option>
+                                <option value='draft'>{language === "es" ? "Borrador" : "Draft"}</option>
+                                <option value='public'>{language === "es" ? "Público" : "Public"}</option>
+                                <option value='restricted'>{language === "es" ? "Restringido" : "Restricted"}</option>
                             </Select>
                             <FormErrorMessage>{errors.state && errors.state.message}</FormErrorMessage>
                             <Text py={2} fontSize="sm">
-                                {language === "es" ? "Nota: Si el estado de la plantilla es 'Draft', solo el creador del template podra verlo."
+                                {language === "es" ? "Nota: Si el estado de la plantilla es 'Borrador', solo el creador del template podra verlo."
                                     : "Note: If the template state is 'Draft', only the creator of the template can see it."}
                             </Text>
                         </FormControl>
@@ -330,7 +328,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                                 options={userOptions ? userOptions : []}
                                 result={state === "restricted" ? usersSelected : []}
                                 setResult={(userOptions) => setUsersSelected(userOptions)}
-                                placeholder="Select users"
+                                placeholder={language === "es" ? "Selecciona un usuario" : "Select a user"}
                                 disabled={loadingUpdate || state !== "restricted"}
                                 allowCreation={false}
                                 notFoundText={language === "es" ? "No se encontraron resultados" : "No results found"}
@@ -358,7 +356,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                             />
                             <Text py={2} fontSize="sm">
                                 {language === "es" ?
-                                    "Nota: Aqui puedes seleccionar los usuarios autorizados para ver y rellenar la plantilla (solo en stado restringido)."
+                                    "Nota: Aqui puedes seleccionar los usuarios autorizados para ver y rellenar la plantilla (solo en stado 'restringido)'."
                                     : "Note: Here you can select users authorized to see and fill out the template (only in state 'restricted')."}
                             </Text>
                         </FormControl>

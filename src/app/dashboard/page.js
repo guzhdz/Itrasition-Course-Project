@@ -1,7 +1,7 @@
 "use client"
 
 //React/Next imports
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 //Chakra imports
@@ -17,6 +17,9 @@ import LoadingPage from '../components/shared/LoadingPage'
 import UserBanner from "../components/dashboard/UserBanner";
 import DashboardTabs from "../components/dashboard/DashboardTabs";
 
+//Services imports
+import { getTemplatesUser } from "../services/templateService";
+
 //Context imports
 import { useUI } from "../context/UIContext";
 import { useAuth } from "../context/AuthContext";
@@ -31,7 +34,8 @@ export default function Dashboard() {
         openExpiredSessionModal,
         pageLoaded,
         setPageLoaded } = useUI();
-    const { checkAuth } = useAuth();
+    const { checkAuth, user } = useAuth();
+    const [templatesNumber, setTemplatesNumber] = useState(0);
 
     const authenticate = async () => {
         const response = await checkAuth();
@@ -72,6 +76,23 @@ export default function Dashboard() {
         isAuth && setPageLoaded(true);
     }
 
+    const loadTemplates = async () => {
+        const response = await getTemplatesUser(user.id_user);
+        if (response.ok) {
+            setTemplatesNumber(response.data.length);
+            return response.data;
+        } else {
+            let messageError = language === "es" ? "Error al cargar las plantillas. Por favor, intenta de nuevo."
+                : "Error loading templates. Please try again later.";
+            if (response.message) {
+                messageError = language === "es" ? response.message[language] : response.message.en;
+            }
+            openToast("Error", messageError, "error");
+            setTemplatesNumber(0);
+            return [];
+        }
+    }
+
     useEffect(() => {
         initializePage();
     }, []);
@@ -92,12 +113,13 @@ export default function Dashboard() {
                     <Box maxW="1400px" mx="auto" width="80%" p={3}>
                         <Heading mb="40px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
                         
-                        <UserBanner />
+                        <UserBanner templatesNumber={templatesNumber} />
 
                         <DashboardTabs checkAuth={async () => {
                             const authCase = await authenticate();
                             return handleAuthCase(authCase);
-                        }}/>
+                        }}
+                        loadTemplates={loadTemplates}/>
                     </Box>
                 </Flex >
                 :
