@@ -55,7 +55,7 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
         const response = await loadTemplates(user.id_user);
         setTemplates(response);
         setCheckedTemplates(new Array(response.length).fill(false));
-        setTimeout (() => setLoading(false), 300);
+        setTimeout(() => setLoading(false), 300);
     };
 
     const getStateColor = (state) => {
@@ -214,7 +214,13 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
 
             case 2:
                 sortedTemplates.sort((a, b) =>
-                    order === "asc" ? a.topic.name.localeCompare(b.title) : b.topic.name.localeCompare(a.title));
+                    order === "asc" ? a.topic.name.localeCompare(b.topic.name) : b.topic.name.localeCompare(a.topic.name));
+                setTemplates(sortedTemplates);
+                break;
+
+            default:
+                sortedTemplates.sort((a, b) =>
+                    order === "asc" ? a.title.localeCompare(b.title) : b.title.localeCompare(a.title));
                 setTemplates(sortedTemplates);
                 break;
         }
