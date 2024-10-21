@@ -18,7 +18,7 @@ import {
 import { FaSort } from "react-icons/fa";
 
 //Context imports
-import { useUI } from "../../context/UIContext";
+import { useUI } from "../../../context/UIContext";
 
 const SortMenu = ({ sortTemplates }) => {
     const { language } = useUI();

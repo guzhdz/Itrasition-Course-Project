@@ -11,7 +11,7 @@ import {
 } from "@chakra-ui/react";
 
 //Components imports
-import TemplatesTable from "./TemplatesTable";
+import TemplatesTable from "./templates-table/TemplatesTable";
 
 //Context imports
 import { useUI } from "../../context/UIContext";

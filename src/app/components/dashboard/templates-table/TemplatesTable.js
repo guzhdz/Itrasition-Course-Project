@@ -23,19 +23,20 @@ import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
 
 //Component imports
 import SortMenu from "./SortMenu";
-import ConfirmModal from "../shared/ConfirmModal";
+import TemplateActions from "./TemplateActions";
+import ConfirmModal from "../../shared/ConfirmModal";
 
 //Services imports
-import { insertDraftTemplate } from "../../services/templateService";
-import { getTopics } from "../../services/topicService";
-import { deleteTemplates } from "../../services/templateService";
+import { insertDraftTemplate } from "../../../services/templateService";
+import { getTopics } from "../../../services/topicService";
+import { deleteTemplates } from "../../../services/templateService";
 
 //Context imports
-import { useUI } from "../../context/UIContext";
-import { useAuth } from "../../context/AuthContext";
+import { useUI } from "../../../context/UIContext";
+import { useAuth } from "../../../context/AuthContext";
 
 const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
-    const { language, openToast, setPageLoaded } = useUI();
+    const { language, openToast } = useUI();
     const { user } = useAuth();
     const [templates, setTemplates] = useState([]);
     const [checkedTemplates, setCheckedTemplates] = useState([false]);
@@ -52,10 +53,13 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
 
     const callLoadTemplates = async () => {
         setLoading(true);
-        const response = await loadTemplates(user.id_user);
-        setTemplates(response);
-        setCheckedTemplates(new Array(response.length).fill(false));
-        setTimeout(() => setLoading(false), 300);
+        const isAuth = await checkAuth();
+        if (isAuth) {
+            const response = await loadTemplates(user.id_user);
+            setTemplates(response);
+            setCheckedTemplates(new Array(response.length).fill(false));
+            setTimeout(() => setLoading(false), 300);
+        }
     };
 
     const getStateColor = (state) => {
@@ -187,13 +191,16 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
         setLoading(false);
     }
 
-    const openDeleteModal = (title, message, confirmCallback) => {
-        setConfirmModalInfo({
-            title,
-            message,
-            confirmCallback
-        });
-        setShowModal(true);
+    const openDeleteModal = async (title, message, confirmCallback) => {
+        const isAuth = await checkAuth();
+        if (isAuth) {
+            setConfirmModalInfo({
+                title,
+                message,
+                confirmCallback
+            });
+            setShowModal(true);
+        }
     }
 
     const sortTemplates = (type, order) => {
@@ -238,29 +245,15 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
     return (
         <>
             <Box my={2}>
-                <Flex mb={4} gap={2}>
-                    <Button
-                        rightIcon={<AddIcon />}
-                        colorScheme="green"
-                        onClick={handleNewTemplate}
-                        isLoading={loading}>
-                        {language === "es" ? 'Nueva' : 'New'}
-                    </Button>
-
-                    <SortMenu sortTemplates={sortTemplates} />
-
-                    <Button
-                        ml="auto"
-                        disabled={!((allChecked && templates.length > 0) || isIndeterminate)}
-                        colorScheme="red"
-                        onClick={() => openDeleteModal(
-                            language === "es" ? "Eliminar plantillas" : "Delete templates",
-                            language === "es" ? "¿Seguro que quieres eliminar las plantillas seleccionadas?"
-                                : "Are you sure you want to delete the selected templates?",
-                            deleteSelectedTemplates)} >
-                        {language === "es" ? 'Eliminar' : 'Delete'}
-                    </Button>
-                </Flex>
+                <TemplateActions
+                    sortTemplates={sortTemplates}
+                    loading={loading}
+                    allChecked={allChecked}
+                    templates={templates}
+                    isIndeterminate={isIndeterminate}
+                    openDeleteModal={openDeleteModal}
+                    deleteSelectedTemplates={deleteSelectedTemplates}
+                    handleNewTemplate={handleNewTemplate} />
 
                 <TableContainer>
                     <Table variant="striped">
