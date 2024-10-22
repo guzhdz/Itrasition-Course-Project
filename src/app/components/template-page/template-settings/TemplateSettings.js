@@ -10,14 +10,14 @@ import {
 import SettingsForm from "./SettingsForm";
 
 //Services imports
-import { getTopics } from "../../services/topicService";
-import { getTags } from "../../services/tagService";
-import { getTemplate } from "../../services/templateService";
-import { getUsers } from "../../services/userService";
+import { getTopics } from "../../../services/topicService";
+import { getTags } from "../../../services/tagService";
+import { getTemplate } from "../../../services/templateService";
+import { getUsers } from "../../../services/userService";
 
 //Context imports
-import { useUI } from "../../context/UIContext";
-import { useAuth } from "../../context/AuthContext";
+import { useUI } from "../../../context/UIContext";
+import { useAuth } from "../../../context/AuthContext";
 
 const TemplateSettings = ({id, checkAuth}) => {
     const { openSimpleErrorModal, setPageLoaded } = useUI();

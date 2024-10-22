@@ -24,17 +24,17 @@ import {
 } from "@chakra-ui/react";
 
 //Components imports
-import ConfirmModal from "../shared/ConfirmModal";
+import ConfirmModal from "../../shared/ConfirmModal";
 
 //Services imports
-import { updateTemplateSettings } from "../../services/templateService";
+import { updateTemplateSettings } from "../../../services/templateService";
 
 //Library imports
 import { useForm } from "react-hook-form";
 import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 
 //Context imports
-import { useUI } from "../../context/UIContext";
+import { useUI } from "../../../context/UIContext";
 
 const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, setLoading, refreshInfo, checkAuth }) => {
     const { language, greenColor, openToast, textGreenScheme } = useUI();
@@ -200,8 +200,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                                             message: language === "es" ? "Longitud maxima de 510 caracteres" : "Maximum length is 510 characters",
                                         }
                                     })
-                                }
-                            />
+                                } />
                             <FormErrorMessage>{errors.description && errors.description.message}</FormErrorMessage>
                         </FormControl>
 

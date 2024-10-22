@@ -11,7 +11,8 @@ import {
 } from "@chakra-ui/react";
 
 //Components imports
-import TemplateSettings from "./TemplateSettings";
+import TemplateSettings from "./template-settings/TemplateSettings";
+import TemplateQuestions from "./template-questions/TemplateQuestions";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -33,7 +34,7 @@ const TemplatePageTabs = ({ id, checkAuth }) => {
                     <TemplateSettings id={id} checkAuth={checkAuth}/>
                 </TabPanel>
                 <TabPanel>
-                    <h1>Questions</h1>
+                    <TemplateQuestions id={id} checkAuth={checkAuth} />
                 </TabPanel>
                 <TabPanel>
                     <h1>Results</h1>

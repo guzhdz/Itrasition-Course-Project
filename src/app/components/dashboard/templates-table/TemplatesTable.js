@@ -16,13 +16,11 @@ import {
     Badge,
     Flex,
     IconButton,
-    Button,
     Skeleton
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon, AddIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 
 //Component imports
-import SortMenu from "./SortMenu";
 import TemplateActions from "./TemplateActions";
 import ConfirmModal from "../../shared/ConfirmModal";
 
