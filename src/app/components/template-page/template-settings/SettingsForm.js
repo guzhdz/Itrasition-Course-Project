@@ -52,9 +52,29 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
     const [showModal, setShowModal] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
 
-    const handleTagSelected = (value) => {
-        const nueva = value[0].label;
-        return validateTag(nueva) ? value : tagsSelected;
+    const handleTagSelected = (newTags) => {
+        if(newTags.length !== 0){
+            const nueva = newTags.shift();
+            if(newTags.some(tag => tag.value === nueva.value)){
+                return newTags.filter((tag) => tag.value !== nueva.value);
+            } else {
+                newTags.unshift(nueva);
+                return validateTag(nueva.label) ? newTags : tagsSelected;   
+            }
+        }
+        return newTags;
+    };
+
+    const handleUserSelected = (newUsers) => {
+        if(newUsers.length !== 0){
+            const nuevo = newUsers.shift();
+            if(newUsers.some(user => user.value === nuevo.value)){
+                return newUsers.filter(user => user.value !== nuevo.value);
+            } else {
+                newUsers.unshift(nuevo);
+            }
+        }
+        return newUsers;
     };
 
     const validateTag = (value) => {
@@ -75,12 +95,12 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
             const newTemplateInfo = getNewTemplateInfo(data);
             const response = await updateTemplateSettings(newTemplateInfo);
             if (response.ok) {
+                await refreshInfo();
                 openToast(
                     null,
                     language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
                     'success'
                 )
-                await refreshInfo();
             } else {
                 openToast(
                     'Error',
@@ -98,10 +118,10 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
             typeof tag.value === "number" &&
             !templateInfo.templatetags.some(templatetag => templatetag.value === tag.value)
         );
-        const tagsToDelete = templateInfo.templatetags.filter((tag) => !tagsSelected.some(tagSelected => tagSelected === tag));
+        const tagsToDelete = templateInfo.templatetags.filter((tag) => !tagsSelected.some(tagSelected => tagSelected.value === tag.value));
         let usersToAdd = [];
         let usersToDelete = [];
-        if(state === "restricted") {
+        if (state === "restricted") {
             usersToAdd = usersSelected.filter((user) =>
                 !templateInfo.templateaccess.some(templateaccess => templateaccess.value === user.value)
             );
@@ -280,8 +300,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                                         <TagLabel>{option.label}</TagLabel>
                                         <TagCloseButton />
                                     </Tag>
-                                )}
-                            />
+                                )} />
                             <FormErrorMessage>
                                 {language === "es" ? "Longitud maxima de 255 caracteres" : "Maximum length is 255 characters"}
                             </FormErrorMessage>
@@ -323,7 +342,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                             <Autocomplete
                                 options={userOptions ? userOptions : []}
                                 result={state === "restricted" ? usersSelected : []}
-                                setResult={(userOptions) => setUsersSelected(userOptions)}
+                                setResult={(userOptions) => setUsersSelected(handleUserSelected(userOptions))}
                                 placeholder={language === "es" ? "Selecciona un usuario" : "Select a user"}
                                 disabled={loadingUpdate || state !== "restricted"}
                                 allowCreation={false}

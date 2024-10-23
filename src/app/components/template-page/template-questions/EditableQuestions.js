@@ -93,12 +93,12 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
             !updatedQuestions.some((questionUpdated) => question.id === questionUpdated?.id));
         const response = await updateTemplateQuestions(id, newQuestions, changedQuestions, deletedQuestions);
         if (response.ok) {
+            await refreshInfo();
             openToast(
                 null,
                 language === 'es' ? 'Preguntas actualizadas correctamente' : 'Questions updated successfully',
                 'success'
             );
-            await refreshInfo();
         } else {
             openToast(
                 'Error',
