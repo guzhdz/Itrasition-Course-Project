@@ -26,26 +26,20 @@ import { DeleteIcon } from "@chakra-ui/icons";
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const QuestionItem = ({ question, index, errors, register, watch, reset, deleteQuestion }) => {
+const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion, loadingUpdate }) => {
     const { language, greenColor } = useUI();
-    const type = watch(`question_${question.renderId}.type`);
+    const [type, setType] = useState(watch(`question_${question.renderId}.type`));
 
     const handleDelete = () => {
         deleteQuestion(index, question.renderId);
     }
 
     useEffect(() => {
-        if (question?.id) {
-            reset({
-                [`question_${question.renderId}`]: {
-                    type: question?.type || "text",
-                    title: question?.title || "",
-                    description: question?.description || "",
-                    displayed: question?.displayed || true
-                }
-            });
+        const newType = watch(`question_${question.renderId}.type`);
+        if (newType !== type) {
+          setType(newType);
         }
-    }, [question]);
+      }, [watch(`question_${question.renderId}.type`)]);
 
     return (
         <Card border="1px" borderColor={greenColor} mb={3}>
@@ -64,6 +58,7 @@ const QuestionItem = ({ question, index, errors, register, watch, reset, deleteQ
                         </FormLabel>
                         <Select
                             focusBorderColor={greenColor}
+                            disabled={loadingUpdate}
                             _placeholder={{ color: 'gray.500' }}
                             {...register(`question_${question.renderId}.type`,
                                 {
@@ -88,7 +83,7 @@ const QuestionItem = ({ question, index, errors, register, watch, reset, deleteQ
                         </FormLabel>
                         <Switch
                             colorScheme="green"
-                            defaultChecked
+                            disabled={loadingUpdate}
                             {...register(`question_${question.renderId}.displayed`)} />
                     </FormControl>
                 </Flex>
@@ -99,6 +94,7 @@ const QuestionItem = ({ question, index, errors, register, watch, reset, deleteQ
                         placeholder={language === "es" ? "Etiqueta" : "Label"}
                         focusBorderColor={greenColor}
                         variant="flushed"
+                        disabled={loadingUpdate}
                         _placeholder={{ color: 'gray.500' }}
                         {...register(`question_${question.renderId}.title`,
                             {
@@ -119,6 +115,7 @@ const QuestionItem = ({ question, index, errors, register, watch, reset, deleteQ
                         placeholder={language === "es" ? "Pregunta" : "Question"}
                         focusBorderColor={greenColor}
                         variant="flushed"
+                        disabled={loadingUpdate}
                         _placeholder={{ color: 'gray.500' }}
                         {...register(`question_${question.renderId}.description`,
                             {

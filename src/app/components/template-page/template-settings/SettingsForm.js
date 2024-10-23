@@ -72,6 +72,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
         setLoadingUpdate(true);
         const isOwner = await checkAuth();
         if (isOwner) {
+            setLoading(true);
             const newTemplateInfo = getNewTemplateInfo(data);
             const response = await updateTemplateSettings(newTemplateInfo);
             if (response.ok) {
@@ -80,7 +81,6 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                     language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
                     'success'
                 )
-                setLoading(true);
                 refreshInfo();
             } else {
                 openToast(
@@ -88,8 +88,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                     language === 'es' ? response.message[language] : response.message.en,
                     'error'
                 );
-                setLoading(true);
-                refreshInfo();
+                setLoading(false);
             }
         }
         setLoadingUpdate(false);

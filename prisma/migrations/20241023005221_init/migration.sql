@@ -72,6 +72,7 @@ CREATE TABLE "Question" (
     "description" VARCHAR(255) NOT NULL,
     "displayed" BOOLEAN NOT NULL DEFAULT true,
     "type" "QuestionType" NOT NULL DEFAULT 'text',
+    "index_order" INTEGER NOT NULL,
     "template_id" BIGINT NOT NULL,
 
     CONSTRAINT "Question_pkey" PRIMARY KEY ("id")

@@ -87,6 +87,7 @@ model Question {
   description String        @db.VarChar(255)
   displayed   Boolean       @default(true)
   type        QuestionType  @default(text)
+  index_order Int           
   template    Template      @relation(fields: [template_id], references: [id], onDelete: Cascade)
   template_id BigInt
   answers     Answer[]

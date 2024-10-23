@@ -35,7 +35,7 @@ const TemplateSettings = ({id, checkAuth}) => {
                 setTemplateInfo(response.data);
             else 
                 openSimpleErrorModal(
-                    { es: "Error al cargar la plantilla", en: "Error aot loading template" },
+                    { es: "Error al cargar la plantilla", en: "Error at loading template" },
                     () => router.push('/dashboard')
                 );
         } else {

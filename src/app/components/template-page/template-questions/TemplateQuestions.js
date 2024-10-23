@@ -24,7 +24,9 @@ const TemplateQuestions = ({ id, checkAuth }) => {
     const getQuestions = async () => {
         const response = await getQuestionsTemplate(id);
         if (response.ok) {
-            setQuestions(response.data.map((question) => { return {...question, renderId: getRenderId() }} ));
+            let renderIdCount = 0;
+            setQuestions(response.data.map((question) => { return {...question, renderId: renderIdCount++ }} ));
+            setRenderIdCount(renderIdCount);
         } else {
             setPageLoaded(false);
             openSimpleErrorModal(
@@ -55,7 +57,9 @@ const TemplateQuestions = ({ id, checkAuth }) => {
                     questions={questions}
                     setQuestions={setQuestions}
                     checkAuth={checkAuth}
-                    getRenderId={getRenderId} />}
+                    getRenderId={getRenderId}
+                    id={id}
+                    setLoading={setLoading} />}
         </>
     )
 }

@@ -21,14 +21,17 @@ import { AddIcon } from "@chakra-ui/icons";
 import QuestionItem from "./QuestionItem";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
+//Services imports
+import { getQuestionsTemplate, updateTemplateQuestions } from "../../../services/questionService";
+
 //Library imports
-import { useForm } from "react-hook-form";
+import { get, set, useForm } from "react-hook-form";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) => {
-    const { language } = useUI();
+const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoading, checkAuth }) => {
+    const { language, openToast } = useUI();
     const {
         register,
         handleSubmit,
@@ -37,13 +40,67 @@ const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) 
         watch,
         unregister
     } = useForm();
+    const [loadingUpdate, setLoadingUpdate] = useState(false);
 
     const onSubmit = async (data) => {
-        console.log(errors);
-        console.log(data);
+        setLoadingUpdate(true);
+        setLoading(true);
+        const actualQuestions = await getActualQuestions();
+        if (actualQuestions !== null) {
+            const updatedQuestions = questions.map((question, index) => {
+                const questionFormat = {
+                    ...question,
+                    ...data[`question_${question.renderId}`],
+                    index_order: index
+                }
+                delete questionFormat.renderId;
+                return questionFormat;
+            });
+            await updateQuestions(actualQuestions,updatedQuestions);
+            setLoading(false);
+        } else {
+            openToast(
+                'Error',
+                language === 'es' ? 'Error al actualizar las preguntas' : 'Error at updating questions',
+                'error'
+            );
+            setLoading(false);
+        }
+        setLoadingUpdate(false);
+    }
+
+    const getActualQuestions = async () => {
+        const response = await getQuestionsTemplate(id);
+        if (response.ok) {
+            return response.data;
+        } else {
+            return null;
+        }
+    }
+
+    const updateQuestions = async (actualQuestions, updatedQuestions) => {
+        const newQuestions = updatedQuestions.filter((question) => !question?.id);
+        const changedQuestions = updatedQuestions.filter((question) => question?.id);
+        const deletedQuestions = actualQuestions.filter((question) => 
+            !updatedQuestions.some((questionUpdated) => question.id === questionUpdated?.id));
+        const response = await updateTemplateQuestions(id, newQuestions, changedQuestions, deletedQuestions);
+        if (response.ok) {
+            openToast(
+                null,
+                language === 'es' ? 'Preguntas actualizadas correctamente' : 'Questions updated successfully',
+                'success'
+            );
+        } else {
+            openToast(
+                'Error',
+                language === 'es' ? 'Error al actualizar las preguntas' : 'Error at updating questions',
+                'error'
+            );
+        }
     }
 
     const handleNewQuestion = () => {
+        setLoadingUpdate(true);
         const newQuestion = {
             renderId: getRenderId(),
             title: "",
@@ -52,24 +109,50 @@ const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) 
             type: "text"
         }
         setQuestions([...questions, newQuestion]);
+        reset({
+            [`question_${newQuestion.renderId}`]: {
+                type: newQuestion.type,
+                title: newQuestion.title,
+                description: newQuestion.description,
+                displayed: newQuestion.displayed
+            }
+        });
+        setLoadingUpdate(false);
     }
 
     const deleteQuestion = (index, renderId) => {
+        setLoadingUpdate(true);
         unregister(`question_${renderId}`);
         const newQuestions = [...questions];
         newQuestions.splice(index, 1);
         setQuestions(newQuestions);
+        setLoadingUpdate(false);
     }
 
     const handleDragEnd = (result) => {
         if (!result.destination) return;
         const startIndex = result.source.index;
         const endIndex = result.destination.index;
+        if(startIndex === endIndex) return;
         const newQuestions = [...questions];
         const [draggedQuestion] = newQuestions.splice(startIndex, 1);
         newQuestions.splice(endIndex, 0, draggedQuestion);
         setQuestions(newQuestions);
     };
+
+    useEffect(() => {
+        const renderQuestions = questions.map((question) => {
+            return {
+                [`question_${question.renderId}`]: {
+                    type: question.type,
+                    title: question.title,
+                    description: question.description,
+                    displayed: question.displayed
+                }
+            }
+        })
+        reset(Object.assign({}, ...renderQuestions));
+    }, []);
 
     return (
         <>
@@ -106,7 +189,8 @@ const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) 
                                                         errors={errors}
                                                         watch={watch}
                                                         reset={reset}
-                                                        deleteQuestion={deleteQuestion} />
+                                                        deleteQuestion={deleteQuestion}
+                                                        loadingUpdate={loadingUpdate} />
                                                 </Box>
                                             )}
                                         </Draggable>
@@ -121,7 +205,8 @@ const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) 
                         <IconButton
                             icon={<AddIcon />}
                             colorScheme="green"
-                            onClick={handleNewQuestion} />
+                            onClick={handleNewQuestion}
+                            isLoading={loadingUpdate} />
                     </Flex>
 
                     {questions.length === 0 &&
@@ -131,7 +216,7 @@ const EditableQuestions = ({ questions, setQuestions, getRenderId, checkAuth }) 
                 </CardBody>
 
                 <CardFooter display="flex" justifyContent="flex-end">
-                    <Button colorScheme="green" onClick={handleSubmit(onSubmit)}>
+                    <Button colorScheme="green" onClick={handleSubmit(onSubmit)} isLoading={loadingUpdate}>
                         {language === "es" ? "Guardar preguntas" : "Save questions"}
                     </Button>
                 </CardFooter>
