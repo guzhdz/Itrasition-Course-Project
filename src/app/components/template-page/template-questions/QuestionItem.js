@@ -32,7 +32,7 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
 
     const handleDelete = () => {
         deleteQuestion(index, question.renderId);
-    }
+    };
 
     useEffect(() => {
         const newType = watch(`question_${question.renderId}.type`);
@@ -135,18 +135,21 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
                         type="text"
                         placeholder={language === "es" ? "Respuesta (Vista previa)" : "Answer (preview)"}
                         focusBorderColor={greenColor}
+                        disabled={loadingUpdate}
                         _placeholder={{ color: 'gray.500' }} />}
 
                     {type === "textarea" && <Textarea
                         placeholder={language === "es" ? "Respuesta (Vista previa)" : "Answer (preview)"}
                         focusBorderColor={greenColor}
+                        disabled={loadingUpdate}
                         rows={4}
                         _placeholder={{ color: 'gray.500' }} />}
 
                     {type === "positive_num" && <NumberInput
                         defaultValue={0}
                         min={0}
-                        focusBorderColor={greenColor} >
+                        focusBorderColor={greenColor}
+                        disabled={loadingUpdate} >
                         <NumberInputField />
                         <NumberInputStepper>
                             <NumberIncrementStepper />
@@ -155,7 +158,8 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
                     </NumberInput>}
 
                     {type === "checkbox" && <Checkbox
-                        colorScheme="green" >
+                        colorScheme="green"
+                        disabled={loadingUpdate} >
                         {language === "es" ? "Respuesta (Vista previa)" : "Answer (preview)"}
                     </Checkbox>}
                 </FormControl>
@@ -165,7 +169,8 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
                         colorScheme="red"
                         icon={<DeleteIcon />}
                         variant="ghost"
-                        onClick={handleDelete} />
+                        onClick={handleDelete}
+                        disabled={loadingUpdate} />
                 </Flex>
             </CardBody>
         </Card>

@@ -130,6 +130,9 @@ const getTemplatesUser = async (queryParams) => {
             where: { user_id: Number.parseInt(userId) },
             include: {
                 topic: true
+            },
+            orderBy: {
+                id: 'asc'
             }
         });
         statusCode = 200;

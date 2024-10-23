@@ -54,12 +54,13 @@ const TemplateQuestions = ({ id, checkAuth }) => {
         <>
             {loading ? <Skeleton height="700px" />
                 : <EditableQuestions
-                    questions={questions}
-                    setQuestions={setQuestions}
+                    loadedQuestions={questions}
+                    //setQuestions={setQuestions}
                     checkAuth={checkAuth}
                     getRenderId={getRenderId}
                     id={id}
-                    setLoading={setLoading} />}
+                    setLoading={setLoading}
+                    refreshInfo={initializeComponent} />}
         </>
     )
 }

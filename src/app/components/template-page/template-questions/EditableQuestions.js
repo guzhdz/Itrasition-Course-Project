@@ -1,5 +1,5 @@
 //React/Next imports
-import { useState, useEffect, useCallback, use } from "react";
+import { useState, useEffect } from "react";
 
 //Chakra imports
 import {
@@ -19,18 +19,19 @@ import { AddIcon } from "@chakra-ui/icons";
 
 //Components imports
 import QuestionItem from "./QuestionItem";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import ConfirmModal from "../../shared/ConfirmModal";
 
 //Services imports
 import { getQuestionsTemplate, updateTemplateQuestions } from "../../../services/questionService";
 
 //Library imports
-import { get, set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoading, checkAuth }) => {
+const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, checkAuth }) => {
     const { language, openToast } = useUI();
     const {
         register,
@@ -38,33 +39,40 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
         formState: { errors },
         reset,
         watch,
-        unregister
+        unregister,
     } = useForm();
+    const [questions, setQuestions] = useState(loadedQuestions);
+    const [showModal, setShowModal] = useState(false);
+    const [confirmModalInfo, setConfirmModalInfo] = useState({
+        title: "",
+        message: "",
+        confirmCallback: () => { }
+    });
     const [loadingUpdate, setLoadingUpdate] = useState(false);
 
     const onSubmit = async (data) => {
         setLoadingUpdate(true);
-        setLoading(true);
-        const actualQuestions = await getActualQuestions();
-        if (actualQuestions !== null) {
-            const updatedQuestions = questions.map((question, index) => {
-                const questionFormat = {
-                    ...question,
-                    ...data[`question_${question.renderId}`],
-                    index_order: index
-                }
-                delete questionFormat.renderId;
-                return questionFormat;
-            });
-            await updateQuestions(actualQuestions,updatedQuestions);
-            setLoading(false);
-        } else {
-            openToast(
-                'Error',
-                language === 'es' ? 'Error al actualizar las preguntas' : 'Error at updating questions',
-                'error'
-            );
-            setLoading(false);
+        const isOwner = await checkAuth();
+        if (isOwner) {
+            const actualQuestions = await getActualQuestions();
+            if (actualQuestions !== null) {
+                const updatedQuestions = questions.map((question, index) => {
+                    const questionFormat = {
+                        ...question,
+                        ...data[`question_${question.renderId}`],
+                        index_order: index
+                    }
+                    delete questionFormat.renderId;
+                    return questionFormat;
+                });
+                await updateQuestions(actualQuestions, updatedQuestions);
+            } else {
+                openToast(
+                    'Error',
+                    language === 'es' ? 'Error al actualizar las preguntas' : 'Error at updating questions',
+                    'error'
+                );
+            }
         }
         setLoadingUpdate(false);
     }
@@ -81,7 +89,7 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
     const updateQuestions = async (actualQuestions, updatedQuestions) => {
         const newQuestions = updatedQuestions.filter((question) => !question?.id);
         const changedQuestions = updatedQuestions.filter((question) => question?.id);
-        const deletedQuestions = actualQuestions.filter((question) => 
+        const deletedQuestions = actualQuestions.filter((question) =>
             !updatedQuestions.some((questionUpdated) => question.id === questionUpdated?.id));
         const response = await updateTemplateQuestions(id, newQuestions, changedQuestions, deletedQuestions);
         if (response.ok) {
@@ -90,6 +98,7 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
                 language === 'es' ? 'Preguntas actualizadas correctamente' : 'Questions updated successfully',
                 'success'
             );
+            await refreshInfo();
         } else {
             openToast(
                 'Error',
@@ -133,15 +142,24 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
         if (!result.destination) return;
         const startIndex = result.source.index;
         const endIndex = result.destination.index;
-        if(startIndex === endIndex) return;
+        if (startIndex === endIndex) return;
         const newQuestions = [...questions];
         const [draggedQuestion] = newQuestions.splice(startIndex, 1);
         newQuestions.splice(endIndex, 0, draggedQuestion);
         setQuestions(newQuestions);
     };
 
-    useEffect(() => {
-        const renderQuestions = questions.map((question) => {
+    const openConfirmModal = (title, message, confirmCallback) => {
+        setConfirmModalInfo({
+            title,
+            message,
+            confirmCallback
+        });
+        setShowModal(true);
+    }
+
+    const resetForm = () => {
+        const renderQuestions = loadedQuestions.map((question) => {
             return {
                 [`question_${question.renderId}`]: {
                     type: question.type,
@@ -150,9 +168,14 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
                     displayed: question.displayed
                 }
             }
-        })
+        });
         reset(Object.assign({}, ...renderQuestions));
-    }, []);
+    }
+
+    useEffect(() => {
+        setQuestions(loadedQuestions);
+        resetForm();
+    }, [loadedQuestions]);
 
     return (
         <>
@@ -175,6 +198,7 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
                                         <Draggable
                                             key={question.renderId}
                                             index={index}
+                                            isDragDisabled={loadingUpdate}
                                             draggableId={`${question.renderId}`} >
                                             {(draggableProvider) => (
                                                 <Box
@@ -190,7 +214,8 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
                                                         watch={watch}
                                                         reset={reset}
                                                         deleteQuestion={deleteQuestion}
-                                                        loadingUpdate={loadingUpdate} />
+                                                        loadingUpdate={loadingUpdate}
+                                                        opens />
                                                 </Box>
                                             )}
                                         </Draggable>
@@ -216,11 +241,25 @@ const EditableQuestions = ({ id, questions, setQuestions, getRenderId, setLoadin
                 </CardBody>
 
                 <CardFooter display="flex" justifyContent="flex-end">
-                    <Button colorScheme="green" onClick={handleSubmit(onSubmit)} isLoading={loadingUpdate}>
+                    <Button
+                        isLoading={loadingUpdate}
+                        colorScheme="green"
+                        onClick={() => openConfirmModal(
+                            language === "es" ? "Guardar preguntas" : "Save questions",
+                            language === "es" ? "¿Deseas guardar las preguntas?" : "Do you want to save the questions?",
+                            handleSubmit(onSubmit)
+                        )} >
                         {language === "es" ? "Guardar preguntas" : "Save questions"}
                     </Button>
                 </CardFooter>
             </Card >
+
+            <ConfirmModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                confirmCallback={confirmModalInfo.confirmCallback}
+                title={confirmModalInfo.title}
+                message={confirmModalInfo.message} />
         </>
     )
 }

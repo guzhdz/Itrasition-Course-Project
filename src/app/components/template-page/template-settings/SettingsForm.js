@@ -36,7 +36,7 @@ import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, setLoading, refreshInfo, checkAuth }) => {
+const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, refreshInfo, checkAuth }) => {
     const { language, greenColor, openToast, textGreenScheme } = useUI();
     const {
         register,
@@ -72,7 +72,6 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
         setLoadingUpdate(true);
         const isOwner = await checkAuth();
         if (isOwner) {
-            setLoading(true);
             const newTemplateInfo = getNewTemplateInfo(data);
             const response = await updateTemplateSettings(newTemplateInfo);
             if (response.ok) {
@@ -81,14 +80,13 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, set
                     language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
                     'success'
                 )
-                refreshInfo();
+                await refreshInfo();
             } else {
                 openToast(
                     'Error',
                     language === 'es' ? response.message[language] : response.message.en,
                     'error'
                 );
-                setLoading(false);
             }
         }
         setLoadingUpdate(false);

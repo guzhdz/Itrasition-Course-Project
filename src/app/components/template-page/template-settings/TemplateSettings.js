@@ -119,7 +119,6 @@ const TemplateSettings = ({id, checkAuth}) => {
                     tagOptions={tagOptions}
                     topicOptions={topicOptions}
                     userOptions={userOptions}
-                    setLoading={setLoading}
                     refreshInfo={initializeComponent}
                     checkAuth={checkAuth} />}
         </>
