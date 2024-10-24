@@ -22,7 +22,7 @@ function HeroSection({ goTo }) {
     return (
         <Box maxW="2000px" mx="auto" width="85%" height="90vh" p={3}>
             <Flex align="center" height="100%">
-                <Box w="50%" h="60%" >
+                <Box w="50%" h="70%" >
                     <Flex direction="column" justify="center" height="100%" gap={10}>
                         <Heading as='h1' size='3xl'>
                             {language === "es" ? "Crea, Configura y Comparte Tus Plantillas Facilmente"
@@ -50,13 +50,13 @@ function HeroSection({ goTo }) {
                     </Flex>
                 </Box>
 
-                <Box w="50%" h="60%">
+                <Box w="50%" h="70%">
                     <Image
                         src="https://res.cloudinary.com/da7gnzwis/image/upload/v1729740418/main-image_qldod3.png"
                         alt="Login image"
                         w="100%"
                         h="100%"
-                        objectFit="cover" />
+                        objectFit="contain" />
                 </Box>
             </Flex>
         </Box>
