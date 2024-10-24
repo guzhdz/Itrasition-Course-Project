@@ -44,10 +44,10 @@ const Header = ({ refreshPage }) => {
     const goTo = async (path) => {
         setPageLoaded(false);
         const response = await getCookie('authToken');
-        if(!response.ok) {
+        if (!response.ok) {
             openExpiredSessionModal(() => router.push('/'));
         } else {
-            if(pathname === path) {
+            if (pathname === path) {
                 refreshPage();
             }
             router.push(path);
@@ -107,7 +107,10 @@ const Header = ({ refreshPage }) => {
                     <Flex>
                         <FormControl mx={2} minW="120px">
                             <InputGroup>
-                                <Select value={language} onChange={(e) => changeLanguage(e.target.value)}>
+                                <Select
+                                    value={language}
+                                    focusBorderColor={greenColor}
+                                    onChange={(e) => changeLanguage(e.target.value)}>
                                     <option value="en">English</option>
                                     <option value="es">Español</option>
                                 </Select>

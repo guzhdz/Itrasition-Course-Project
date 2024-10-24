@@ -1,0 +1,107 @@
+.markdown h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown h2 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown h4 {
+    font-size: 1em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown h5 {
+    font-size: 0.9em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown h6 {
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown ul {
+    list-style: disc;
+    margin-left: 1em;
+  }
+  
+  .markdown ul ul {
+    list-style: circle;
+    margin-left: 2em;
+  }
+  
+  .markdown ul ul ul {
+    list-style: square;
+    margin-left: 3em;
+  }
+  
+  .markdown ul ul ul ul {
+    list-style: disc;
+    margin-left: 4em;
+  }
+  
+  .markdown ol {
+    list-style: decimal;
+    margin-left: 1em;
+  }
+  
+  .markdown ol ol {
+    list-style: lower-alpha;
+    margin-left: 2em;
+  }
+  
+  .markdown ol ol ol {
+    list-style: lower-roman;
+    margin-left: 3em;
+  }
+  
+  .markdown ol ol ol ol {
+    list-style: decimal;
+    margin-left: 4em;
+  }
+  
+  .markdown li {
+    margin-bottom: 0.5em;
+  }
+  
+  .markdown p {
+    margin-bottom: 1em;
+  }
+  
+  .markdown a {
+    text-decoration: underline;
+  }
+  
+  .markdown strong {
+    font-weight: bold;
+  }
+  
+  .markdown em {
+    font-style: italic;
+  }
+  
+  .markdown code {
+    font-family: monospace;
+    background-color: #f0f0f0;
+    padding: 2px 4px;
+  }
+  
+  .markdown blockquote {
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-left: 4px solid #ccc;
+  }
