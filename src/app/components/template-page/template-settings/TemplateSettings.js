@@ -105,6 +105,7 @@ const TemplateSettings = ({id, checkAuth, isSavingChanges, setIsSavingChanges}) 
         await getTagOptions();
         await getUsersOptions();
         setLoading(false);
+        setIsSavingChanges(false);
     }
 
     useEffect(() => {

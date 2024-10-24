@@ -44,6 +44,7 @@ const TemplateQuestions = ({ id, checkAuth, isSavingChanges, setIsSavingChanges 
     const initializeComponent = async () => {
         await getQuestions();
         setLoading(false);
+        setIsSavingChanges(false);
     }
 
     useEffect(() => {

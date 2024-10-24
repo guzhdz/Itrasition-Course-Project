@@ -39,7 +39,7 @@ export default function TemplatePage() {
     setPageLoaded,
     language } = useUI();
   const { checkAuth } = useAuth();
-  const [isSavingChanges, setIsSavingChanges] = useState(false);
+  const [isSavingChanges, setIsSavingChanges] = useState(true);
 
 
   const authenticate = async () => {
@@ -75,14 +75,12 @@ export default function TemplatePage() {
   }
 
   const initializePage = async () => {
-    setIsSavingChanges(true);
     const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
     if (isAuth) {
       const isOwner = await validateTemplate(authCase.user);
       isOwner && setPageLoaded(true);
     }
-    setIsSavingChanges(false);
   }
 
   const validateTemplate = async (user) => {
