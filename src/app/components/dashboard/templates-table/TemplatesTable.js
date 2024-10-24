@@ -16,9 +16,10 @@ import {
     Badge,
     Flex,
     IconButton,
-    Skeleton
+    Skeleton,
+    Button
 } from "@chakra-ui/react";
-import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 
 //Component imports
 import TemplateActions from "./TemplateActions";
@@ -318,6 +319,12 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
                                                     icon={<EditIcon />}
                                                     colorScheme="blue"
                                                     onClick={() => openTemplatePage(template.id)} />
+
+                                                <IconButton
+                                                    variant="ghost"
+                                                    icon={<ViewIcon />}
+                                                    colorScheme="green"
+                                                    onClick={() => console.log("view")} />
                                             </Flex>
                                         </Td>
                                     </Tr>

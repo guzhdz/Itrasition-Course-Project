@@ -1,6 +1,3 @@
-//React/Next imports
-import { useState, useEffect } from "react";
-
 //Chakra imports
 import {
     Tabs,

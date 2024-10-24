@@ -6,8 +6,7 @@ import {
     Avatar,
     Text,
     Box,
-    Divider,
-    Image
+    Divider
 } from "@chakra-ui/react";
 import { PlusSquareIcon, CopyIcon } from "@chakra-ui/icons";
 

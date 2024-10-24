@@ -127,14 +127,13 @@ export default function TemplatePage() {
           <Box maxW="1400px" mx="auto" width="80%">
             <Heading mb="40px">{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
 
-            <Flex justify="flex-end" gap={4}>
+            <Flex justify="flex-end">
               <Button
                 colorScheme="green"
                 isLoading={isSavingChanges}
                 onClick={() => setIsSavingChanges(true)} >
                 {language === "es" ? "Guardar cambios" : "Save changes"}
               </Button>
-              <Button colorScheme="green" variant="outline">{language === "es" ? "Vista previa" : "Preview"}</Button>
             </Flex>
 
             <TemplatePageTabs
