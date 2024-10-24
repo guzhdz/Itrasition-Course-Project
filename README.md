@@ -1,7 +1,15 @@
 # Course Project
 Deploy Link: https://itrasition-course-project.onrender.com
 
-This is the Intrasition Intership Final Project 
+This is the Intrasition Intership Final Project
+
+Technologies used:
+- React
+- Next.js
+- Chakra UI
+- Prisma
+- PostreSQL
+- node.js
 
 ## Project instructions and requirements
 se this (depending of what group you are in):
