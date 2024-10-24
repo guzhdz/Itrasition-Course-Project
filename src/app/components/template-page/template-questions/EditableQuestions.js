@@ -25,13 +25,13 @@ import ConfirmModal from "../../shared/ConfirmModal";
 import { getQuestionsTemplate, updateTemplateQuestions } from "../../../services/questionService";
 
 //Library imports
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, checkAuth }) => {
+const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, checkAuth, isSavingChanges, setIsSavingChanges }) => {
     const { language, openToast } = useUI();
     const {
         register,
@@ -74,6 +74,7 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
                 );
             }
         }
+        setIsSavingChanges(false);
         setLoadingUpdate(false);
     }
 
@@ -176,6 +177,12 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
         setQuestions(loadedQuestions);
         resetForm();
     }, [loadedQuestions]);
+
+    useEffect(() => {
+        if (isSavingChanges) {
+            handleSubmit(onSubmit)();
+        }
+    }, [isSavingChanges]);
 
     return (
         <>

@@ -15,7 +15,7 @@ import { getQuestionsTemplate } from "@/app/services/questionService";
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const TemplateQuestions = ({ id, checkAuth }) => {
+const TemplateQuestions = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }) => {
     const { openSimpleErrorModal, setPageLoaded } = useUI();
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -55,12 +55,13 @@ const TemplateQuestions = ({ id, checkAuth }) => {
             {loading ? <Skeleton height="700px" />
                 : <EditableQuestions
                     loadedQuestions={questions}
-                    //setQuestions={setQuestions}
                     checkAuth={checkAuth}
                     getRenderId={getRenderId}
                     id={id}
                     setLoading={setLoading}
-                    refreshInfo={initializeComponent} />}
+                    refreshInfo={initializeComponent}
+                    isSavingChanges={isSavingChanges}
+                    setIsSavingChanges={setIsSavingChanges} />}
         </>
     )
 }

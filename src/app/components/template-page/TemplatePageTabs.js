@@ -17,7 +17,7 @@ import TemplateQuestions from "./template-questions/TemplateQuestions";
 //Context imports
 import { useUI } from "../../context/UIContext";
 
-const TemplatePageTabs = ({ id, checkAuth }) => {
+const TemplatePageTabs = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }) => {
     const { language} = useUI();
     
     return (
@@ -31,10 +31,18 @@ const TemplatePageTabs = ({ id, checkAuth }) => {
 
             <TabPanels>
                 <TabPanel>
-                    <TemplateSettings id={id} checkAuth={checkAuth}/>
+                    <TemplateSettings 
+                    id={id} 
+                    checkAuth={checkAuth} 
+                    isSavingChanges={isSavingChanges} 
+                    setIsSavingChanges={setIsSavingChanges}/>
                 </TabPanel>
                 <TabPanel>
-                    <TemplateQuestions id={id} checkAuth={checkAuth} />
+                    <TemplateQuestions 
+                    id={id} 
+                    checkAuth={checkAuth}
+                    isSavingChanges={isSavingChanges} 
+                    setIsSavingChanges={setIsSavingChanges} />
                 </TabPanel>
                 <TabPanel>
                     <h1>Results</h1>

@@ -30,13 +30,13 @@ import ConfirmModal from "../../shared/ConfirmModal";
 import { updateTemplateSettings } from "../../../services/templateService";
 
 //Library imports
-import { useForm } from "react-hook-form";
+import { set, useForm } from "react-hook-form";
 import { Autocomplete } from 'chakra-ui-simple-autocomplete';
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, refreshInfo, checkAuth }) => {
+const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, refreshInfo, checkAuth, isSavingChanges, setIsSavingChanges }) => {
     const { language, greenColor, openToast, textGreenScheme } = useUI();
     const {
         register,
@@ -98,7 +98,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                 await refreshInfo();
                 openToast(
                     null,
-                    language === 'es' ? 'La plantilla se actualizo correctamente' : 'Template updated successfully',
+                    language === 'es' ? 'La configuración de la plantilla se actualizo correctamente' : 'Template settings updated successfully',
                     'success'
                 )
             } else {
@@ -109,6 +109,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                 );
             }
         }
+        setIsSavingChanges(false);
         setLoadingUpdate(false);
     }
 
@@ -159,6 +160,12 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
         setTagsSelected(templateInfo.templatetags || []);
         setUsersSelected(templateInfo.templateaccess || []);
     }, [templateInfo]);
+
+    useEffect(() => {
+        if (isSavingChanges) {
+            handleSubmit(onSubmit)();
+        }
+    }, [isSavingChanges]);
 
     return (
         <>

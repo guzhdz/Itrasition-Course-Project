@@ -39,6 +39,7 @@ export default function TemplatePage() {
     setPageLoaded,
     language } = useUI();
   const { checkAuth } = useAuth();
+  const [isSavingChanges, setIsSavingChanges] = useState(false);
 
 
   const authenticate = async () => {
@@ -74,12 +75,14 @@ export default function TemplatePage() {
   }
 
   const initializePage = async () => {
+    setIsSavingChanges(true);
     const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
     if (isAuth) {
       const isOwner = await validateTemplate(authCase.user);
       isOwner && setPageLoaded(true);
     }
+    setIsSavingChanges(false);
   }
 
   const validateTemplate = async (user) => {
@@ -127,12 +130,19 @@ export default function TemplatePage() {
             <Heading mb="40px">{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
 
             <Flex justify="flex-end" gap={4}>
-              <Button colorScheme="green">{language === "es" ? "Guardar cambios" : "Save changes"}</Button>
+              <Button
+                colorScheme="green"
+                isLoading={isSavingChanges}
+                onClick={() => setIsSavingChanges(true)} >
+                {language === "es" ? "Guardar cambios" : "Save changes"}
+              </Button>
               <Button colorScheme="green" variant="outline">{language === "es" ? "Vista previa" : "Preview"}</Button>
             </Flex>
 
             <TemplatePageTabs
               id={id}
+              isSavingChanges={isSavingChanges}
+              setIsSavingChanges={setIsSavingChanges}
               checkAuth={
                 async () => {
                   const authCase = await authenticate();

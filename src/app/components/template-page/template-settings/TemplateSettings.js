@@ -19,7 +19,7 @@ import { getUsers } from "../../../services/userService";
 import { useUI } from "../../../context/UIContext";
 import { useAuth } from "../../../context/AuthContext";
 
-const TemplateSettings = ({id, checkAuth}) => {
+const TemplateSettings = ({id, checkAuth, isSavingChanges, setIsSavingChanges}) => {
     const { openSimpleErrorModal, setPageLoaded } = useUI();
     const { user } = useAuth();
     const [topicOptions, setTopicOptions] = useState([]);
@@ -120,7 +120,9 @@ const TemplateSettings = ({id, checkAuth}) => {
                     topicOptions={topicOptions}
                     userOptions={userOptions}
                     refreshInfo={initializeComponent}
-                    checkAuth={checkAuth} />}
+                    checkAuth={checkAuth}
+                    isSavingChanges={isSavingChanges}
+                    setIsSavingChanges={setIsSavingChanges} />}
         </>
     )
 }
