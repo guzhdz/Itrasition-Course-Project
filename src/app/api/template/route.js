@@ -11,6 +11,8 @@ export async function GET(request) {
         return await getTemplatesUser(queryParams);
     } else if (action === 'getTemplateSettings') {
         return await getTemplateSettings(queryParams);
+    } else if (action === 'getLatestTemplates') {
+        return await getLatestTemplates();
     } else {
         const messageError = {
             en: "Bad request.",
@@ -179,6 +181,27 @@ const getTemplateSettings = async (queryParams) => {
             }));
         }
         return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getLatestTemplates = async () => {
+    let statusCode = 500;
+    try {
+        const rows = await prisma.template.findMany({
+            take: 9,
+            orderBy: { 
+                creation_time: 'desc' 
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(rows), { status: statusCode });
     } catch (error) {
         const messageError = {
             en: "Server error. Please try again later.",

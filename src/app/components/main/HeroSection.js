@@ -20,7 +20,7 @@ function HeroSection({ goTo }) {
 
 
     return (
-        <Box maxW="2000px" mx="auto" width="85%" height="100%" p={3} >
+        <Box maxW="2000px" mx="auto" width="85%" height="90vh" p={3}>
             <Flex align="center" height="100%">
                 <Box w="50%" h="60%" >
                     <Flex direction="column" justify="center" height="100%" gap={10}>

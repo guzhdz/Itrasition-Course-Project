@@ -44,6 +44,24 @@ export const getTemplatesUser = async (userId) => {
     }
 }
 
+export const getLatestTemplates = async () => {
+    let messageError = "";
+    try {
+        const url = new URL(API_URL, window.location.origin);
+        url.searchParams.append('action', "getLatestTemplates");
+        const response = await fetch(url.toString());
+        const data = superjson.deserialize(await response.json());
+        if (response.status !== 200) {
+            messageError = data.error;
+            return { ok: false, message: messageError };
+        } else {
+            return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(deserializedError);
+    }
+}
+
 export const insertDraftTemplate = async (title, description, topic_id, user_id) => {
     const template = {
         title,

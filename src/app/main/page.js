@@ -7,17 +7,14 @@ import { useRouter } from "next/navigation";
 //Chakra imports
 import {
   Flex,
-  Box,
-  Heading,
-  Image,
-  Button,
-  Text
+  Box
 } from "@chakra-ui/react";
 
 //Components import
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import HeroSection from "../components/main/HeroSection";
+import LatestTemplates from "../components/main/LatestTemplates";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -94,14 +91,12 @@ export default function Main() {
       {pageLoaded ?
         <Flex
           w="100%"
-          h="100vh"
           minH="100vh"
           direction="column"
           bg={bg} >
-
           <Header refreshPage={initializePage} />
-
           <HeroSection goTo={goTo} />
+          <LatestTemplates />
         </Flex>
         :
         <LoadingPage />
