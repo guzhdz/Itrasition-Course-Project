@@ -6,12 +6,18 @@ import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
-  Flex
+  Flex,
+  Box,
+  Heading,
+  Image,
+  Button,
+  Text
 } from "@chakra-ui/react";
 
 //Components import
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
+import HeroSection from "../components/main/HeroSection";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -20,12 +26,14 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Main() {
   const router = useRouter();
-  const { 
-    bg, 
+  const {
+    bg,
     openErrorAuthModal,
     openExpiredSessionModal,
-    pageLoaded, 
-    setPageLoaded } = useUI();
+    pageLoaded,
+    setPageLoaded,
+    language
+  } = useUI();
   const { checkAuth } = useAuth();
 
   const authenticate = async (home) => {
@@ -71,6 +79,11 @@ export default function Main() {
     isAuth && setPageLoaded(true);
   }
 
+  const goTo = (path) => {
+    setPageLoaded(false);
+    router.push(path);
+  }
+
   useEffect(() => {
     initializePage(true);
   }, []);
@@ -87,11 +100,12 @@ export default function Main() {
           bg={bg} >
 
           <Header refreshPage={initializePage} />
+
+          <HeroSection goTo={goTo} />
         </Flex>
         :
         <LoadingPage />
       }
     </>
-
   );
 }
