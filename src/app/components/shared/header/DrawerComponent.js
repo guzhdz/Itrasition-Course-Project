@@ -11,7 +11,8 @@ import {
     Avatar,
     Button,
     Switch,
-    Flex
+    Flex,
+    DrawerCloseButton
 } from "@chakra-ui/react";
 import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 
@@ -38,7 +39,8 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
     return (
         <Drawer placement="left" onClose={() => setShowDrawer(false)} isOpen={showDrawer}>
             <DrawerOverlay />
-            <DrawerContent>
+            <DrawerContent >
+            <DrawerCloseButton />
                 <DrawerHeader borderBottomWidth='1px'>
                     <Logo />
                 </DrawerHeader>

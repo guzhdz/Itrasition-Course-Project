@@ -37,7 +37,7 @@ export default function Authentication() {
                     justify="center"
                     align="center"
                     bg={bg} >
-                    <Card w="80%" h={750} p={0} >
+                    <Card w="80%" minW="300px" h={{ base: "500", lg: "750px" }} p={0} >
                         <CardBody display="flex" flexDirection="row" p={0} >
 
                             <Show above="lg">
@@ -59,7 +59,7 @@ export default function Authentication() {
                                 align="center"
                                 direction="column" >
 
-                                <Suspense>
+                                <Suspense width="100%">
                                     <FormComponent />
                                 </Suspense>
                                 

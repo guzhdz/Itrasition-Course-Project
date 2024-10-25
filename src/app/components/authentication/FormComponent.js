@@ -72,7 +72,8 @@ const FormComponent = () => {
                 w={{ base: '80%', lg: '60%' }}
                 maxWidth="350px" >
 
-                <SlideFade in={showForm} transition={{ enter: { duration: 0.3 } }}>
+                <SlideFade in={showForm} transition={{ enter: { duration: 0.3 } }} >
+                    <Box w={{base: 'auto', sm: '340px', lg: '300px'}}>
                     <Heading
                         as="h1"
                         size="xl"
@@ -115,6 +116,7 @@ const FormComponent = () => {
                                 tooglePasswordVisibility={tooglePasswordVisibility}
                                 showPassword={showPassword} />
                         }
+                    </Box>
                     </Box>
                 </SlideFade>
             </Flex>

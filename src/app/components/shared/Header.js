@@ -68,7 +68,7 @@ const Header = ({ refreshPage }) => {
     return (
         <Flex
             w="100%"
-            py={4} px={8}
+            py={4} px={{ base: 2, sm: 4, md: 8 }}
             pos="sticky"
             top="0"
             align="center"
@@ -89,7 +89,7 @@ const Header = ({ refreshPage }) => {
 
             <Flex direction="row" mx="auto" w={{ base: '80%', md: '60%' }}>
                 {/*Cambiar a componente*/}
-                <FormControl minW="300px">
+                <FormControl minW="260px">
                     <InputGroup>
                         <InputLeftElement>
                             <SearchIcon color="gray.500" />
