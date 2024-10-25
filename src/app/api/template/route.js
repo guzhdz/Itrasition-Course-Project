@@ -195,7 +195,7 @@ const getLatestTemplates = async () => {
     let statusCode = 500;
     try {
         const rows = await prisma.template.findMany({
-            take: 9,
+            take: 6,
             where: { state: 'public' },
             orderBy: {
                 creation_time: 'desc'
