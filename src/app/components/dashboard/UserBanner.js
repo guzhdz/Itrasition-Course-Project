@@ -6,7 +6,8 @@ import {
     Avatar,
     Text,
     Box,
-    Divider
+    Divider,
+    Show
 } from "@chakra-ui/react";
 import { PlusSquareIcon, CopyIcon } from "@chakra-ui/icons";
 
@@ -14,13 +15,17 @@ import { PlusSquareIcon, CopyIcon } from "@chakra-ui/icons";
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
-const UserBanner = ({templatesNumber}) => {
+const UserBanner = ({ templatesNumber }) => {
     const { greenColor, textGreenScheme, language } = useUI();
     const { user } = useAuth();
 
     return (
-        <Card w="60%" mx="auto" minW="300px" mb={10}>
-            <CardBody display="flex" alignItems="center" justifyContent="space-evenly">
+        <Card w="60%" mx="auto" minW="250px" mb={10}>
+            <CardBody
+                display="flex"
+                alignItems="center"
+                justifyContent="space-evenly"
+                flexDirection={{ base: "column", xl: "row" }}>
                 <Flex gap={4} p={2} alignItems="center">
                     <Avatar name={user.name} bg={greenColor} color={textGreenScheme} size="lg" />
                     <Box>
@@ -29,11 +34,19 @@ const UserBanner = ({templatesNumber}) => {
                     </Box>
                 </Flex>
 
-                <Box height="80px">
-                    <Divider orientation="vertical" />
+                <Box
+                    height={{ base: "auto", xl: "80px" }}
+                    w={{ base: "100%", xl: "auto" }}
+                    py={{ base: 4, xl: 0 }}>
+                    <Show above="xl">
+                        <Divider orientation="vertical" />
+                    </Show>
+                    <Show below="xl">
+                        <Divider orientation="horizontal" />
+                    </Show>
                 </Box>
 
-                <Flex justify="space-between" gap={8}>
+                <Flex justify="space-between" gap={8} direction={{ base: "column", lg: "row" }}>
                     <Flex direction="column" alignItems="center">
                         <Text fontSize="lg" display="flex" alignItems="center" gap={2}>
                             <PlusSquareIcon color={greenColor} />

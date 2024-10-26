@@ -9,7 +9,9 @@ import {
   Flex,
   Box,
   Heading,
-  Button
+  Button,
+  Show,
+  IconButton
 } from "@chakra-ui/react";
 
 //Components import
@@ -19,6 +21,9 @@ import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
+
+//Library imports
+import { FaSave } from "react-icons/fa";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -124,16 +129,26 @@ export default function TemplatePage() {
           bg={bg} >
 
           <Header refreshPage={initializePage} />
-          <Box maxW="1400px" mx="auto" width="80%">
+          <Box maxW="1400px" mx="auto" width={{ base: "90%", lg: "85%" }}>
             <Heading mb="40px">{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
 
             <Flex justify="flex-end">
-              <Button
-                colorScheme="green"
-                isLoading={isSavingChanges}
-                onClick={() => setIsSavingChanges(true)} >
-                {language === "es" ? "Guardar cambios" : "Save changes"}
-              </Button>
+              <Show above="sm">
+                <Button
+                  colorScheme="green"
+                  isLoading={isSavingChanges}
+                  onClick={() => setIsSavingChanges(true)} >
+                  {language === "es" ? "Guardar cambios" : "Save changes"}
+                </Button>
+              </Show>
+
+              <Show below="sm">
+                <IconButton
+                  colorScheme="green"
+                  isLoading={isSavingChanges}
+                  icon={<FaSave />}
+                  onClick={() => setIsSavingChanges(true)} />
+              </Show>
             </Flex>
 
             <TemplatePageTabs

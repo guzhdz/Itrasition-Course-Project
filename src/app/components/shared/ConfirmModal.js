@@ -1,5 +1,5 @@
 //Chakra imports
-import { 
+import {
     Modal,
     ModalOverlay,
     ModalContent,
@@ -14,7 +14,7 @@ import {
 import { useUI } from "../../context/UIContext";
 
 
-const ConfirmModal = ({closeOnOverlay = true, showModal, setShowModal, title, message, confirmCallback}) => {
+const ConfirmModal = ({ closeOnOverlay = true, showModal, setShowModal, title, message, confirmCallback }) => {
     const { language } = useUI();
 
     const handleOk = () => {
@@ -23,12 +23,16 @@ const ConfirmModal = ({closeOnOverlay = true, showModal, setShowModal, title, me
     }
 
     return (
-        <Modal closeOnOverlayClick={closeOnOverlay} isOpen={showModal} isCentered onClose={() => setShowModal(false)}>
+        <Modal
+            closeOnOverlayClick={closeOnOverlay}
+            isOpen={showModal}
+            isCentered
+            onClose={() => setShowModal(false)} size={{ base: "xs", md: "sm" }}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>{title}</ModalHeader>
                 <ModalCloseButton />
-                
+
                 <ModalBody pb={6}>
                     {message}
                 </ModalBody>

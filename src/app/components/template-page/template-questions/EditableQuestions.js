@@ -13,7 +13,8 @@ import {
     Box,
     Button,
     chakra,
-    Text
+    Text,
+    Show
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 
@@ -25,8 +26,9 @@ import ConfirmModal from "../../shared/ConfirmModal";
 import { getQuestionsTemplate, updateTemplateQuestions } from "../../../services/questionService";
 
 //Library imports
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { FaSave } from "react-icons/fa";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
@@ -248,16 +250,31 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
                 </CardBody>
 
                 <CardFooter display="flex" justifyContent="flex-end">
-                    <Button
-                        isLoading={loadingUpdate}
-                        colorScheme="green"
-                        onClick={() => openConfirmModal(
-                            language === "es" ? "Guardar preguntas" : "Save questions",
-                            language === "es" ? "¿Deseas guardar las preguntas?" : "Do you want to save the questions?",
-                            handleSubmit(onSubmit)
-                        )} >
-                        {language === "es" ? "Guardar preguntas" : "Save questions"}
-                    </Button>
+                    <Show above="sm">
+                        <Button
+                            isLoading={loadingUpdate}
+                            colorScheme="green"
+                            onClick={() => openConfirmModal(
+                                language === "es" ? "Guardar preguntas" : "Save questions",
+                                language === "es" ? "¿Deseas guardar las preguntas?" : "Do you want to save the questions?",
+                                handleSubmit(onSubmit)
+                            )} >
+                            {language === "es" ? "Guardar preguntas" : "Save questions"}
+                        </Button>
+                    </Show>
+
+                    <Show below="sm">
+                        <IconButton
+                            colorScheme="green"
+                            icon={<FaSave />}
+                            onClick={() => openConfirmModal(
+                                language === "es" ? "Guardar preguntas" : "Save questions",
+                                language === "es" ? "¿Deseas guardar las preguntas?" : "Do you want to save the questions?",
+                                handleSubmit(onSubmit)
+                            )}
+                            isLoading={loadingUpdate} />
+                    </Show>
+
                 </CardFooter>
             </Card >
 

@@ -83,7 +83,7 @@ const TableActions = ({ isOpen, deleteSelected, updateSelected, checkAuth }) => 
     return (
         <>
             <Collapse in={isOpen} animateOpacity startingHeight={0.5}>
-                <Flex mb={3} justify="flex-end" gap={3}>
+                <Flex mb={3} justify={{ base: "center", md: "flex-end" }} gap={3} wrap="wrap">
                     <IconButton
                         icon={<LockIcon />}
                         colorScheme="red"

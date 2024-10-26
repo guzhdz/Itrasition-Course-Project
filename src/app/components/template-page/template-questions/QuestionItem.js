@@ -44,7 +44,7 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
     return (
         <Card border="1px" borderColor={greenColor} mb={3}>
             <CardBody>
-                <Flex justify="space-between" align="center" gap={4} mb={3}>
+                <Flex justify="space-between" align="center" direction={{ base: "column", md: "row" }} gap={4} mb={3}>
                     <FormControl
                         display="flex"
                         alignItems="center"
@@ -74,7 +74,7 @@ const QuestionItem = ({ question, index, errors, register, watch, deleteQuestion
                             && errors[`question_${question.renderId}`]?.type.message}</FormErrorMessage>
                     </FormControl>
 
-                    <FormControl display="flex" alignItems="center" gap={2} justifyContent="flex-end">
+                    <FormControl display="flex" alignItems="center" gap={2} justifyContent={{ base: "flex-start", md: "flex-end" }}>
                         <FormLabel
                             color={greenColor}
                             fontWeight="bold"

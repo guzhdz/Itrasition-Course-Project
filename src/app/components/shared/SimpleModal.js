@@ -19,7 +19,8 @@ const SimpleModal = ({ closeOnOverlay, showModal, setShowModal, title, message, 
             isOpen={showModal}
             isCentered
             onClose={() => setShowModal(false)}
-            onCloseComplete={closeCallback}>
+            onCloseComplete={closeCallback}
+            size={{ base: "xs", md: "sm" }}>
             <ModalOverlay />
             <ModalContent>
                 <ModalHeader>{title}</ModalHeader>

@@ -20,7 +20,9 @@ import {
     TagCloseButton,
     Text,
     chakra,
-    Avatar
+    Avatar,
+    Show, 
+    IconButton
 } from "@chakra-ui/react";
 
 //Components imports
@@ -30,8 +32,9 @@ import ConfirmModal from "../../shared/ConfirmModal";
 import { updateTemplateSettings } from "../../../services/templateService";
 
 //Library imports
-import { set, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Autocomplete } from 'chakra-ui-simple-autocomplete';
+import { FaSave } from "react-icons/fa";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
@@ -53,22 +56,22 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
     const [loadingUpdate, setLoadingUpdate] = useState(false);
 
     const handleTagSelected = (newTags) => {
-        if(newTags.length !== 0){
+        if (newTags.length !== 0) {
             const nueva = newTags.shift();
-            if(newTags.some(tag => tag.value === nueva.value)){
+            if (newTags.some(tag => tag.value === nueva.value)) {
                 return newTags.filter((tag) => tag.value !== nueva.value);
             } else {
                 newTags.unshift(nueva);
-                return validateTag(nueva.label) ? newTags : tagsSelected;   
+                return validateTag(nueva.label) ? newTags : tagsSelected;
             }
         }
         return newTags;
     };
 
     const handleUserSelected = (newUsers) => {
-        if(newUsers.length !== 0){
+        if (newUsers.length !== 0) {
             const nuevo = newUsers.shift();
-            if(newUsers.some(user => user.value === nuevo.value)){
+            if (newUsers.some(user => user.value === nuevo.value)) {
                 return newUsers.filter(user => user.value !== nuevo.value);
             } else {
                 newUsers.unshift(nuevo);
@@ -300,6 +303,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                                 renderBadge={(option) => (
                                     <Tag
                                         key={option.value}
+                                        mb={2}
                                         borderRadius='full'
                                         variant='solid'
                                         colorScheme='green'
@@ -361,6 +365,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                                     <Tag
                                         key={option.value}
                                         borderRadius='full'
+                                        mb={2}
                                         variant='solid'
                                         size='lg'
                                         mx={1} >
@@ -386,9 +391,19 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                     </CardBody>
 
                     <CardFooter display="flex" justifyContent="flex-end">
-                        <Button colorScheme="green" type="button" onClick={openConfirmModal} isLoading={loadingUpdate}>
-                            {language === "es" ? "Guardar configuración" : "Save settings"}
-                        </Button>
+                        <Show above="sm">
+                            <Button colorScheme="green" type="button" onClick={openConfirmModal} isLoading={loadingUpdate}>
+                                {language === "es" ? "Guardar configuración" : "Save settings"}
+                            </Button>
+                        </Show>
+
+                        <Show below="sm">
+                            <IconButton
+                                colorScheme="green"
+                                icon={<FaSave />}
+                                onClick={openConfirmModal} 
+                                isLoading={loadingUpdate} />
+                        </Show>
                     </CardFooter>
                 </Card>
             </chakra.form>

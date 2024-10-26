@@ -19,7 +19,7 @@ const TemplatePageTabs = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }
     
     return (
         <Tabs colorScheme="green" align="center">
-            <TabList>
+            <TabList flexWrap="wrap">
                 <Tab>{language === "es" ? "Configuración" : "Settings"}</Tab>
                 <Tab>{language === "es" ? "Preguntas" : "Questions"}</Tab>
                 <Tab>{language === "es" ? "Resultados" : "Results"}</Tab>

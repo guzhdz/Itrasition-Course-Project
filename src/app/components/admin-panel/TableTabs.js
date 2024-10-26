@@ -17,8 +17,8 @@ const TableTabs = ({ checkAuth }) => {
     const { language } = useUI();
 
     return (
-        <Tabs colorScheme="green" isLazy>
-            <TabList>
+        <Tabs colorScheme="green" isLazy align="center">
+            <TabList flexWrap="wrap">
                 <Tab>{language === "es" ? "Todos" : "All"}</Tab>
                 <Tab>{language === "es" ? "Activos" : "Active"}</Tab>
                 <Tab>{language === "es" ? "Bloqueados" : "Blocked"}</Tab>
