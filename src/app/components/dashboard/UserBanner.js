@@ -15,7 +15,7 @@ import { PlusSquareIcon, CopyIcon } from "@chakra-ui/icons";
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
-const UserBanner = ({ templatesNumber }) => {
+const UserBanner = ({ templatesNumber, formsNumber }) => {
     const { greenColor, textGreenScheme, language } = useUI();
     const { user } = useAuth();
 
@@ -60,7 +60,7 @@ const UserBanner = ({ templatesNumber }) => {
                     <Flex direction="column" alignItems="center">
                         <Text fontSize="lg" display="flex" alignItems="center" gap={2}>
                             <CopyIcon color={greenColor} />
-                            0
+                            {formsNumber}
                         </Text>
                         <Text fontSize="lg">
                             {language === "es" ? "Formularios llenos" : "Forms filled"}

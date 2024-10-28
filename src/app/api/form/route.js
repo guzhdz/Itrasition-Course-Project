@@ -7,6 +7,8 @@ export async function GET(request) {
     const action = queryParams.get('action');
     if (action === 'getUserForm') {
         return await getUserForm(queryParams);
+    } else if (action === 'getFormsUser') {
+        return await getFormsUser(queryParams);
     } else {
         const messageError = {
             en: "Bad request.",
@@ -85,6 +87,29 @@ export async function PUT(request) {
     }
 }
 
+export async function DELETE(request) {
+    const { ids } = await request.json();
+    let statusCode = 500;
+    try {
+        const result = await prisma.form.deleteMany({
+            where: {
+                id: {
+                    in: ids
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(JSON.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(JSON.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
 const getUserForm = async (queryParams) => {
     const userId = queryParams.get('userId');
     const templateId = queryParams.get('templateId');
@@ -108,6 +133,43 @@ const getUserForm = async (queryParams) => {
         });
         statusCode = 200;
         return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        console.log(error);
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getFormsUser = async (queryParams) => {
+    const userId = queryParams.get('userId');
+    let statusCode = 500;
+    try {
+        const rows = await prisma.form.findMany({
+            where: { user_id: Number.parseInt(userId) },
+            include: {
+                template: {
+                    select: {
+                        id: true,
+                        title: true,
+                        topic: true,
+                        user: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                }
+            },
+            orderBy: {
+                fill_time: 'desc'
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(rows), { status: statusCode });
     } catch (error) {
         console.log(error);
         const messageError = {

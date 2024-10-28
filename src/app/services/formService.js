@@ -26,6 +26,25 @@ export const getUserForm = async (templateId, userId) => {
     }
 }
 
+export const getFormsUser = async (userId) => {
+    let messageError = "";
+    try {
+        const url = new URL(API_URL, window.location.origin);
+        url.searchParams.append('action', "getFormsUser");
+        url.searchParams.append('userId', userId);
+        const response = await fetch(url.toString());
+        const data = superjson.deserialize(await response.json());
+        if (response.status !== 200) {
+            messageError = data.error;
+            return { ok: false, message: messageError };
+        } else {
+            return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(deserializedError);
+    }
+}
+
 export const insertFormAndAnswers = async (template_id, user_id, answers) => {
     const form = {
         template_id: template_id.toString(),
@@ -74,6 +93,29 @@ export const updateFormAndAnswers = async (template_id, user_id, answers) => {
         }
         else {
             return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(error);
+    }
+}
+
+export const deleteForms = async (ids) => {
+    ids = ids.map(id => id.toString());
+    try {
+        const response = await fetch(API_URL, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ids: ids
+            })
+        });
+        if (response.status === 200) {
+            return { ok: true };
+        } else {
+            const data = await response.json();
+            return { ok: false, message: data.error };
         }
     } catch (error) {
         return getGeneralError(error);

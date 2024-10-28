@@ -19,6 +19,7 @@ import DashboardTabs from "../components/dashboard/DashboardTabs";
 
 //Services imports
 import { getTemplatesUser } from "../services/templateService";
+import { getFormsUser } from "../services/formService";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -33,9 +34,11 @@ export default function Dashboard() {
         openErrorAuthModal,
         openExpiredSessionModal,
         pageLoaded,
+        openToast,
         setPageLoaded } = useUI();
     const { checkAuth, user } = useAuth();
     const [templatesNumber, setTemplatesNumber] = useState(0);
+    const [formsNumber, setFormsNumber] = useState(0);
 
     const authenticate = async () => {
         const response = await checkAuth();
@@ -97,6 +100,23 @@ export default function Dashboard() {
         }
     }
 
+    const loadForms = async () => {
+        const response = await getFormsUser(user.id_user);
+        if (response.ok) {
+            setFormsNumber(response.data.length);
+            return response.data;
+        } else {
+            let messageError = language === "es" ? "Error al cargar los formularios. Por favor, intenta de nuevo."
+                : "Error loading forms. Please try again later.";
+            if (response.message) {
+                messageError = language === "es" ? response.message[language] : response.message.en;
+            }
+            openToast("Error", messageError, "error");
+            setFormsNumber(0);
+            return [];
+        }
+    }
+
     useEffect(() => {
         initializePage();
     }, []);
@@ -116,11 +136,13 @@ export default function Dashboard() {
 
                     <Box maxW="1400px" mx="auto" width="80%" p={3}>
                         <Heading mb="40px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
-                        
-                        <UserBanner templatesNumber={templatesNumber} />
 
-                        <DashboardTabs checkAuth={checkAuthProcess}
-                        loadTemplates={loadTemplates}/>
+                        <UserBanner templatesNumber={templatesNumber} formsNumber={formsNumber} />
+
+                        <DashboardTabs
+                            checkAuth={checkAuthProcess}
+                            loadTemplates={loadTemplates}
+                            loadForms={loadForms} />
                     </Box>
                 </Flex >
                 :

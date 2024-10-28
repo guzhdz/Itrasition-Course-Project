@@ -13,6 +13,7 @@ import {
   Show,
   IconButton
 } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 //Components import
 import Header from '../../components/shared/Header'
@@ -138,14 +139,23 @@ export default function TemplatePage() {
       {pageLoaded ?
         <Flex
           w="100%"
-          h="100vh"
           minH="100vh"
           direction="column"
           bg={bg} >
 
           <Header refreshPage={initializePage} />
           <Box maxW="1400px" mx="auto" width={{ base: "90%", lg: "85%" }}>
-            <Heading mb="40px">{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
+            <Flex gap={4} align="center" mb="40px">
+              <IconButton
+                onClick={() => {
+                  setPageLoaded(false);
+                  router.back();
+                }}
+                colorScheme="green"
+                variant="ghost"
+                icon={<ArrowBackIcon />} />
+              <Heading>{language === "es" ? "Personaliza tu plantilla" : "Customize your template"}</Heading>
+            </Flex>
 
             <Flex justify="flex-end">
               <Show above="sm">

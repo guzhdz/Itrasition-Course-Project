@@ -16,8 +16,7 @@ import {
     Badge,
     Flex,
     IconButton,
-    Skeleton,
-    Button
+    Skeleton
 } from "@chakra-ui/react";
 import { DeleteIcon, EditIcon, ViewIcon } from "@chakra-ui/icons";
 
