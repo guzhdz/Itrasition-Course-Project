@@ -1,6 +1,7 @@
 "use client"
 //React/Next imports
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -21,7 +22,7 @@ import {
 } from "@chakra-ui/react";
 
 //Styles imports
-import styles from "./styles.module.css";
+import styles from "../shared/styles.module.css";
 
 //Services imports
 import { getLatestTemplates } from "../../services/templateService";
@@ -35,7 +36,8 @@ import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
 function LatestTemplates() {
-    const { language, greenColor, textGreenScheme } = useUI();
+    const router = useRouter();
+    const { language, greenColor, textGreenScheme, setPageLoaded } = useUI();
     const { user } = useAuth();
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,6 +51,11 @@ function LatestTemplates() {
             console.log("Error");
         }
         setLoading(false);
+    };
+
+    const goTo = (path) => {
+        setPageLoaded(false);
+        router.push(path);
     };
 
     useEffect(() => {
@@ -86,7 +93,10 @@ function LatestTemplates() {
                                         bg={greenColor}
                                         color={textGreenScheme} />
                                     <Box>
-                                        <Heading size='xs'>{template.user.name}</Heading>
+                                        <Heading size='xs'>
+                                            {template.user.name}{user?.email === template.user.email ?
+                                            language === "es" ? " (Tu)" : " (You)": ""}
+                                            </Heading>
                                         <Text fontSize='sm'>{template.user.email}</Text>
                                     </Box>
                                 </Flex>
@@ -114,7 +124,10 @@ function LatestTemplates() {
                                 <Button colorScheme="green" variant='ghost' leftIcon={<BiChat />}>
                                     {language === "es" ? "Comentar" : "Comment"}
                                 </Button>
-                                <Button variant='ghost' leftIcon={<BiRightArrowCircle />}>
+                                <Button
+                                    variant='ghost'
+                                    leftIcon={<BiRightArrowCircle />}
+                                    onClick={() => goTo(`/form-page/${template.id}`)}>
                                     {language === "es" ? "Ir" : "Go to"}
                                 </Button>
                             </CardFooter>

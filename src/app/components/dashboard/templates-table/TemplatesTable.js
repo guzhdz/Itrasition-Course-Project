@@ -324,7 +324,7 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
                                                     variant="ghost"
                                                     icon={<ViewIcon />}
                                                     colorScheme="green"
-                                                    onClick={() => console.log("view")} />
+                                                    onClick={() => goTo(`/form-page/${template.id}`)} />
                                             </Flex>
                                         </Td>
                                     </Tr>

@@ -55,7 +55,7 @@ function HeroSection({ goTo }) {
                     <Box w="50%" h="70%">
                         <Image
                             src="https://res.cloudinary.com/da7gnzwis/image/upload/v1729740418/main-image_qldod3.png"
-                            alt="Login image"
+                            alt="Main image"
                             w="100%"
                             h="100%"
                             objectFit="contain" />

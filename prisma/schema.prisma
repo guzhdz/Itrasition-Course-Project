@@ -108,11 +108,13 @@ model Form {
   user        User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
   user_id     Int
   answers     Answer[]
+
+  @@unique([template_id, user_id])
 }
 
 model Answer {
   id            BigInt    @id @default(autoincrement()) 
-  answer_value  String       
+  answer_value  String    @db.VarChar(510)  
   form          Form      @relation(fields: [form_id], references: [id], onDelete: Cascade)
   form_id       BigInt
   question      Question  @relation(fields: [question_id], references: [id], onDelete: Cascade)

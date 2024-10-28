@@ -13,6 +13,8 @@ export async function GET(request) {
         return await getTemplateSettings(queryParams);
     } else if (action === 'getLatestTemplates') {
         return await getLatestTemplates();
+    } else if (action === 'getTemplateForFill') {
+        return await getTemplateForFill(queryParams);
     } else {
         const messageError = {
             en: "Bad request.",
@@ -62,7 +64,7 @@ export async function POST(request) {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
         }
-        return new Response(superjson.stringify(messageError), { status: 500 });
+        return new Response(superjson.stringify({ error: messageError}), { status: 500 });
     }
 }
 
@@ -134,7 +136,7 @@ const getTemplatesUser = async (queryParams) => {
                 topic: true
             },
             orderBy: {
-                id: 'asc'
+                creation_time: 'desc'
             }
         });
         statusCode = 200;
@@ -191,12 +193,62 @@ const getTemplateSettings = async (queryParams) => {
     }
 }
 
+const getTemplateForFill = async (queryParams) => {
+    const id = queryParams.get('id');
+    let statusCode = 500;
+    try {
+        const result = await prisma.template.findUnique({
+            where: { id: id },
+            include: {
+                topic: true,
+                templatetags: {
+                    select: {
+                        tag: {
+                            select: {
+                                name: true
+                            }
+                        }
+                    }
+                },
+                templateaccess: {
+                    select: {
+                        user: {
+                            select: {
+                                id_user: true
+                            }
+                        }
+                    }
+                },
+                questions: {
+                    orderBy: {
+                        index_order: 'asc'
+                    }
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
 const getLatestTemplates = async () => {
     let statusCode = 500;
     try {
         const rows = await prisma.template.findMany({
             take: 6,
-            where: { state: 'public' },
+            where: {
+                OR: [
+                    { state: { equals: 'public' } },
+                    { state: { equals: 'restricted' } }
+                ]
+            },
             orderBy: {
                 creation_time: 'desc'
             },

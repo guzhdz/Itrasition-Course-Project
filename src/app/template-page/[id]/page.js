@@ -42,7 +42,9 @@ export default function TemplatePage() {
     openSimpleModal,
     pageLoaded,
     setPageLoaded,
-    language } = useUI();
+    language,
+    openToast
+  } = useUI();
   const { checkAuth } = useAuth();
   const [isSavingChanges, setIsSavingChanges] = useState(true);
 
@@ -91,7 +93,18 @@ export default function TemplatePage() {
   const validateTemplate = async (user) => {
     const response = await getTemplate(id, "getTemplateOwner");
     if (response.ok) {
-      if (response.data.user_id === user.id_user || user.is_admin) {
+      const template = response.data;
+      if(template === null) {
+        setPageLoaded(false);
+        openToast(
+          'Error',
+          language === "es" ? 'No existe este formulario' : 'This form does not exist',
+          'error'
+        );
+        router.push('/dashboard');
+        return false
+      }
+      if (template.user_id === user.id_user || user.is_admin) {
         return true;
       } else {
         setPageLoaded(false);

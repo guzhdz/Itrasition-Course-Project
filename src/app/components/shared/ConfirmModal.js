@@ -27,6 +27,7 @@ const ConfirmModal = ({ closeOnOverlay = true, showModal, setShowModal, title, m
             closeOnOverlayClick={closeOnOverlay}
             isOpen={showModal}
             isCentered
+            returnFocusOnClose={false}
             onClose={() => setShowModal(false)} size={{ base: "xs", md: "sm" }}>
             <ModalOverlay />
             <ModalContent>
