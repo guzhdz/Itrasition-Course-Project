@@ -339,7 +339,12 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                     </Markdown>
                                 </Box>
 
-                                {templateInfo.image_url && <Box w="70%" minW={"300px"} h="500px" mx="auto" mb={8}>
+                                {templateInfo.image_url && <Box
+                                    w={{ base: "95%", lg: "80%" }}
+                                    minW="200px"
+                                    h={{ base: "150px", sm: "500px" }}
+                                    mx="auto"
+                                    mb={8}>
                                     <Image
                                         src={templateInfo.image_url}
                                         alt="Template image"

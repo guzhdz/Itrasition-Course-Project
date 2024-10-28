@@ -81,20 +81,22 @@ export default function TemplatePage() {
     }
   }
 
-  const initializePage = async () => {
+  const checkAuthProcess = async () => {
     const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
-    if (isAuth) {
-      const isOwner = await validateTemplate(authCase.user);
-      isOwner && setPageLoaded(true);
-    }
+    return isAuth ? await validateTemplate(authCase.user) : false;
+  }
+
+  const initializePage = async () => {
+    const isOwner = await checkAuthProcess();
+    isOwner && setPageLoaded(true);
   }
 
   const validateTemplate = async (user) => {
     const response = await getTemplate(id, "getTemplateOwner");
     if (response.ok) {
       const template = response.data;
-      if(template === null) {
+      if (template === null) {
         setPageLoaded(false);
         openToast(
           'Error',
@@ -168,13 +170,7 @@ export default function TemplatePage() {
               id={id}
               isSavingChanges={isSavingChanges}
               setIsSavingChanges={setIsSavingChanges}
-              checkAuth={
-                async () => {
-                  const authCase = await authenticate();
-                  const isAuth = handleAuthCase(authCase);
-                  return isAuth ? await validateTemplate(authCase.user) : false;
-                }
-              } />
+              checkAuth={checkAuthProcess} />
           </Box>
         </Flex>
         :

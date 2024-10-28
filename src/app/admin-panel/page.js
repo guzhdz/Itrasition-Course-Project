@@ -80,9 +80,13 @@ export default function AdminPanel() {
     }
   }
 
-  const initializePage = async () => {
+  const checkAuthProcess = async () => {
     const authCase = await authenticate();
-    const isAuth = handleAuthCase(authCase);
+    return handleAuthCase(authCase);
+}
+
+  const initializePage = async () => {
+    const isAuth = await checkAuthProcess();
     isAuth && setPageLoaded(true);
   }
 
@@ -105,10 +109,7 @@ export default function AdminPanel() {
           <Box maxW="1400px" mx="auto" width="80%" p={3}>
             <Heading mb="40px">{language === "es" ? "Panel de administración" : "Admin Panel"}</Heading>
 
-            <TableTabs checkAuth={async () => {
-              const authCase = await authenticate();
-              return handleAuthCase(authCase);
-            }} />
+            <TableTabs checkAuth={checkAuthProcess} />
           </Box>
         </Flex>
         :

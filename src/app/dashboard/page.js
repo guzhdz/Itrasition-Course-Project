@@ -70,9 +70,13 @@ export default function Dashboard() {
         }
     }
 
-    const initializePage = async () => {
+    const checkAuthProcess = async () => {
         const authCase = await authenticate();
-        const isAuth = handleAuthCase(authCase);
+        return handleAuthCase(authCase);
+    }
+
+    const initializePage = async () => {
+        const isAuth = await checkAuthProcess();
         isAuth && setPageLoaded(true);
     }
 
@@ -115,10 +119,7 @@ export default function Dashboard() {
                         
                         <UserBanner templatesNumber={templatesNumber} />
 
-                        <DashboardTabs checkAuth={async () => {
-                            const authCase = await authenticate();
-                            return handleAuthCase(authCase);
-                        }}
+                        <DashboardTabs checkAuth={checkAuthProcess}
                         loadTemplates={loadTemplates}/>
                     </Box>
                 </Flex >
