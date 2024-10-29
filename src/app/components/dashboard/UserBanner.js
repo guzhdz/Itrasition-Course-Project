@@ -20,13 +20,13 @@ const UserBanner = ({ templatesNumber, formsNumber }) => {
     const { user } = useAuth();
 
     return (
-        <Card w="60%" mx="auto" minW="250px" mb={10}>
+        <Card w={{ base: "80%", md: "60%" }} mx="auto" minW="250px" mb={10}>
             <CardBody
                 display="flex"
                 alignItems="center"
                 justifyContent="space-evenly"
                 flexDirection={{ base: "column", xl: "row" }}>
-                <Flex gap={4} p={2} alignItems="center">
+                <Flex gap={4} p={2} alignItems="center" direction={{ base: "column", md: "row" }}>
                     <Avatar name={user.name} bg={greenColor} color={textGreenScheme} size="lg" />
                     <Box>
                         <Text fontSize="2xl">{user.name}</Text>

@@ -134,7 +134,7 @@ export default function Dashboard() {
 
                     <Header refreshPage={initializePage} />
 
-                    <Box maxW="1400px" mx="auto" width="80%" p={3}>
+                    <Box maxW="1400px" mx="auto" width={{ base: "90%", lg: "80%" }} p={3}>
                         <Heading mb="40px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
 
                         <UserBanner templatesNumber={templatesNumber} formsNumber={formsNumber} />

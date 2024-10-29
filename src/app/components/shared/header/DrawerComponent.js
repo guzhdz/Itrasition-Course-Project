@@ -29,7 +29,7 @@ import { useUI } from "../../../context/UIContext";
 import { useAuth } from "../../../context/AuthContext";
 
 const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, toggleColor, logout, goTo }) => {
-    const { language, changeLanguage, greenColor } = useUI();
+    const { language, changeLanguage, greenColor, textGreenScheme } = useUI();
     const { user } = useAuth();
 
     const onChangeLanguage = () => {
@@ -68,7 +68,7 @@ const DrawerComponent = ({ showDrawer, setShowDrawer, goToLogin, colorMode, togg
                             p={4}
                             _hover={{ cursor: 'pointer', color: greenColor }}
                             onClick={() => goTo('/dashboard')} >
-                            <Avatar name={user.name} bg={greenColor} />
+                            <Avatar name={user.name} bg={greenColor} color={textGreenScheme} />
                             <Box>
                                 <Text fontSize="lg">{user.name}</Text>
                                 <Text fontSize="xs">{user.email}</Text>
