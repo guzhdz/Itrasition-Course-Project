@@ -1,7 +1,7 @@
 "use client"
 
 //React/Next imports
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 
 //Chakra imports
 import {
@@ -58,11 +58,7 @@ export default function Authentication() {
                                 justify="center"
                                 align="center"
                                 direction="column" >
-
-                                <Suspense width="100%">
-                                    <FormComponent />
-                                </Suspense>
-                                
+                                <FormComponent />
                             </Flex>
                         </CardBody>
                     </Card>
