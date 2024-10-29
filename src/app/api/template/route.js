@@ -15,6 +15,8 @@ export async function GET(request) {
         return await getLatestTemplates();
     } else if (action === 'getTemplateForFill') {
         return await getTemplateForFill(queryParams);
+    } else if (action === 'getAllTemplates') {
+        return await getAllTemplates(queryParams);  
     } else {
         const messageError = {
             en: "Bad request.",
@@ -243,6 +245,41 @@ const getLatestTemplates = async () => {
     try {
         const rows = await prisma.template.findMany({
             take: 6,
+            where: {
+                OR: [
+                    { state: { equals: 'public' } },
+                    { state: { equals: 'restricted' } }
+                ]
+            },
+            orderBy: {
+                creation_time: 'desc'
+            },
+            include: {
+                user: {
+                    select: {
+                        name: true,
+                        email: true
+                    }
+                }
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(rows), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getAllTemplates = async (queryParams) => {
+    const round = queryParams.get('round');
+    let statusCode = 500;
+    try {
+        const rows = await prisma.template.findMany({
             where: {
                 OR: [
                     { state: { equals: 'public' } },

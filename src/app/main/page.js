@@ -28,8 +28,7 @@ export default function Main() {
     openErrorAuthModal,
     openExpiredSessionModal,
     pageLoaded,
-    setPageLoaded,
-    language
+    setPageLoaded
   } = useUI();
   const { checkAuth } = useAuth();
 

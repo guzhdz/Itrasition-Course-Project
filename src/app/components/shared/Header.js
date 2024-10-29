@@ -8,6 +8,7 @@ import {
     Input,
     InputGroup,
     InputLeftElement,
+    InputRightElement,
     Select,
     IconButton,
     Button,
@@ -39,6 +40,12 @@ const Header = ({ refreshPage }) => {
 
     const toggleColor = () => {
         toggleColorMode();
+    }
+
+    const handleSearchEnter = (event) => {
+        if (event.key === 'Enter') {
+            goTo('/search-results');
+        }
     }
 
     const goTo = async (path) => {
@@ -88,7 +95,6 @@ const Header = ({ refreshPage }) => {
             </Show>
 
             <Flex direction="row" mx="auto" w={{ base: '80%', md: '60%' }}>
-                {/*Cambiar a componente*/}
                 <FormControl minW="260px">
                     <InputGroup>
                         <InputLeftElement>
@@ -98,8 +104,19 @@ const Header = ({ refreshPage }) => {
                             type="text"
                             placeholder={language === "es" ? "Buscar..." : "Search..."}
                             focusBorderColor={greenColor}
+                            onKeyDown={handleSearchEnter}
+                            onK
                             _placeholder={{ color: 'gray.500' }}
                         />
+                        <InputRightElement width='4.5rem'>
+                            <Button
+                                colorScheme="green"
+                                h='1.75rem' 
+                                size='sm'
+                                onClick={() => goTo('/search-results')}>
+                                {language === "es" ? "Buscar" : "Search"}
+                            </Button>
+                        </InputRightElement>
                     </InputGroup>
                 </FormControl>
 
