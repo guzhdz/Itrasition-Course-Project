@@ -54,7 +54,7 @@ const FormsTable = ({ goTo, checkAuth, loadForms }) => {
             const response = await loadForms(user.id_user);
             setForms(response);
             setCheckedForms(new Array(response.length).fill(false));
-            setTimeout(() => setLoading(false), 300);
+            setTimeout(() => setLoading(false), 50);
         }
     };
 
@@ -169,7 +169,7 @@ const FormsTable = ({ goTo, checkAuth, loadForms }) => {
                 setForms(sortedForms);
                 break;
         }
-        setTimeout(() => setLoading(false), 300);
+        setTimeout(() => setLoading(false), 50);
     }
 
     const openFormPage = (id) => {

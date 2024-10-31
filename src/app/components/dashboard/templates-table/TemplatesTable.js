@@ -56,7 +56,7 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
             const response = await loadTemplates(user.id_user);
             setTemplates(response);
             setCheckedTemplates(new Array(response.length).fill(false));
-            setTimeout(() => setLoading(false), 300);
+            setTimeout(() => setLoading(false), 50);
         }
     };
 
@@ -229,7 +229,7 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
                 setTemplates(sortedTemplates);
                 break;
         }
-        setTimeout(() => setLoading(false), 300);
+        setTimeout(() => setLoading(false), 50);
     }
 
     const openTemplatePage = (id) => {

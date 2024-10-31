@@ -55,7 +55,7 @@ const UsersTable = ({ usersRequest, checkAuth }) => {
                     "error"
                 );
             }
-            setTimeout(() => setLoading(false), 300);
+            setTimeout(() => setLoading(false), 10);
         }
     };
 

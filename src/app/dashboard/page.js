@@ -81,6 +81,8 @@ export default function Dashboard() {
     const initializePage = async () => {
         const isAuth = await checkAuthProcess();
         isAuth && setPageLoaded(true);
+        loadTemplates();
+        loadForms();
     }
 
     const loadTemplates = async () => {
