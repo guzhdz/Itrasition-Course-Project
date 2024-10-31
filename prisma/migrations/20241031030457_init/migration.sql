@@ -91,11 +91,30 @@ CREATE TABLE "Form" (
 -- CreateTable
 CREATE TABLE "Answer" (
     "id" BIGSERIAL NOT NULL,
-    "answer_value" TEXT NOT NULL,
+    "answer_value" VARCHAR(510) NOT NULL,
     "form_id" BIGINT NOT NULL,
     "question_id" BIGINT NOT NULL,
 
     CONSTRAINT "Answer_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "TemplateLike" (
+    "id" BIGSERIAL NOT NULL,
+    "template_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
+
+    CONSTRAINT "TemplateLike_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Comment" (
+    "id" BIGSERIAL NOT NULL,
+    "comment_text" VARCHAR(510) NOT NULL,
+    "template_id" BIGINT NOT NULL,
+    "user_id" INTEGER NOT NULL,
+
+    CONSTRAINT "Comment_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -109,6 +128,12 @@ CREATE UNIQUE INDEX "TemplateTag_template_id_tag_id_key" ON "TemplateTag"("templ
 
 -- CreateIndex
 CREATE UNIQUE INDEX "TemplateAccess_template_id_user_id_key" ON "TemplateAccess"("template_id", "user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Form_template_id_user_id_key" ON "Form"("template_id", "user_id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TemplateLike_template_id_user_id_key" ON "TemplateLike"("template_id", "user_id");
 
 -- AddForeignKey
 ALTER TABLE "Template" ADD CONSTRAINT "Template_topic_id_fkey" FOREIGN KEY ("topic_id") REFERENCES "Topic"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -142,3 +167,15 @@ ALTER TABLE "Answer" ADD CONSTRAINT "Answer_form_id_fkey" FOREIGN KEY ("form_id"
 
 -- AddForeignKey
 ALTER TABLE "Answer" ADD CONSTRAINT "Answer_question_id_fkey" FOREIGN KEY ("question_id") REFERENCES "Question"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TemplateLike" ADD CONSTRAINT "TemplateLike_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "Template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "TemplateLike" ADD CONSTRAINT "TemplateLike_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id_user") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "Template"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Comment" ADD CONSTRAINT "Comment_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "User"("id_user") ON DELETE CASCADE ON UPDATE CASCADE;

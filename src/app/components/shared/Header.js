@@ -105,7 +105,6 @@ const Header = ({ refreshPage }) => {
                             placeholder={language === "es" ? "Buscar..." : "Search..."}
                             focusBorderColor={greenColor}
                             onKeyDown={handleSearchEnter}
-                            onK
                             _placeholder={{ color: 'gray.500' }}
                         />
                         <InputRightElement width='4.5rem'>
