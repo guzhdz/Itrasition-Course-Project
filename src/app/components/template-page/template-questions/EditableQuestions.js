@@ -175,6 +175,11 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
         reset(Object.assign({}, ...renderQuestions));
     }
 
+    const saveAllChanges = async () => {
+        await handleSubmit(onSubmit)();
+        setIsSavingChanges(false);
+    }
+
     useEffect(() => {
         setQuestions(loadedQuestions);
         resetForm();
@@ -182,7 +187,7 @@ const EditableQuestions = ({ id, loadedQuestions, getRenderId, refreshInfo, chec
 
     useEffect(() => {
         if (isSavingChanges) {
-            handleSubmit(onSubmit)();
+            saveAllChanges();
         }
     }, [isSavingChanges]);
 

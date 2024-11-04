@@ -26,12 +26,10 @@ import { BiSolidData } from "react-icons/bi";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
-import { useAuth } from "../../context/AuthContext";
 
 function LatestTemplates() {
     const router = useRouter();
-    const { language, greenColor, textGreenScheme, setPageLoaded } = useUI();
-    const { user } = useAuth();
+    const { language, greenColor, setPageLoaded, openToast } = useUI();
     const [templates, setTemplates] = useState([]);
     const [loading, setLoading] = useState(true);
     const skeletons = Array(6).fill(null);
@@ -41,7 +39,12 @@ function LatestTemplates() {
         if (response.ok) {
             setTemplates(response.data);
         } else {
-            console.log("Error");
+            openToast(
+                "Error",
+                language === "es" ? "Error al obtener las plantillas" : "Error at getting templates",
+                "error"
+            );
+            setTemplates([]);
         }
         setLoading(false);
     };

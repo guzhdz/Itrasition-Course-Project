@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 //Chakra imports
 import {
   Flex,
-  Box
 } from "@chakra-ui/react";
 
 //Components import

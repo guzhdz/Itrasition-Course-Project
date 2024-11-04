@@ -112,7 +112,6 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
                 );
             }
         }
-        setIsSavingChanges(false);
         setLoadingUpdate(false);
     }
 
@@ -152,6 +151,11 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
         setShowModal(true);
     };
 
+    const saveAllChanges = async () => {
+        await handleSubmit(onSubmit)();
+        setIsSavingChanges(false);
+    }
+
     useEffect(() => {
         reset({
             title: templateInfo.title || "",
@@ -166,7 +170,7 @@ const SettingsForm = ({ templateInfo, tagOptions, topicOptions, userOptions, ref
 
     useEffect(() => {
         if (isSavingChanges) {
-            handleSubmit(onSubmit)();
+           saveAllChanges();
         }
     }, [isSavingChanges]);
 

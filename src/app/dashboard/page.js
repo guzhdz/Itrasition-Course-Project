@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import {
     Flex,
     Box,
-    Heading
+    Heading,
+    Button
 } from "@chakra-ui/react";
 
 //Components import
@@ -20,6 +21,9 @@ import DashboardTabs from "../components/dashboard/DashboardTabs";
 //Services imports
 import { getTemplatesUser } from "../services/templateService";
 import { getFormsUser } from "../services/formService";
+
+//Library imports
+import { FaSalesforce } from "react-icons/fa";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -81,8 +85,6 @@ export default function Dashboard() {
     const initializePage = async () => {
         const isAuth = await checkAuthProcess();
         isAuth && setPageLoaded(true);
-        loadTemplates();
-        loadForms();
     }
 
     const loadTemplates = async () => {
@@ -119,10 +121,22 @@ export default function Dashboard() {
         }
     }
 
+    const goTo = (path) => {
+        setPageLoaded(false);
+        router.push(path);
+    }
+
     useEffect(() => {
         initializePage();
     }, []);
 
+
+    useEffect(() => {
+        if (user !== null) {
+            loadTemplates();
+            loadForms();
+        }
+    }, [user]);
 
     return (
         <>
@@ -140,6 +154,15 @@ export default function Dashboard() {
                         <Heading mb="40px">{language === "es" ? "Mi Dashboard" : "My Dashboard"}</Heading>
 
                         <UserBanner templatesNumber={templatesNumber} formsNumber={formsNumber} />
+
+                        <Flex justify="flex-end">
+                            <Button 
+                            colorScheme="green" 
+                            leftIcon={<FaSalesforce />}
+                            onClick={() => goTo("/sf-form")} >
+                                {language === "es" ? "Conectar con SF" : "Link to SF"}
+                            </Button>
+                        </Flex>
 
                         <DashboardTabs
                             checkAuth={checkAuthProcess}

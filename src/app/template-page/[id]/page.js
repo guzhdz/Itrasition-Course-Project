@@ -19,6 +19,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
+import ConfirmModal from "../../components/shared/ConfirmModal";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
@@ -47,6 +48,7 @@ export default function TemplatePage() {
     openToast
   } = useUI();
   const { checkAuth } = useAuth();
+  const [showModal, setShowModal] = useState(false);
   const [isSavingChanges, setIsSavingChanges] = useState(true);
 
 
@@ -129,6 +131,11 @@ export default function TemplatePage() {
     }
   }
 
+  const openConfirmModal = async () => {
+    setShowModal(true);
+  };
+
+
   useEffect(() => {
     initializePage();
   }, []);
@@ -162,7 +169,7 @@ export default function TemplatePage() {
                 <Button
                   colorScheme="green"
                   isLoading={isSavingChanges}
-                  onClick={() => setIsSavingChanges(true)} >
+                  onClick={openConfirmModal} >
                   {language === "es" ? "Guardar cambios" : "Save changes"}
                 </Button>
               </Show>
@@ -172,7 +179,7 @@ export default function TemplatePage() {
                   colorScheme="green"
                   isLoading={isSavingChanges}
                   icon={<FaSave />}
-                  onClick={() => setIsSavingChanges(true)} />
+                  onClick={openConfirmModal} />
               </Show>
             </Flex>
 
@@ -186,6 +193,13 @@ export default function TemplatePage() {
         :
         <LoadingPage />
       }
+
+      <ConfirmModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        confirmCallback={() => setIsSavingChanges(true)}
+        title={language === "es" ? "Guardar todos los cambios" : "Save all changes"}
+        message={language === "es" ? "¿Deseas guardar todos los cambios?" : "Do you want to save all the changes?"} />
     </>
 
   );

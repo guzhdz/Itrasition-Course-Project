@@ -20,6 +20,7 @@
     "chakra-ui-simple-autocomplete": "^2.3.0",
     "cookie": "^0.7.1",
     "framer-motion": "^11.9.0",
+    "jsforce": "^3.6.2",
     "jsonwebtoken": "^9.0.2",
     "markdown-to-jsx": "^7.5.0",
     "next": "14.2.14",

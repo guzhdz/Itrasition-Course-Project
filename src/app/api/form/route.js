@@ -40,7 +40,6 @@ export async function POST(request) {
         statusCode = 200;
         return new Response(superjson.stringify(result.id), { status: statusCode });
     } catch (error) {
-        console.log(error);
         let messageError = {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
@@ -78,7 +77,6 @@ export async function PUT(request) {
         statusCode = 200;
         return new Response(superjson.stringify(result.id), { status: statusCode });
     } catch (error) {
-        console.log(error);
         let messageError = {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
@@ -134,7 +132,6 @@ const getUserForm = async (queryParams) => {
         statusCode = 200;
         return new Response(superjson.stringify(result), { status: statusCode });
     } catch (error) {
-        console.log(error);
         const messageError = {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
@@ -171,7 +168,6 @@ const getFormsUser = async (queryParams) => {
         statusCode = 200;
         return new Response(superjson.stringify(rows), { status: statusCode });
     } catch (error) {
-        console.log(error);
         const messageError = {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
