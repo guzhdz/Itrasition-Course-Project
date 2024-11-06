@@ -17,6 +17,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import TemplatesResults from "../components/search-results/TemplatesResults";
+import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -33,7 +34,7 @@ export default function SearchResults() {
         setPageLoaded,
         language
     } = useUI();
-    const { checkAuth } = useAuth();
+    const { checkAuth, user } = useAuth();
 
     const authenticate = async (initial) => {
         const response = await checkAuth();
@@ -107,6 +108,8 @@ export default function SearchResults() {
 
                         <TemplatesResults />
                     </Box>
+
+                    {user !== null && <HelpButton />}
                 </Flex>
                 :
                 <LoadingPage />

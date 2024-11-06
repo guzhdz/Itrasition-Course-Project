@@ -14,6 +14,7 @@ import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import HeroSection from "../components/main/HeroSection";
 import LatestTemplates from "../components/main/LatestTemplates";
+import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -29,7 +30,7 @@ export default function Main() {
     pageLoaded,
     setPageLoaded
   } = useUI();
-  const { checkAuth } = useAuth();
+  const { checkAuth, user } = useAuth();
 
   const authenticate = async (home) => {
     const response = await checkAuth();
@@ -95,6 +96,8 @@ export default function Main() {
           <Header refreshPage={initializePage} />
           <HeroSection goTo={goTo} />
           <LatestTemplates />
+
+          {user !== null && <HelpButton />}
         </Flex>
         :
         <LoadingPage />

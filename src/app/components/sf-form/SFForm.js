@@ -36,7 +36,11 @@ const SFForm = ({ checkAuth, setAccountCreated }) => {
         register,
         handleSubmit,
         formState: { errors }
-    } = useForm();
+    } = useForm({
+        defaultValues: {
+            email: user.email,
+        }
+    });
     const [showModal, setShowModal] = useState(false);
     const [loadingUpdate, setLoadingUpdate] = useState(false);
 
@@ -179,6 +183,7 @@ const SFForm = ({ checkAuth, setAccountCreated }) => {
                                 id="email"
                                 type="text"
                                 placeholder={language === "es" ? "Ingrese su correo" : "Input your email"}
+                                readOnly = {user !== null }
                                 disabled={loadingUpdate}
                                 focusBorderColor={greenColor}
                                 _placeholder={{ color: 'gray.500' }}

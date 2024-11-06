@@ -13,11 +13,12 @@ import {
 //Components imports
 import TemplatesTable from "./templates-table/TemplatesTable";
 import FormsTable from "./forms-table/FormsTable";
+import TicketsTable from "./tickets-table/TicketsTable";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
 
-const DashboardTabs = ({ checkAuth, loadTemplates, loadForms }) => {
+const DashboardTabs = ({ checkAuth, loadTemplates, loadForms, loadTickets }) => {
     const router = useRouter();
     const { language, setPageLoaded } = useUI();
 
@@ -31,6 +32,7 @@ const DashboardTabs = ({ checkAuth, loadTemplates, loadForms }) => {
             <TabList>
                 <Tab>{language === "es" ? "Mis plantillas" : "My templates"}</Tab>
                 <Tab>{language === "es" ? "Mis formularios" : "My forms"}</Tab>
+                <Tab>{language === "es" ? "Mis tickets" : "My tickets"}</Tab>
             </TabList>
 
             <TabPanels>
@@ -39,6 +41,9 @@ const DashboardTabs = ({ checkAuth, loadTemplates, loadForms }) => {
                 </TabPanel>
                 <TabPanel>
                     <FormsTable goTo={goTo} checkAuth={checkAuth} loadForms={loadForms} />
+                </TabPanel>
+                <TabPanel>
+                    <TicketsTable goTo={goTo} checkAuth={checkAuth} loadTickets={loadTickets} />
                 </TabPanel>
             </TabPanels>
         </Tabs>

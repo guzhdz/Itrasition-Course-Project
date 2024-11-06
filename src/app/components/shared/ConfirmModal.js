@@ -39,7 +39,13 @@ const ConfirmModal = ({ closeOnOverlay = true, showModal, setShowModal, title, m
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme="red" mr={3} onClick={() => setShowModal(false)}>{language === "es" ? "Cancelar" : "Cancel"}</Button>
+                    <Button
+                        colorScheme="green"
+                        variant="outline"
+                        mr={3}
+                        onClick={() => setShowModal(false)} >
+                        {language === "es" ? "Cancelar" : "Cancel"}
+                    </Button>
                     <Button onClick={handleOk} colorScheme="green">OK</Button>
                 </ModalFooter>
             </ModalContent>

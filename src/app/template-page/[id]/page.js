@@ -20,6 +20,7 @@ import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
 import ConfirmModal from "../../components/shared/ConfirmModal";
+import HelpButton from "../../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
@@ -189,6 +190,8 @@ export default function TemplatePage() {
               setIsSavingChanges={setIsSavingChanges}
               checkAuth={checkAuthProcess} />
           </Box>
+
+          <HelpButton />
         </Flex>
         :
         <LoadingPage />

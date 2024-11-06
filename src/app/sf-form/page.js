@@ -21,6 +21,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import SFForm from "../components/sf-form/SFForm";
+import HelpButton from "../components/shared/help/HelpButton";
 
 //Services imports
 import { getAccountByAccountNumber } from "../services/salesforceService";
@@ -163,6 +164,8 @@ export default function SfForm() {
                             </Flex>
                         </Card>}
                     </Box>
+
+                    <HelpButton />
                 </Flex >
                 :
                 <LoadingPage />

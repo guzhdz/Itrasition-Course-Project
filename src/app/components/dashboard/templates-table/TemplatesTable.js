@@ -53,7 +53,7 @@ const TemplatesTable = ({ goTo, checkAuth, loadTemplates }) => {
         setLoading(true);
         const isAuth = await checkAuth();
         if (isAuth) {
-            const response = await loadTemplates(user.id_user);
+            const response = await loadTemplates();
             setTemplates(response);
             setCheckedTemplates(new Array(response.length).fill(false));
             setTimeout(() => setLoading(false), 50);

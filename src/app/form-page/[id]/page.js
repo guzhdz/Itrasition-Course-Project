@@ -14,6 +14,7 @@ import {
 import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import Form from "../../components/form-page/Form";
+import HelpButton from "../../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
@@ -140,6 +141,8 @@ export default function TemplatePage() {
                     <Box maxW="1400px" mx="auto" width="80%">
                         <Form templateInfo={templateInfo} checkAuth={checkAuthProcess} />
                     </Box>
+
+                    <HelpButton />
                 </Flex>
                 :
                 <LoadingPage />

@@ -51,7 +51,7 @@ const FormsTable = ({ goTo, checkAuth, loadForms }) => {
         setLoading(true);
         const isAuth = await checkAuth();
         if (isAuth) {
-            const response = await loadForms(user.id_user);
+            const response = await loadForms();
             setForms(response);
             setCheckedForms(new Array(response.length).fill(false));
             setTimeout(() => setLoading(false), 50);

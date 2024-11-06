@@ -15,6 +15,7 @@ import {
 import Header from '../components/shared/Header'
 import TableTabs from "../components/admin-panel/TableTabs";
 import LoadingPage from "../components/shared/LoadingPage";
+import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -111,6 +112,8 @@ export default function AdminPanel() {
 
             <TableTabs checkAuth={checkAuthProcess} />
           </Box>
+
+          <HelpButton />
         </Flex>
         :
         <LoadingPage />

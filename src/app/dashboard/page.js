@@ -17,10 +17,12 @@ import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import UserBanner from "../components/dashboard/UserBanner";
 import DashboardTabs from "../components/dashboard/DashboardTabs";
+import HelpButton from "../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplatesUser } from "../services/templateService";
 import { getFormsUser } from "../services/formService";
+import { getUserIssues } from "../services/jiraService";
 
 //Library imports
 import { FaSalesforce } from "react-icons/fa";
@@ -121,6 +123,21 @@ export default function Dashboard() {
         }
     }
 
+    const loadTickets = async () => {
+        const response = await getUserIssues(user.email);
+        if (response.ok) {
+            return response.data;
+        } else {
+            let messageError = language === "es" ? "Error al cargar los tickets. Por favor, intenta de nuevo."
+                : "Error loading tickets. Please try again later.";
+            if (response.message) {
+                messageError = language === "es" ? response.message[language] : response.message.en;
+            }
+            openToast("Error", messageError, "error");
+            return [];
+        }
+    }
+
     const goTo = (path) => {
         setPageLoaded(false);
         router.push(path);
@@ -157,7 +174,8 @@ export default function Dashboard() {
 
                         <Flex justify="flex-end">
                             <Button 
-                            colorScheme="green" 
+                            colorScheme="green"
+                            variant="outline" 
                             leftIcon={<FaSalesforce />}
                             onClick={() => goTo("/sf-form")} >
                                 {language === "es" ? "Conectar con SF" : "Link to SF"}
@@ -167,13 +185,15 @@ export default function Dashboard() {
                         <DashboardTabs
                             checkAuth={checkAuthProcess}
                             loadTemplates={loadTemplates}
-                            loadForms={loadForms} />
+                            loadForms={loadForms}
+                            loadTickets={loadTickets} />
                     </Box>
+
+                    <HelpButton />
                 </Flex >
                 :
                 <LoadingPage />
             }
         </>
-
     );
 }
