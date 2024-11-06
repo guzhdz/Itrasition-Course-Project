@@ -92,7 +92,7 @@ const searchUser = async (email) => {
         );
         return user;
     } catch (error) {
-        throw new Error(error);
+        return [];
     }
 }
 
@@ -111,7 +111,7 @@ const getUserIssues = async (queryParams) => {
             );
         }
         statusCode = 200;
-        return new Response(JSON.stringify(rows.issues), { status: statusCode });
+        return new Response(JSON.stringify(rows?.issues || rows), { status: statusCode });
     } catch (error) {
         console.log(error);
         const messageError = {
