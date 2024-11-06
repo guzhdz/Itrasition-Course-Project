@@ -43,7 +43,7 @@ const DashboardTabs = ({ checkAuth, loadTemplates, loadForms, loadTickets }) => 
                     <FormsTable goTo={goTo} checkAuth={checkAuth} loadForms={loadForms} />
                 </TabPanel>
                 <TabPanel>
-                    <TicketsTable goTo={goTo} checkAuth={checkAuth} loadTickets={loadTickets} />
+                    <TicketsTable checkAuth={checkAuth} loadTickets={loadTickets} />
                 </TabPanel>
             </TabPanels>
         </Tabs>
