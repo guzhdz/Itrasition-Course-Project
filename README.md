@@ -12,7 +12,7 @@ Technologies used:
 - node.js
 
 ## Project instructions and requirements
-se this (depending of what group you are in):
+ Depending of what group you are in):
 .NET: C#, Blazor or MVC (you choose)
 or
 JavaScript: JavaScript or TypeScript (you choose), React (ask if you want to replace React with Angular)
