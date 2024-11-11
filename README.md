@@ -12,7 +12,7 @@ Technologies used:
 - node.js
 
 ## Project instructions and requirements
-se this (depending of what group you are in):
+ Depending of what group you are in):
 .NET: C#, Blazor or MVC (you choose)
 or
 JavaScript: JavaScript or TypeScript (you choose), React (ask if you want to replace React with Angular)
@@ -108,20 +108,31 @@ add any number of questions of any type (not 0 or 1 or 2 or 3 or 4, but any numb
 add the "E-mail me the copy of my answers" checkbox to the form.
 
 ## Preview Images:
-![image](https://github.com/user-attachments/assets/89c41a98-355d-45bc-acb2-71825e2fbce8)
+![image](https://github.com/user-attachments/assets/d8e024d4-0413-43d2-9111-de87f4969902)
 
-![image](https://github.com/user-attachments/assets/124f0b7b-6a32-462a-9181-17b5c125a85e)
+![image](https://github.com/user-attachments/assets/679cfe77-6f64-4906-a7f5-9690dd47a4cd)
 
-![image](https://github.com/user-attachments/assets/0838e9fc-6f69-49e1-af2b-fd7a0a344faa)
+![image](https://github.com/user-attachments/assets/b77aa51f-a876-4826-aa8b-ba321c3dfa5b)
 
-![image](https://github.com/user-attachments/assets/add03832-9abd-48a1-a814-f3899bd3f6ad)
+![image](https://github.com/user-attachments/assets/cc550b9a-78c2-4c75-85e7-96fb204d6a8f)
 
-![image](https://github.com/user-attachments/assets/ccf419a2-a187-4452-a674-ff0e36730f56)
+![image](https://github.com/user-attachments/assets/1fa9ef2a-b1b2-457a-b40e-ca8d3500bae8)
 
-![image](https://github.com/user-attachments/assets/51b70d35-86d5-400c-8f9b-e947750f766b)
+![image](https://github.com/user-attachments/assets/58a5f332-6541-4ac7-a113-89ca264c4201)
 
-![image](https://github.com/user-attachments/assets/4cdc87cd-420c-44fb-a015-59103166d778)
+![image](https://github.com/user-attachments/assets/e4b383fd-ceca-4479-8ef0-f2294d48a31d)
 
+![image](https://github.com/user-attachments/assets/9127c097-4e5f-4260-8b29-0610f76eaa12)
+
+![image](https://github.com/user-attachments/assets/07c347d3-3194-41aa-92ce-781f1fc2de3f)
+
+![image](https://github.com/user-attachments/assets/fa30e229-894d-4c86-ac44-42d744e091f3)
+
+![image](https://github.com/user-attachments/assets/2083e59b-84fa-4f13-b68d-620472119b76)
+
+![image](https://github.com/user-attachments/assets/9b08af09-430e-4ac6-a96f-1462936a3980)
+
+![image](https://github.com/user-attachments/assets/c7fcb365-53aa-46db-978d-d767c23e4ac2)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
