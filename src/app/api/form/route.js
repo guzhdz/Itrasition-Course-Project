@@ -9,7 +9,11 @@ export async function GET(request) {
         return await getUserForm(queryParams);
     } else if (action === 'getFormsUser') {
         return await getFormsUser(queryParams);
-    } else {
+    }
+    else if (action === 'getTemplateForms') {
+        return await getTemplateForms(queryParams);
+    }
+    else {
         const messageError = {
             en: "Bad request.",
             es: "Solicitud incorrecta."
@@ -70,10 +74,10 @@ export async function PUT(request) {
                 }
             },
             data: {
-              fill_time,
-              answers: { updateMany: updatedAnswers },
+                fill_time,
+                answers: { updateMany: updatedAnswers },
             },
-          });
+        });
         statusCode = 200;
         return new Response(superjson.stringify(result.id), { status: statusCode });
     } catch (error) {
@@ -81,7 +85,7 @@ export async function PUT(request) {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
         }
-        return new Response(superjson.stringify({error: messageError}), { status: 500 });
+        return new Response(superjson.stringify({ error: messageError }), { status: 500 });
     }
 }
 
@@ -158,6 +162,42 @@ const getFormsUser = async (queryParams) => {
                                 name: true
                             }
                         }
+                    }
+                }
+            },
+            orderBy: {
+                fill_time: 'desc'
+            }
+        });
+        statusCode = 200;
+        return new Response(superjson.stringify(rows), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getTemplateForms = async (queryParams) => {
+    const templateId = queryParams.get('templateId');
+    let statusCode = 500;
+    try {
+        const rows = await prisma.form.findMany({
+            where: { template_id: templateId },
+            include: {
+                user: {
+                    select: {
+                        id_user: true,
+                        name: true,
+                        email: true
+                    }
+                },
+                template: {
+                    select: {
+                        id: true,
                     }
                 }
             },

@@ -18,7 +18,7 @@ const HelpButton = () => {
 
     return (
         <>
-            <Flex mt="auto" px={6} py={4} justify="flex-end">
+            <Flex mt="auto" px={6} pb={4} justify="flex-end">
                 <IconButton
                     colorScheme="green"
                     variant="outline"

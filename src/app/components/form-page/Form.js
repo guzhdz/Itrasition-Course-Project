@@ -46,14 +46,14 @@ import { insertFormAndAnswers, getUserForm, updateFormAndAnswers } from "../../s
 
 //Library imports
 import Markdown from 'markdown-to-jsx'
-import { useForm, Controller, set } from "react-hook-form";
+import { useForm, Controller} from "react-hook-form";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
 
-function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth }) {
+function Form({ templateInfo,  submitter = null, checkAuth }) {
     const router = useRouter();
     const { user } = useAuth();
     const {
@@ -82,8 +82,8 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
     const owner = templateInfo.user_id === user?.id_user ? true : false
 
     const getMode = () => {
-        if (modePassed) {
-            return modePassed;
+        if (submitter && (owner || user?.is_admin)) {
+            return 2;
         } else if (owner) {
             return 0;
         } else {
@@ -110,7 +110,8 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
     }
 
     const getPossibleAnswers = async () => {
-        const response = await getUserForm(templateInfo.id, user?.id_user);
+        const userInfo = submitter ? submitter : user;
+        const response = await getUserForm(templateInfo.id, userInfo.id_user);
         if (response.ok) {
             const form = response.data;
             if (form !== null) {
@@ -260,12 +261,26 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
 
     const initializeComponent = async () => {
         setLoadingComp(true);
-        const stateMode = await getMode();
+        const stateMode = getMode();
         setMode(stateMode);
-        if (user !== null && stateMode === 1) {
+        console.log((user !== null && stateMode === 1) || stateMode === 2);
+        if ((user !== null && stateMode === 1) || stateMode === 2) {
             await getPossibleAnswers();
         }
         setLoadingComp(false);
+    }
+
+    const getTitle = () => {
+        switch (mode) {
+            case 0:
+                return language === "es" ? "Completa el formulario" : "Complete the form";
+
+            case 1:
+                return language === "es" ? "Plantilla (Vista previa solo lectura)" : "Template (Preview read only)";
+
+            case 2:
+                return language === "es" ? `Formulario de ${submitter.name} (Respuestas)` : `${submitter.name}'s Forms (Answers)`;
+        }
     }
 
     useEffect(() => {
@@ -287,14 +302,12 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                 variant="ghost"
                                 icon={<ArrowBackIcon />} />
                             <Heading mb={2}>
-                                {mode ?
-                                    language === "es" ? "Completa el formulario" : "Complete the form"
-                                    : language === "es" ? "Plantilla (Vista previa solo lectura)" : "Template (Preview read only)"}
+                                {getTitle()}
                             </Heading>
                         </Flex>
 
 
-                        {owner && <Text fontSize={"sm"}>
+                        {owner && mode !== 2 && <Text fontSize={"sm"}>
                             {language === "es" ? "Este es lo que otros usuarios verán en tu plantilla"
                                 : "This is how other users will see your template"}
                         </Text>}
@@ -389,7 +402,7 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                             <FormLabel fontWeight="normal">{question.description}</FormLabel>
                                             {question.type === "text" && (
                                                 <Input
-                                                    readOnly={!mode}
+                                                    readOnly={mode != 1}
                                                     disabled={loadingUpdate}
                                                     type="text"
                                                     focusBorderColor={greenColor}
@@ -410,7 +423,7 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                             )}
                                             {question.type === "textarea" && (
                                                 <Textarea
-                                                    readOnly={!mode}
+                                                    readOnly={mode != 1}
                                                     disabled={loadingUpdate}
                                                     focusBorderColor={greenColor}
                                                     _placeholder={{ color: 'gray.500' }}
@@ -444,7 +457,7 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                                     }}
                                                     render={({ field }) => (
                                                         <NumberInput
-                                                            readOnly={!mode}
+                                                            readOnly={mode != 1}
                                                             disabled={loadingUpdate}
                                                             focusBorderColor={greenColor}
                                                             {...field}>
@@ -463,7 +476,7 @@ function Form({ templateInfo, modePassed = null, adminRequest = null, checkAuth 
                                                     control={control}
                                                     render={({ field }) => (
                                                         <Checkbox
-                                                            readOnly={!mode}
+                                                            readOnly={mode != 1}
                                                             disabled={loadingUpdate}
                                                             {...field}
                                                             colorScheme="green"

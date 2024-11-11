@@ -10,6 +10,7 @@ import {
 //Components imports
 import TemplateSettings from "./template-settings/TemplateSettings";
 import TemplateQuestions from "./template-questions/TemplateQuestions";
+import TemplateResults from "./template-results/TemplateResults";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -42,7 +43,7 @@ const TemplatePageTabs = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }
                     setIsSavingChanges={setIsSavingChanges} />
                 </TabPanel>
                 <TabPanel>
-                    <h1>Results</h1>
+                    <TemplateResults id={id} checkAuth={checkAuth} />
                 </TabPanel>
                 <TabPanel>
                     <h1>Statistics</h1>

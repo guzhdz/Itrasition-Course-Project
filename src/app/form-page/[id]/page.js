@@ -2,7 +2,7 @@
 
 //React/Next imports
 import { useEffect, useState } from "react";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 
 //Chakra imports
 import {
@@ -18,6 +18,7 @@ import HelpButton from "../../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
+import { getUser } from "../../services/userService";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -27,7 +28,9 @@ import { useAuth } from "../../context/AuthContext";
 export default function TemplatePage() {
     const router = useRouter();
     const params = useParams();
+    const searchParams = useSearchParams();
     const id = BigInt(params.id);
+    const submitterId = searchParams.get('submitter');
     const {
         bg,
         openSimpleErrorModal,
@@ -39,6 +42,7 @@ export default function TemplatePage() {
         language
     } = useUI();
     const [templateInfo, setTemplateInfo] = useState({});
+    const [submitter, setSubmitter] = useState(null);
     const { checkAuth } = useAuth();
 
 
@@ -61,7 +65,7 @@ export default function TemplatePage() {
                 return true;
             case 2:
                 setPageLoaded(false);
-                openErrorAuthModal(authCase.message, () => router.push('/'));
+                openErrorAuthModal(authCase.message, () => router.back());
                 return false;
 
             case 3:
@@ -69,7 +73,7 @@ export default function TemplatePage() {
 
             case 4:
                 setPageLoaded(false);
-                openExpiredSessionModal(() => router.push('/'));
+                openExpiredSessionModal(() => router.back());
                 return false;
 
             default:
@@ -88,7 +92,7 @@ export default function TemplatePage() {
                     language === "es" ? 'No existe este formulario' : 'This form does not exist',
                     'error'
                 )
-                router.push('/main');
+                router.back();
                 return false
             } else {
                 setTemplateInfo(template);
@@ -98,7 +102,7 @@ export default function TemplatePage() {
             setPageLoaded(false);
             openSimpleErrorModal(
                 response.message,
-                () => router.push('/main')
+                () => router.back()
             );
             return false;
         }
@@ -116,11 +120,31 @@ export default function TemplatePage() {
             return false;
     }
 
-    const initializePage = async () => {
-        const isAuth = await checkAuthProcess(true);
-        if (isAuth) {
-            setPageLoaded(true);
+    const getSubmitterInfo = async () => {
+        const submitterInfo = await getUser(parseInt(submitterId));
+        if (submitterInfo.ok) {
+            return submitterInfo.data;
+        } else {
+            setPageLoaded(false);
+            openSimpleErrorModal(
+                submitterInfo.message,
+                () => router.back()
+            );
+            return null;
         }
+    }
+
+    const initializePage = async () => {
+        if (submitterId !== null) {
+            const submitterInfo = await getSubmitterInfo();
+            console.log(submitterInfo);
+            if (submitterInfo !== null)
+                setSubmitter(submitterInfo);
+            else
+                return;
+        }
+        const isAuth = await checkAuthProcess(true);
+        isAuth && setPageLoaded(true);
     }
 
     useEffect(() => {
@@ -139,7 +163,7 @@ export default function TemplatePage() {
 
                     <Header refreshPage={initializePage} />
                     <Box maxW="1400px" mx="auto" width="80%">
-                        <Form templateInfo={templateInfo} checkAuth={checkAuthProcess} />
+                        <Form templateInfo={templateInfo} checkAuth={checkAuthProcess} submitter={submitter} />
                     </Box>
 
                     <HelpButton />

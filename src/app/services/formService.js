@@ -45,6 +45,25 @@ export const getFormsUser = async (userId) => {
     }
 }
 
+export const getTemplateForms = async (templateId) => {
+    let messageError = "";
+    try {
+        const url = new URL(API_URL, window.location.origin);
+        url.searchParams.append('action', "getTemplateForms");
+        url.searchParams.append('templateId', templateId.toString());
+        const response = await fetch(url.toString());
+        const data = superjson.deserialize(await response.json());
+        if (response.status !== 200) {
+            messageError = data.error;
+            return { ok: false, message: messageError };
+        } else {
+            return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(deserializedError);
+    }
+}
+
 export const insertFormAndAnswers = async (template_id, user_id, answers) => {
     const form = {
         template_id: template_id.toString(),
