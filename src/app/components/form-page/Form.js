@@ -46,14 +46,14 @@ import { insertFormAndAnswers, getUserForm, updateFormAndAnswers } from "../../s
 
 //Library imports
 import Markdown from 'markdown-to-jsx'
-import { useForm, Controller} from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
 
-function Form({ templateInfo,  submitter = null, checkAuth }) {
+function Form({ templateInfo, submitter = null, checkAuth }) {
     const router = useRouter();
     const { user } = useAuth();
     const {
@@ -263,7 +263,6 @@ function Form({ templateInfo,  submitter = null, checkAuth }) {
         setLoadingComp(true);
         const stateMode = getMode();
         setMode(stateMode);
-        console.log((user !== null && stateMode === 1) || stateMode === 2);
         if ((user !== null && stateMode === 1) || stateMode === 2) {
             await getPossibleAnswers();
         }
@@ -395,6 +394,7 @@ function Form({ templateInfo,  submitter = null, checkAuth }) {
                         <chakra.form onSubmit={handleSubmit(onSubmit)} w="100%">
 
                             {templateInfo.questions.map((question) => (
+                                (question.displayed || mode !== 2) &&
                                 <Card mb={4} pb={2} key={question.id}>
                                     <CardBody>
                                         <Heading size="md" color={greenColor} mb={2}>{question.title}</Heading>

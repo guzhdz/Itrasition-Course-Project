@@ -137,7 +137,6 @@ export default function TemplatePage() {
     const initializePage = async () => {
         if (submitterId !== null) {
             const submitterInfo = await getSubmitterInfo();
-            console.log(submitterInfo);
             if (submitterInfo !== null)
                 setSubmitter(submitterInfo);
             else
