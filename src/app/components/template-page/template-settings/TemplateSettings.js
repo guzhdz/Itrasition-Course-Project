@@ -1,5 +1,6 @@
 //React/Next imports
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -20,6 +21,7 @@ import { useUI } from "../../../context/UIContext";
 import { useAuth } from "../../../context/AuthContext";
 
 const TemplateSettings = ({id, checkAuth, isSavingChanges, setIsSavingChanges}) => {
+    const router = useRouter();
     const { openSimpleErrorModal, setPageLoaded } = useUI();
     const { user } = useAuth();
     const [topicOptions, setTopicOptions] = useState([]);

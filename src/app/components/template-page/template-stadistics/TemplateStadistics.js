@@ -4,28 +4,25 @@ import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
-    Skeleton
+    Skeleton,
+    Button
 } from "@chakra-ui/react";
 
-//Components imports
-import FillOutForms from "./FillOutForms";
-
 //Services imports
-import { getTemplateForms } from "../../../services/formService";
+import { getTemplateStadistics } from "../../../services/templateService";
 
 //Context imports
 import { useUI } from "../../../context/UIContext";
 
-const TemplateResults = ({ id }) => {
+const TemplateStadistics = ({ id }) => {
     const router = useRouter();
     const { openSimpleErrorModal, setPageLoaded } = useUI();
-    const [forms, setForms] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const getForms = async () => {
-        const response = await getTemplateForms(id);
+    const getStadistics = async () => {
+        const response = await getTemplateStadistics(id);
         if (response.ok) {
-           setForms(response.data);
+            console.log(response.data);
         } else {
             setPageLoaded(false);
             openSimpleErrorModal(
@@ -36,7 +33,7 @@ const TemplateResults = ({ id }) => {
     }
 
     const initializeComponent = async () => {
-        await getForms();
+        await getStadistics();
         setLoading(false);
     }
 
@@ -47,9 +44,9 @@ const TemplateResults = ({ id }) => {
     return (
         <>
             {loading ? <Skeleton height="700px" />
-                : <FillOutForms forms={forms} setForms={setForms} />}
+                : <Button onClick={getStadistics}>Test</Button>}
         </>
     )
 }
 
-export default TemplateResults;
+export default TemplateStadistics;

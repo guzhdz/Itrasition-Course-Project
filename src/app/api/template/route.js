@@ -1,5 +1,6 @@
 import prisma from "../../lib/prismaClient";
 import superjson from 'superjson';
+import _ from 'underscore';
 
 export async function GET(request) {
     const url = new URL(request.url);
@@ -16,8 +17,11 @@ export async function GET(request) {
     } else if (action === 'getTemplateForFill') {
         return await getTemplateForFill(queryParams);
     } else if (action === 'getAllTemplates') {
-        return await getAllTemplates(queryParams);  
-    } else {
+        return await getAllTemplates(queryParams);
+    } else if (action === 'getTemplateStadistics') {
+        return await getTemplateStadistics(queryParams);
+    }
+    else {
         const messageError = {
             en: "Bad request.",
             es: "Solicitud incorrecta."
@@ -66,7 +70,7 @@ export async function POST(request) {
             en: "Server error. Please try again later.",
             es: "Error del servidor. Por favor, intentalo de nuevo."
         }
-        return new Response(superjson.stringify({ error: messageError}), { status: 500 });
+        return new Response(superjson.stringify({ error: messageError }), { status: 500 });
     }
 }
 
@@ -308,6 +312,69 @@ const getAllTemplates = async (queryParams) => {
         statusCode = 500;
         return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
+}
+
+const getTemplateStadistics = async (queryParams) => {
+    const id = queryParams.get('id');
+    let statusCode = 500;
+    try {
+        const result = await prisma.template.findUnique({
+            where: { id: id },
+            include: {
+                questions: {
+                    select: {
+                        id: true,
+                        type: true,
+                        answers: {
+                            select: {
+                                answer_value: true
+                            }
+                        }
+                    },
+                    orderBy: {
+                        index_order: 'asc'
+                    }
+                }
+            }
+        });
+        statusCode = 200;
+        if (result) {
+            if (result.questions) {
+                result.questions.forEach((question) => {
+                    const aggregation = getAggregationStatistics(question);
+                    question.aggregation = aggregation;
+                });
+            }
+        }
+        return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        console.log(error);
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
+const getAggregationStatistics = (question) => {
+    switch (question.type) {
+        case "text": {
+            return getTextAggregation(question.answers);
+        }
+    }
+}
+
+const getTextAggregation = (answers) => {
+    const answersFormatted = answers.map((answer) => answer.answer_value);
+    const answerCount = _.countBy(answersFormatted);
+    const sortedAnswers = _.chain(answerCount).pairs().sortBy(pair => pair[1]).reverse().value();
+    const maxAnswer = sortedAnswers.length > 0 ? sortedAnswers[0] : null;
+    return {
+        sortedAnswers,
+        maxAnswer
+    };
 }
 
 const updateTemplateSettings = async (templateInfo) => {

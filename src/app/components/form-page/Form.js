@@ -474,6 +474,7 @@ function Form({ templateInfo, submitter = null, checkAuth }) {
                                                 <Controller
                                                     name={`question_${question.index_order}`}
                                                     control={control}
+                                                    defaultValue={false}
                                                     render={({ field }) => (
                                                         <Checkbox
                                                             readOnly={mode != 1}

@@ -11,6 +11,7 @@ import {
 import TemplateSettings from "./template-settings/TemplateSettings";
 import TemplateQuestions from "./template-questions/TemplateQuestions";
 import TemplateResults from "./template-results/TemplateResults";
+import TemplateStadistics from "./template-stadistics/TemplateStadistics";
 
 //Context imports
 import { useUI } from "../../context/UIContext";
@@ -43,10 +44,10 @@ const TemplatePageTabs = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }
                     setIsSavingChanges={setIsSavingChanges} />
                 </TabPanel>
                 <TabPanel>
-                    <TemplateResults id={id} checkAuth={checkAuth} />
+                    <TemplateResults id={id} />
                 </TabPanel>
                 <TabPanel>
-                    <h1>Statistics</h1>
+                    <TemplateStadistics id={id} />
                 </TabPanel>
             </TabPanels>
         </Tabs>

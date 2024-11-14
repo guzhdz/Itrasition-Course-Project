@@ -1,5 +1,6 @@
 //React/Next imports
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
@@ -16,6 +17,7 @@ import { getQuestionsTemplate } from "@/app/services/questionService";
 import { useUI } from "../../../context/UIContext";
 
 const TemplateQuestions = ({ id, checkAuth, isSavingChanges, setIsSavingChanges }) => {
+    const router = useRouter();
     const { openSimpleErrorModal, setPageLoaded } = useUI();
     const [questions, setQuestions] = useState([]);
     const [loading, setLoading] = useState(true);

@@ -80,6 +80,25 @@ export const getAllTemplates = async () => {
     }
 }
 
+export const getTemplateStadistics = async (templateId) => {
+    let messageError = "";
+    try {
+        const url = new URL(API_URL, window.location.origin);
+        url.searchParams.append('action', "getTemplateStadistics");
+        url.searchParams.append('id', templateId);
+        const response = await fetch(url.toString());
+        const data = superjson.deserialize(await response.json());
+        if (response.status !== 200) {
+            messageError = data.error;
+            return { ok: false, message: messageError };
+        } else {
+            return { ok: true, data: data };
+        }
+    } catch (error) {
+        return getGeneralError(error);
+    }
+}
+
 export const insertDraftTemplate = async (title, description, topic_id, user_id) => {
     const template = {
         title,
