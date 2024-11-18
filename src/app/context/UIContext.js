@@ -20,6 +20,10 @@ export const UIProvider = ({ children }) => {
     const greenColor = useColorModeValue("green.600", "green.300");
     const redColor = useColorModeValue("red.600", "red.300");
     const textGreenScheme = useColorModeValue("white", "gray.800");
+    const textColor = useColorModeValue("gray.800", "white");
+    const barColor = useColorModeValue("#38A169", "#48BB78");
+    const bar2Color = useColorModeValue("#3182ce", "#4299e1");
+    const chartTooltipBg = useColorModeValue("light", "dark");
 
     //Text Settings
     const [language, setLanguage] = useState('en');
@@ -129,6 +133,10 @@ export const UIProvider = ({ children }) => {
             greenColor,
             redColor,
             textGreenScheme,
+            textColor,
+            barColor,
+            bar2Color,
+            chartTooltipBg,
             language,
             setLanguage,
             markdownStyles,

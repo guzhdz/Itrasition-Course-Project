@@ -4,9 +4,11 @@ import { useRouter } from "next/navigation";
 
 //Chakra imports
 import {
-    Skeleton,
-    Button
+    Skeleton
 } from "@chakra-ui/react";
+
+//Components imports
+import Statistics from "./Stadistics";
 
 //Services imports
 import { getTemplateStadistics } from "../../../services/templateService";
@@ -17,12 +19,14 @@ import { useUI } from "../../../context/UIContext";
 const TemplateStadistics = ({ id }) => {
     const router = useRouter();
     const { openSimpleErrorModal, setPageLoaded } = useUI();
+    const [stadistics, setStadistics] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const getStadistics = async () => {
         const response = await getTemplateStadistics(id);
         if (response.ok) {
             console.log(response.data);
+            setStadistics(response.data);
         } else {
             setPageLoaded(false);
             openSimpleErrorModal(
@@ -44,7 +48,7 @@ const TemplateStadistics = ({ id }) => {
     return (
         <>
             {loading ? <Skeleton height="700px" />
-                : <Button onClick={getStadistics}>Test</Button>}
+                : <Statistics  stadistics={stadistics}/>}
         </>
     )
 }

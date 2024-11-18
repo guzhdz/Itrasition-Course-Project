@@ -80,7 +80,7 @@ const FormsTable = ({ forms, setForms }) => {
                 <Table variant="striped">
                     {forms.length > 0 &&
                         <TableCaption>{language === "es" ? "Formularios" : "Forms"}</TableCaption>}
-                    {forms.length === 0 && !loading &&
+                    {forms.length === 0 &&
                         <TableCaption>{language === "es" ? "No hay formularios aqui" : "No forms here"}</TableCaption>}
                     <Thead>
                         <Tr>

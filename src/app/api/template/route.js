@@ -1,6 +1,6 @@
 import prisma from "../../lib/prismaClient";
 import superjson from 'superjson';
-import _ from 'underscore';
+import _, { select } from 'underscore';
 
 export async function GET(request) {
     const url = new URL(request.url);
@@ -320,10 +320,12 @@ const getTemplateStadistics = async (queryParams) => {
     try {
         const result = await prisma.template.findUnique({
             where: { id: id },
-            include: {
+            select: {
+                title: true,
                 questions: {
                     select: {
                         id: true,
+                        title: true,
                         type: true,
                         answers: {
                             select: {
@@ -334,15 +336,23 @@ const getTemplateStadistics = async (queryParams) => {
                     orderBy: {
                         index_order: 'asc'
                     }
+                },
+                _count: {
+                    select: {
+                        forms: true
+                    }
                 }
             }
         });
         statusCode = 200;
         if (result) {
             if (result.questions) {
-                result.questions.forEach((question) => {
+                result.questions = result.questions.map((question) => {
                     const aggregation = getAggregationStatistics(question);
-                    question.aggregation = aggregation;
+                    return {
+                        ...question,
+                        aggregation
+                    }
                 });
             }
         }
@@ -360,11 +370,21 @@ const getTemplateStadistics = async (queryParams) => {
 
 const getAggregationStatistics = (question) => {
     switch (question.type) {
-        case "text": {
+        case "text":
             return getTextAggregation(question.answers);
-        }
+
+        case "textarea":
+            return getTextAreaAggregation(question.answers);
+
+        case "positive_num":
+            return getNumberAggregation(question.answers);
+
+        case "checkbox":
+            return getCheckboxAggregation(question.answers);
+
     }
 }
+
 
 const getTextAggregation = (answers) => {
     const answersFormatted = answers.map((answer) => answer.answer_value);
@@ -375,6 +395,43 @@ const getTextAggregation = (answers) => {
         sortedAnswers,
         maxAnswer
     };
+}
+
+const getTextAreaAggregation = (answers) => {
+    const answersFormatted = answers.map((answer) => answer.answer_value);
+    const averageWords = answersFormatted
+        .map(answer => answer.split(/\s+/).length)
+        .reduce((sum, count) => sum + count, 0) / answersFormatted.length;
+
+    const mostCommonWords = _.chain(answersFormatted)
+        .map(sentence => sentence.toLowerCase().match(/\b\w+\b/g)).flatten()
+        .countBy().pairs().sortBy(pair => -pair[1]).value().slice(0, 3);
+    return {
+        averageWords,
+        mostCommonWords
+    };
+}
+
+const getNumberAggregation = (answers) => {
+    const answersFormatted = answers.map((answer) => parseInt(answer.answer_value));
+    const average = answersFormatted.reduce((sum, num) => sum + num, 0) / answersFormatted.length;
+    const min = Math.min(...answersFormatted);
+    const max = Math.max(...answersFormatted);
+    return {
+        average,
+        max,
+        min
+    };
+}
+
+const getCheckboxAggregation = (answers) => {
+    const answersFormatted = answers.map((answer) => answer.answer_value === 'true' ? "yes" : "no");
+    const counts = _.countBy(answersFormatted, answer => answer);
+    const total = answersFormatted.length;
+    const percentages = _.mapObject(counts, count => ((count / total) * 100).toFixed(2));
+    return {
+        percentages
+    }
 }
 
 const updateTemplateSettings = async (templateInfo) => {
