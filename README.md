@@ -136,6 +136,12 @@ add the "E-mail me the copy of my answers" checkbox to the form.
 
 ![image](https://github.com/user-attachments/assets/4205e291-90dd-40b0-b330-01107c8a6613)
 
+![image](https://github.com/user-attachments/assets/fb783ee3-c038-4fd8-927a-4d5577c06d2a)
+
+![image](https://github.com/user-attachments/assets/39b02c24-f9bc-4d92-babd-b42aba8d23e3)
+
+![image](https://github.com/user-attachments/assets/511ccd26-75bc-4464-bafb-289dc0a96cb4)
+
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
