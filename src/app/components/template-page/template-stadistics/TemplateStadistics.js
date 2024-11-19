@@ -25,7 +25,6 @@ const TemplateStadistics = ({ id }) => {
     const getStadistics = async () => {
         const response = await getTemplateStadistics(id);
         if (response.ok) {
-            console.log(response.data);
             setStadistics(response.data);
         } else {
             setPageLoaded(false);

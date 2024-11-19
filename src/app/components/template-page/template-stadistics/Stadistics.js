@@ -24,7 +24,12 @@ const Statistics = ({ stadistics }) => {
                         {language === "es" ? "Estadísticas de los resultados" : "Result's statistics"}
                     </Heading>
                 </CardHeader>
-                <CardBody py={2} display="flex" justifyContent="space-between">
+                <CardBody
+                    py={2}
+                    display="flex"
+                    justifyContent="space-between"
+                    flexDirection={{ base: "column", sm: "row" }}
+                    gap={4}>
                     <Heading size="md" color={greenColor}>
                         {stadistics.title}
                     </Heading>

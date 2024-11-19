@@ -22,7 +22,7 @@ const FillOutForms = ({ forms, setForms }) => {
       }, []);
 
     return (
-        <Card textAlign="initial" mb={4} px={6}>
+        <Card textAlign="initial" mb={4} px={{ base: 0, md: 6 }}>
         <CardHeader>
             <Heading size="md">
                 {language === "es" ? "Formularios contestados" : "Filled forms"}

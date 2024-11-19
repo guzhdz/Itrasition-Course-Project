@@ -91,7 +91,7 @@ const QuestionsStadistics = ({ stadistics }) => {
                                 <AccordionPanel pb={4}>
                                     {question.type === "text" && (
                                         <Flex flexDirection="column" gap={4}>
-                                            <Box width="60%" mx="auto">
+                                            <Box width={{ base: "100%", md: "80%", lg: "60%" }} mx="auto" minW="200px">
                                                 <Text fontSize="md">
                                                     {language === "es" ? "Grafica de respuestas" : "Answers bar chart"}
                                                 </Text>
@@ -126,13 +126,13 @@ const QuestionsStadistics = ({ stadistics }) => {
                                     )}
 
                                     {question.type === "positive_num" && (
-                                        <Flex direction="row" justify="space-around">
+                                        <Flex direction={{ base: "column", md: "row" }} justify="space-around" gap={4}>
                                             <Box>
                                                 <Stat>
                                                     <StatLabel>
                                                         {language === "es" ? "Promedio de respuestas" : "Answer average"}
                                                     </StatLabel>
-                                                    <StatNumber color={greenColor} textAlign="center">
+                                                    <StatNumber color={greenColor} textAlign={{ base: "initial", md: "center" }}>
                                                         {question.aggregation.average}
                                                     </StatNumber>
                                                 </Stat>
@@ -143,7 +143,7 @@ const QuestionsStadistics = ({ stadistics }) => {
                                                     <StatLabel>
                                                         {language === "es" ? "Respuesta maxima" : "Maximum answer"}
                                                     </StatLabel>
-                                                    <StatNumber color={greenColor} textAlign="center">
+                                                    <StatNumber color={greenColor} textAlign={{ base: "initial", md: "center" }}>
                                                         {question.aggregation.max}
                                                     </StatNumber>
                                                 </Stat>
@@ -154,7 +154,7 @@ const QuestionsStadistics = ({ stadistics }) => {
                                                     <StatLabel>
                                                         {language === "es" ? "Respuesta minima" : "Minimum answer"}
                                                     </StatLabel>
-                                                    <StatNumber color={greenColor} textAlign="center">
+                                                    <StatNumber color={greenColor} textAlign={{ base: "initial", md: "center" }}>
                                                         {question.aggregation.min}
                                                     </StatNumber>
                                                 </Stat>
@@ -192,7 +192,7 @@ const QuestionsStadistics = ({ stadistics }) => {
 
                                     {question.type === "checkbox" && (
                                         <Flex flexDirection="column" gap={4}>
-                                            <Box width="60%" mx="auto">
+                                            <Box width={{ base: "100%", md: "80%", lg: "60%" }} mx="auto" minW="200px">
                                                 <Text fontSize="md">
                                                     {language === "es" ? "Grafica de respuestas" : "Answers bar chart"}
                                                 </Text>
@@ -202,7 +202,7 @@ const QuestionsStadistics = ({ stadistics }) => {
                                                         parseFloat(question.aggregation.percentages.yes),
                                                         parseFloat(question.aggregation.percentages.no)
                                                         ]}
-                                                    type="pie"
+                                                    type="donut"
                                                     width="100%"
                                                 />
                                             </Box>
