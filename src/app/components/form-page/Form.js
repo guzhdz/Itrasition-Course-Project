@@ -272,10 +272,10 @@ function Form({ templateInfo, submitter = null, checkAuth }) {
     const getTitle = () => {
         switch (mode) {
             case 0:
-                return language === "es" ? "Completa el formulario" : "Complete the form";
+                return language === "es" ? "Plantilla (Vista previa solo lectura)" : "Template (Preview read only)";
 
             case 1:
-                return language === "es" ? "Plantilla (Vista previa solo lectura)" : "Template (Preview read only)";
+                return language === "es" ? "Completa el formulario" : "Complete the form";
 
             case 2:
                 return language === "es" ? `Formulario de ${submitter.name} (Respuestas)` : `${submitter.name}'s Forms (Answers)`;
