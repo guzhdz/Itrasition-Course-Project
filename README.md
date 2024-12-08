@@ -5,11 +5,11 @@ This is the Intrasition Intership Final Project
 
 Technologies used:
 - React
-- Next.js
+- Next.js (Javascript, CSS, HTML)
 - Chakra UI
-- Prisma
+- Prisma ORM
 - PostreSQL
-- node.js
+- Node.js
 
 ## Project instructions and requirements
  Depending of what group you are in):
