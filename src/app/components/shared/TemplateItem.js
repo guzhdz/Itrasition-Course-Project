@@ -1,3 +1,6 @@
+//React/Next imports
+import { useState, useEffect } from "react";
+
 //Chakra imports
 import {
     Box,
@@ -15,17 +18,49 @@ import {
 //Styles imports
 import styles from "../shared/styles.module.css";
 
+//Services imports
+import { updateTemplateLikes } from "../../services/templateService";
+
 //Library imports
-import { BiLike, BiChat, BiRightArrowCircle } from "react-icons/bi";
+import { BiLike, BiChat, BiRightArrowCircle, BiSolidLike } from "react-icons/bi";
 import Markdown from 'markdown-to-jsx'
 
 //Context imports
 import { useUI } from "../../context/UIContext";
 import { useAuth } from "../../context/AuthContext";
 
-function TemplatesResults({template, goTo}) {
-    const { language, greenColor, textGreenScheme } = useUI();
+function TemplatesResults({ template, goTo }) {
+    const { language, greenColor, textGreenScheme, openToast } = useUI();
     const { user } = useAuth();
+    const [liked, setLiked] = useState(
+        user ? template.templatelikes.some((like) => like.user_id === user.id_user) : false
+    );
+    const [loadingLike, setLoadingLike] = useState(false);
+    const [likesNum, setLikesNum] = useState(template.templatelikes.length);
+
+    const handleLike = async () => {
+        if (user !== null) { 
+            setLoadingLike(true);
+            const response = await updateTemplateLikes({ templateId: template.id, userId: user.id_user, liked: !liked });
+            if (response.ok) {
+                setLiked(!liked);
+            } else {
+                openToast(
+                    "Error",
+                    language === "es" ? response.message[language] : response.message.en,
+                    "error",
+                );
+            }
+            setLoadingLike(false);
+        } else {
+            openToast(
+                null,
+                language === "es" ? "Debe iniciar sesion para dar like" : "You must log in to like",
+                "info",
+            );
+        }
+        setLikesNum(liked ? likesNum - 1 : likesNum + 1);
+    };
 
     return (
         <Card w={"100%"} h={"100%"}
@@ -70,12 +105,18 @@ function TemplatesResults({template, goTo}) {
             <CardFooter
                 justify='flex-end'
                 flexWrap='wrap' >
-                <Button colorScheme="blue" variant='ghost' leftIcon={<BiLike />}>
-                    {language === "es" ? "Me Gusta" : "Like"}
+                <Button
+                    colorScheme="green"
+                    variant='ghost'
+                    leftIcon={liked ? <BiSolidLike /> : <BiLike />}
+                    onClick={handleLike}
+                    isLoading={loadingLike}
+                >
+                    {language === "es" ? "Me Gusta" : "Like"} {likesNum !== 0 && `(${likesNum})`}
                 </Button>
-                <Button colorScheme="green" variant='ghost' leftIcon={<BiChat />}>
+                {/*<Button colorScheme="green" variant='ghost' leftIcon={<BiChat />}>
                     {language === "es" ? "Comentar" : "Comment"}
-                </Button>
+                </Button>*/}
                 <Button
                     variant='ghost'
                     leftIcon={<BiRightArrowCircle />}

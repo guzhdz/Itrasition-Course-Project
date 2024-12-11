@@ -136,10 +136,10 @@ model TemplateLike {
 }
 
 model Comment {
-  id          BigInt    @id @default(autoincrement()) 
+  id            BigInt    @id @default(autoincrement()) 
   comment_text  String  @db.VarChar(510)
-  template    Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
-  template_id BigInt
-  user        User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
-  user_id     Int
+  template      Template  @relation(fields: [template_id], references: [id], onDelete: Cascade)
+  template_id   BigInt
+  user          User      @relation(fields: [user_id], references: [id_user], onDelete: Cascade)
+  user_id       Int
 }

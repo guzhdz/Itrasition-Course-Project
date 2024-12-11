@@ -1,6 +1,6 @@
 import prisma from "../../lib/prismaClient";
 import superjson from 'superjson';
-import _, { select } from 'underscore';
+import _, { select, template } from 'underscore';
 
 export async function GET(request) {
     const url = new URL(request.url);
@@ -78,6 +78,8 @@ export async function PUT(request) {
     const { templateInfoBody, action } = await request.json();
     if (action === 'updateTemplateSettings') {
         return await updateTemplateSettings(templateInfoBody);
+    } else if (action === 'updateTemplateLikes') {
+        return await updateTemplateLikes(templateInfoBody);
     } else {
         const messageError = {
             en: "Bad request.",
@@ -264,7 +266,8 @@ const getLatestTemplates = async () => {
                         name: true,
                         email: true
                     }
-                }
+                },
+                templatelikes: true
             }
         });
         statusCode = 200;
@@ -299,7 +302,8 @@ const getAllTemplates = async (queryParams) => {
                         name: true,
                         email: true
                     }
-                }
+                },
+                templatelikes: true
             }
         });
         statusCode = 200;
@@ -523,3 +527,44 @@ const updateTemplateSettings = async (templateInfo) => {
         return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
     }
 }
+
+const updateTemplateLikes = async (templateInfo) => {
+    const { templateId, userId, liked } = templateInfo;
+    let statusCode = 500;
+    try {
+        let result = null;
+        if (liked) {
+            result = await prisma.templateLike.create({
+                data: {
+                    template: {
+                        connect: {
+                            id: templateId
+                        }
+                    },
+                    user: {
+                        connect: {
+                            id_user: userId
+                        }
+                    }
+                }
+            });
+        } else {
+            result = await prisma.templateLike.deleteMany({
+                where: {
+                    template_id: templateId,
+                    user_id: userId
+                }
+            });
+        }
+        statusCode = 200;
+        return new Response(superjson.stringify(result), { status: statusCode });
+    } catch (error) {
+        const messageError = {
+            en: "Server error. Please try again later.",
+            es: "Error del servidor. Por favor, intentalo de nuevo."
+        };
+        statusCode = 500;
+        return new Response(superjson.stringify({ error: messageError }), { status: statusCode });
+    }
+}
+
