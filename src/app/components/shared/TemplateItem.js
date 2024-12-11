@@ -44,6 +44,7 @@ function TemplatesResults({ template, goTo }) {
             const response = await updateTemplateLikes({ templateId: template.id, userId: user.id_user, liked: !liked });
             if (response.ok) {
                 setLiked(!liked);
+                setLikesNum(liked ? likesNum - 1 : likesNum + 1);
             } else {
                 openToast(
                     "Error",
@@ -51,7 +52,6 @@ function TemplatesResults({ template, goTo }) {
                     "error",
                 );
             }
-            setLikesNum(liked ? likesNum - 1 : likesNum + 1);
             setLoadingLike(false);
         } else {
             openToast(
