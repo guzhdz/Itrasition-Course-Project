@@ -51,6 +51,7 @@ function TemplatesResults({ template, goTo }) {
                     "error",
                 );
             }
+            setLikesNum(liked ? likesNum - 1 : likesNum + 1);
             setLoadingLike(false);
         } else {
             openToast(
@@ -59,7 +60,6 @@ function TemplatesResults({ template, goTo }) {
                 "info",
             );
         }
-        setLikesNum(liked ? likesNum - 1 : likesNum + 1);
     };
 
     return (
