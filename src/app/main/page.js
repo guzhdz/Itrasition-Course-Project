@@ -14,7 +14,7 @@ import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import HeroSection from "../components/main/HeroSection";
 import LatestTemplates from "../components/main/LatestTemplates";
-import HelpButton from "../components/shared/help/HelpButton";
+// import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -43,7 +43,7 @@ export default function Main() {
         return home ? { case: 3 } : { case: 4 };
       }
     }
-  }
+  };
 
   const handleAuthCase = (authCase) => {
     switch (authCase.case) {
@@ -67,18 +67,18 @@ export default function Main() {
         router.push('/');
         return false;
     }
-  }
+  };
 
   const initializePage = async (home = false) => {
     const authCase = await authenticate(home);
     const isAuth = handleAuthCase(authCase);
     isAuth && setPageLoaded(true);
-  }
+  };
 
   const goTo = (path) => {
     setPageLoaded(false);
     router.push(path);
-  }
+  };
 
   useEffect(() => {
     initializePage(true);
@@ -97,7 +97,7 @@ export default function Main() {
           <HeroSection goTo={goTo} />
           <LatestTemplates />
 
-          {user !== null && <HelpButton />}
+          {/* {user !== null && <HelpButton />} */}
         </Flex>
         :
         <LoadingPage />

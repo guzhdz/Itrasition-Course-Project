@@ -17,7 +17,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import TemplatesResults from "../components/search-results/TemplatesResults";
-import HelpButton from "../components/shared/help/HelpButton";
+// import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -47,7 +47,7 @@ export default function SearchResults() {
                 return initial ? { case: 3 } : { case: 4 };
             }
         }
-    }
+    };
 
     const handleAuthCase = (authCase) => {
         switch (authCase.case) {
@@ -71,13 +71,13 @@ export default function SearchResults() {
                 router.push('/main');
                 return false;
         }
-    }
+    };
 
     const initializePage = async (initial = false) => {
         const authCase = await authenticate(initial);
         const isAuth = handleAuthCase(authCase);
         isAuth && setPageLoaded(true);
-    }
+    };
 
     useEffect(() => {
         initializePage(true);
@@ -109,7 +109,7 @@ export default function SearchResults() {
                         <TemplatesResults />
                     </Box>
 
-                    {user !== null && <HelpButton />}
+                    {/* {user !== null && <HelpButton />} */}
                 </Flex>
                 :
                 <LoadingPage />

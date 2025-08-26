@@ -21,7 +21,7 @@ import { ArrowBackIcon } from "@chakra-ui/icons";
 import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import SFForm from "../components/sf-form/SFForm";
-import HelpButton from "../components/shared/help/HelpButton";
+// import HelpButton from "../components/shared/help/HelpButton";
 
 //Services imports
 import { getAccountByAccountNumber } from "../services/salesforceService";
@@ -59,7 +59,7 @@ export default function SfForm() {
                 return { case: 3 };
             }
         }
-    }
+    };
 
     const handleAuthCase = (authCase) => {
         switch (authCase.case) {
@@ -79,22 +79,22 @@ export default function SfForm() {
             default:
                 return false;
         }
-    }
+    };
 
     const checkAuthProcess = async () => {
         const authCase = await authenticate();
         return handleAuthCase(authCase);
-    }
+    };
 
     const initializePage = async () => {
         const isAuth = await checkAuthProcess();
         isAuth && setPageLoaded(true);
-    }
+    };
 
     const getAccount = async () => {
         const response = await getAccountByAccountNumber(user.id_user);
         if (response.ok) {
-            if(response.data.length > 0)
+            if (response.data.length > 0)
                 setAccountCreated(true);
             else
                 setAccountCreated(false);
@@ -103,9 +103,9 @@ export default function SfForm() {
             openSimpleErrorModal(
                 language === "es" ? "Error al cargar la cuenta en salesforce" : "Error at loading account in salesforce",
                 () => router.push('/dashboard')
-            )
+            );
         }
-    }
+    };
 
     useEffect(() => {
         initializePage();
@@ -165,7 +165,7 @@ export default function SfForm() {
                         </Card>}
                     </Box>
 
-                    <HelpButton />
+                    {/* <HelpButton /> */}
                 </Flex >
                 :
                 <LoadingPage />

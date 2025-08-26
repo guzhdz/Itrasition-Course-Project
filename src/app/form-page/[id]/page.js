@@ -14,7 +14,7 @@ import {
 import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import Form from "../../components/form-page/Form";
-import HelpButton from "../../components/shared/help/HelpButton";
+// import HelpButton from "../../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
@@ -57,7 +57,7 @@ export default function TemplatePage() {
                 return initial ? { case: 3 } : { case: 4 };
             }
         }
-    }
+    };
 
     const handleAuthCase = (authCase) => {
         switch (authCase.case) {
@@ -79,7 +79,7 @@ export default function TemplatePage() {
             default:
                 return false;
         }
-    }
+    };
 
     const validateTemplate = async () => {
         const response = await getTemplate(id, "getTemplateForFill");
@@ -106,8 +106,7 @@ export default function TemplatePage() {
             );
             return false;
         }
-
-    }
+    };
 
     const checkAuthProcess = async (inital = false) => {
         const isOk = await validateTemplate();
@@ -118,7 +117,7 @@ export default function TemplatePage() {
         }
         else
             return false;
-    }
+    };
 
     const getSubmitterInfo = async () => {
         const submitterInfo = await getUser(parseInt(submitterId));
@@ -132,7 +131,7 @@ export default function TemplatePage() {
             );
             return null;
         }
-    }
+    };
 
     const initializePage = async () => {
         if (submitterId !== null) {
@@ -144,7 +143,7 @@ export default function TemplatePage() {
         }
         const isAuth = await checkAuthProcess(true);
         isAuth && setPageLoaded(true);
-    }
+    };
 
     useEffect(() => {
         initializePage();
@@ -165,12 +164,11 @@ export default function TemplatePage() {
                         <Form templateInfo={templateInfo} checkAuth={checkAuthProcess} submitter={submitter} />
                     </Box>
 
-                    <HelpButton />
+                    {/* <HelpButton /> */}
                 </Flex>
                 :
                 <LoadingPage />
             }
         </>
-
     );
 }

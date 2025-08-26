@@ -30,7 +30,7 @@ const HelpButton = () => {
                 showModal={showModal}
                 setShowModal={setShowModal} />
         </>
-    )
-}
+    );
+};
 
 export default HelpButton;

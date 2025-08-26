@@ -15,7 +15,7 @@ import {
 import Header from '../components/shared/Header'
 import TableTabs from "../components/admin-panel/TableTabs";
 import LoadingPage from "../components/shared/LoadingPage";
-import HelpButton from "../components/shared/help/HelpButton";
+// import HelpButton from "../components/shared/help/HelpButton";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -45,7 +45,7 @@ export default function AdminPanel() {
         return { case: 3 };
       }
     }
-  }
+  };
 
   const handleAuthCase = (authCase) => {
     switch (authCase.case) {
@@ -71,7 +71,7 @@ export default function AdminPanel() {
         router.push('/');
         return false;
     }
-  }
+  };
 
   const checkAdmin = (response) => {
     if (response?.data?.is_admin) {
@@ -79,17 +79,17 @@ export default function AdminPanel() {
     } else {
       return { case: 4 };
     }
-  }
+  };
 
   const checkAuthProcess = async () => {
     const authCase = await authenticate();
     return handleAuthCase(authCase);
-}
+  };
 
   const initializePage = async () => {
     const isAuth = await checkAuthProcess();
     isAuth && setPageLoaded(true);
-  }
+  };
 
   useEffect(() => {
     initializePage();
@@ -113,7 +113,7 @@ export default function AdminPanel() {
             <TableTabs checkAuth={checkAuthProcess} />
           </Box>
 
-          <HelpButton />
+          {/* <HelpButton /> */}
         </Flex>
         :
         <LoadingPage />

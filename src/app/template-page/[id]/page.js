@@ -20,7 +20,7 @@ import Header from '../../components/shared/Header'
 import LoadingPage from '../../components/shared/LoadingPage'
 import TemplatePageTabs from "../../components/template-page/TemplatePageTabs";
 import ConfirmModal from "../../components/shared/ConfirmModal";
-import HelpButton from "../../components/shared/help/HelpButton";
+// import HelpButton from "../../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplate } from "../../services/templateService";
@@ -64,7 +64,7 @@ export default function TemplatePage() {
         return { case: 3 };
       }
     }
-  }
+  };
 
   const handleAuthCase = (authCase) => {
     switch (authCase.case) {
@@ -83,18 +83,18 @@ export default function TemplatePage() {
       default:
         return false;
     }
-  }
+  };
 
   const checkAuthProcess = async () => {
     const authCase = await authenticate();
     const isAuth = handleAuthCase(authCase);
     return isAuth ? await validateTemplate(authCase.user) : false;
-  }
+  };
 
   const initializePage = async () => {
     const isOwner = await checkAuthProcess();
     isOwner && setPageLoaded(true);
-  }
+  };
 
   const validateTemplate = async (user) => {
     const response = await getTemplate(id, "getTemplateOwner");
@@ -130,7 +130,7 @@ export default function TemplatePage() {
       );
       return false;
     }
-  }
+  };
 
   const openConfirmModal = async () => {
     setShowModal(true);
@@ -191,7 +191,7 @@ export default function TemplatePage() {
               checkAuth={checkAuthProcess} />
           </Box>
 
-          <HelpButton />
+          {/* <HelpButton /> */}
         </Flex>
         :
         <LoadingPage />

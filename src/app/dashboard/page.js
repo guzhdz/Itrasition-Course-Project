@@ -17,7 +17,7 @@ import Header from '../components/shared/Header'
 import LoadingPage from '../components/shared/LoadingPage'
 import UserBanner from "../components/dashboard/UserBanner";
 import DashboardTabs from "../components/dashboard/DashboardTabs";
-import HelpButton from "../components/shared/help/HelpButton";
+// import HelpButton from "../components/shared/help/HelpButton";
 
 //Services imports
 import { getTemplatesUser } from "../services/templateService";
@@ -25,7 +25,7 @@ import { getFormsUser } from "../services/formService";
 import { getUserIssues } from "../services/jiraService";
 
 //Library imports
-import { FaSalesforce } from "react-icons/fa";
+// import { FaSalesforce } from "react-icons/fa";
 
 //Context imports
 import { useUI } from "../context/UIContext";
@@ -57,7 +57,7 @@ export default function Dashboard() {
                 return { case: 3 };
             }
         }
-    }
+    };
 
     const handleAuthCase = (authCase) => {
         switch (authCase.case) {
@@ -77,17 +77,17 @@ export default function Dashboard() {
             default:
                 return false;
         }
-    }
+    };
 
     const checkAuthProcess = async () => {
         const authCase = await authenticate();
         return handleAuthCase(authCase);
-    }
+    };
 
     const initializePage = async () => {
         const isAuth = await checkAuthProcess();
         isAuth && setPageLoaded(true);
-    }
+    };
 
     const loadTemplates = async () => {
         const response = await getTemplatesUser(user.id_user);
@@ -104,7 +104,7 @@ export default function Dashboard() {
             setTemplatesNumber(0);
             return [];
         }
-    }
+    };
 
     const loadForms = async () => {
         const response = await getFormsUser(user.id_user);
@@ -121,7 +121,7 @@ export default function Dashboard() {
             setFormsNumber(0);
             return [];
         }
-    }
+    };
 
     const loadTickets = async () => {
         const response = await getUserIssues(user.email);
@@ -136,12 +136,12 @@ export default function Dashboard() {
             openToast("Error", messageError, "error");
             return [];
         }
-    }
+    };
 
     const goTo = (path) => {
         setPageLoaded(false);
         router.push(path);
-    }
+    };
 
     useEffect(() => {
         initializePage();
@@ -172,7 +172,7 @@ export default function Dashboard() {
 
                         <UserBanner templatesNumber={templatesNumber} formsNumber={formsNumber} />
 
-                        <Flex justify="flex-end">
+                        {/* <Flex justify="flex-end">
                             <Button 
                             colorScheme="green"
                             variant="outline" 
@@ -181,7 +181,7 @@ export default function Dashboard() {
                             disabled>
                                 {language === "es" ? "Conectar con SF" : "Link to SF"}
                             </Button>
-                        </Flex>
+                        </Flex> */}
 
                         <DashboardTabs
                             checkAuth={checkAuthProcess}
@@ -190,7 +190,7 @@ export default function Dashboard() {
                             loadTickets={loadTickets} />
                     </Box>
 
-                    <HelpButton />
+                    {/* <HelpButton /> */}
                 </Flex >
                 :
                 <LoadingPage />
