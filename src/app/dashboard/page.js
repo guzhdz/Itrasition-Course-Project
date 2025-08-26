@@ -177,7 +177,8 @@ export default function Dashboard() {
                             colorScheme="green"
                             variant="outline" 
                             leftIcon={<FaSalesforce />}
-                            onClick={() => goTo("/sf-form")} >
+                            onClick={() => goTo("/sf-form")} 
+                            disabled>
                                 {language === "es" ? "Conectar con SF" : "Link to SF"}
                             </Button>
                         </Flex>
