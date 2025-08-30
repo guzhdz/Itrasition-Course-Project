@@ -107,6 +107,8 @@ add questions with the type “one from the given list” with the ability to sp
 add any number of questions of any type (not 0 or 1 or 2 or 3 or 4, but any number of them),
 add the "E-mail me the copy of my answers" checkbox to the form.
 
+Note: The SalesForce and Jira(Tickats) integrations have been disables for the moment to fix them.
+
 ## Preview Images:
 ![image](https://github.com/user-attachments/assets/d8e024d4-0413-43d2-9111-de87f4969902)
 
